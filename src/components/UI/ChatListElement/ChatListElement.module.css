@@ -1,0 +1,35 @@
+.chatListElement {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 12px 14px;
+	cursor: pointer;
+	border-bottom: 1px solid #222e35;
+	transition: background 0.2s;
+}
+
+.contact:hover {
+	background: #202c33;
+}
+
+.avatar {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background: #2a3942;
+}
+
+.contact-info {
+	flex: 1;
+}
+
+.name {
+	color: #e9edef;
+	text-align: left;
+	font-size: 14px;
+}
+
+.last-message {
+	color: #8696a0;
+	font-size: 12px;
+}
