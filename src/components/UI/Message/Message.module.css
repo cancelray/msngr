@@ -1,0 +1,27 @@
+.message {
+	display: flex;
+	margin: 15px;
+	width: 95%;
+	justify-self: center;
+}
+
+.me {
+	justify-content: flex-end;
+}
+
+.others {
+	justify-content: flex-start;
+}
+
+.messageContent {
+	padding: 10px;
+	background: #202c33;
+	color: #e9edef;
+	border-radius: 8px;
+	max-width: 60%;
+	text-align: left;
+}
+
+.me .messageContent {
+	background-color: rgb(53, 156, 156);
+}

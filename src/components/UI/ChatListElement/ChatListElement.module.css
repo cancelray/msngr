@@ -8,7 +8,7 @@
 	transition: background 0.2s;
 }
 
-.contact:hover {
+.chatListElement:hover {
 	background: #202c33;
 }
 

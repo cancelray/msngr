@@ -1,23 +1,25 @@
 import styles from './ChatListElement.module.css';
 
-const Contact = (props) => {
-	const { contact } = props;
+const ChatListElement = (props) => {
+	const { chat, clickHandler } = props;
 
 	return (
-		<div className={styles.chatListElement}>
+		<div
+			className={styles.chatListElement}
+			onClick={clickHandler}
+			data-chat-id={chat.chatId}
+		>
 			<img
 				className={styles.avatar}
-				src={contact.avatar}
+				src={chat.avatar}
 				alt='avatar'
 			></img>
 			<div className={styles.contactInfo}>
-				<div className={styles.name}>
-					{contact.name + ' ' + contact.lastName}
-				</div>
+				<div className={styles.name}>{chat.name + ' ' + chat.lastName}</div>
 				<div className={styles.lastMessage}>Последнее сообщение...</div>
 			</div>
 		</div>
 	);
 };
 
-export default Contact;
+export default ChatListElement;

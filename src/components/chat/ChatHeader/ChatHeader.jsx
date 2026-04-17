@@ -1,12 +1,24 @@
+import { useContext } from 'react';
+import { MessengerContext } from '../../../context/MessengerContext';
 import styles from './ChatHeader.module.css';
 
 const ChatHeader = () => {
-	return (
-		<div className={styles.chatHeader}>
-			<div className={styles.avatar}></div>
-			<div>Алексей</div>
-		</div>
-	);
+	const { chatWithUser } = useContext(MessengerContext);
+
+	if (chatWithUser) {
+		return (
+			<div className={styles.chatHeader}>
+				<img
+					src={chatWithUser.avatar}
+					alt='avatar'
+					className={styles.avatar}
+				></img>
+				<div>{chatWithUser.name + ' ' + chatWithUser.lastName}</div>
+			</div>
+		);
+	}
+
+	return null;
 };
 
 export default ChatHeader;

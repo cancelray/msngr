@@ -1,20 +1,22 @@
 const usersURL = 'http://localhost:3001/users';
 const contactsURL = 'http://localhost:3001/contacts';
 const chatsURL = 'http://localhost:3001/chats';
-const chatMembersURL = 'http://localhost:3001/chatMembers';
-const messagesURL = 'http://localhost:3001/messages';
 
 const headers = {
 	'Content-Type': 'application/json',
 };
 
 const usersAPI = {
+	getAllUsers: () => {
+		return fetch(usersURL).then((response) => response.json());
+	},
+
 	getUser: (userId) => {
 		return fetch(`${usersURL}/${userId}`).then((response) => response.json());
 	},
 
 	getContactList: (userId) => {
-		return fetch(`${contactsURL}/?userId=${userId}`).then((response) =>
+		return fetch(`${contactsURL}?userId=${userId}`).then((response) =>
 			response.json(),
 		);
 	},
