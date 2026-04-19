@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+
 import chatsAPI from '../api/chatsAPI';
 import usersAPI from '../api/usersAPI';
 
@@ -22,7 +23,7 @@ const useChat = () => {
 		}
 	}, [currentChatId]);
 
-	return { setCurrentChatId, chatWithUser, currentChat };
+	return { setCurrentChatId, chatWithUser, currentChatId, currentChat };
 };
 
 export default useChat;

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 
+import chatsAPI from '../api/chatsAPI';
 import usersAPI from '../api/usersAPI';
 
 const useUser = () => {
@@ -40,8 +41,20 @@ const useUser = () => {
 		chatList.forEach((chat, i) => {
 			const user = users.find((user) => Number(user.id) === chat.membersId[1]);
 			user.chatId = chatList[i].id;
-			
+
 			usersFromChatList.push(user);
+		});
+
+		usersFromChatList.map((userChat) => {
+			chatsAPI
+				.getMessangersByChatId(Number(userChat.chatId))
+				.then((messangers) => {
+					messangers.sort((a, b) => a.createdAt - b.createdAt);
+
+					userChat.lastMessage = messangers.at(-1).content;
+					userChat.lastMessageAuthor = messangers.at(-1).senderId;
+					userChat.lastMessageTime = messangers.at(-1).createdAt;
+				});
 		});
 
 		return usersFromChatList;

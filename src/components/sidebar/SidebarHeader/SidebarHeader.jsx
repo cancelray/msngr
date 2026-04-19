@@ -12,11 +12,17 @@ const SidebarHeader = () => {
 				<h2>Чаты</h2>
 				<div className={styles.userInfo}>
 					<p>{user.name + ' ' + user.lastName}</p>
-					<img
-						className={styles.userAvatar}
-						src={user.avatar}
-						alt='avatar'
-					/>
+					{user.avatar?.length > 0 ? (
+						<img
+							className={styles.userAvatar}
+							src={user.avatar}
+							alt='avatar'
+						></img>
+					) : (
+						<div className={styles.avatarAlt}>
+							{user.name ? user.name[0] : ''}
+						</div>
+					)}
 				</div>
 			</div>
 			<div className={styles.search}>

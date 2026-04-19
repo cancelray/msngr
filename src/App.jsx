@@ -1,10 +1,10 @@
 import { MessengerContext } from './context/MessengerContext';
 
+import useChat from './hooks/useChat';
 import useUser from './hooks/useUser';
 
 import MainPageWrapper from './components/MainPageWrapper/MainPageWrapper';
 
-import useChat from './hooks/useChat';
 import './styles';
 
 function App() {
@@ -17,7 +17,8 @@ function App() {
 		getUsersFromChatList,
 	} = useUser();
 
-	const { setCurrentChatId, chatWithUser, currentChat } = useChat();
+	const { setCurrentChatId, chatWithUser, currentChatId, currentChat } =
+		useChat();
 
 	return (
 		<MessengerContext.Provider
@@ -30,6 +31,7 @@ function App() {
 				getUsersFromChatList,
 				setCurrentChatId,
 				chatWithUser,
+				currentChatId,
 				currentChat,
 			}}
 		>

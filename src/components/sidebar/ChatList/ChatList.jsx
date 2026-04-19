@@ -18,7 +18,7 @@ const Contacts = () => {
 
 	return (
 		<div className={styles.chats}>
-			{currentChatList.map((chat) => (
+			{currentChatList?.map((chat) => (
 				<ChatListElement
 					chat={chat}
 					key={chat.id}

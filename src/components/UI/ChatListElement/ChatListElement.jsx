@@ -1,22 +1,47 @@
+import { useContext } from 'react';
+
+import { MessengerContext } from '../../../context/MessengerContext';
+
 import styles from './ChatListElement.module.css';
 
 const ChatListElement = (props) => {
 	const { chat, clickHandler } = props;
+	const { currentChatId } = useContext(MessengerContext);
+
+	const currentUserId = Number(localStorage.getItem('loginUserId'));
+
+	const lastMessageTime = new Date(chat.lastMessageTime);
+	const day = String(lastMessageTime.getDate()).padStart(2, '0');
+	const month = String(lastMessageTime.getMonth() + 1).padStart(2, '0');
+	const year = String(lastMessageTime.getFullYear()).slice(-2);
+	const date = `${day}.${month}.${year}`;
+
+	const lastMessageAuthorId = chat.lastMessageAuthor;
 
 	return (
 		<div
-			className={styles.chatListElement}
+			className={`${styles.chatListElement} ${currentChatId === chat.chatId ? styles.currentChat : ''}`}
 			onClick={clickHandler}
 			data-chat-id={chat.chatId}
 		>
-			<img
-				className={styles.avatar}
-				src={chat.avatar}
-				alt='avatar'
-			></img>
+			{chat.avatar?.length > 0 ? (
+				<img
+					className={styles.avatar}
+					src={chat.avatar}
+					alt='avatar'
+				></img>
+			) : (
+				<div className={styles.avatarAlt}>{chat.name ? chat.name[0] : ''}</div>
+			)}
+
 			<div className={styles.contactInfo}>
-				<div className={styles.name}>{chat.name + ' ' + chat.lastName}</div>
-				<div className={styles.lastMessage}>Последнее сообщение...</div>
+				<div className={styles.contactHead}>
+					<p className={styles.name}>{chat.name + ' ' + chat.lastName}</p>
+					<p className={styles.date}>{date}</p>
+				</div>
+				<div
+					className={styles.lastMessage}
+				>{`${lastMessageAuthorId === currentUserId ? 'You' : chat.name}: ${chat.lastMessage}`}</div>
 			</div>
 		</div>
 	);

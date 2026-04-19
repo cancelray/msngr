@@ -9,7 +9,11 @@
 }
 
 .chatListElement:hover {
-	background: #202c33;
+	background: #4c5a63;
+}
+
+.currentChat {
+	background: #4c5a63;
 }
 
 .avatar {
@@ -19,17 +23,36 @@
 	background: #2a3942;
 }
 
-.contact-info {
-	flex: 1;
+.avatarAlt {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 25px;
+	width: 40px;
+	height: 40px;
+	border-radius: 50px;
+	background: #284253;
+}
+
+.contactHead {
+	display: flex;
+	justify-content: space-between;
+	width: 250px;
 }
 
 .name {
-	color: #e9edef;
+	font-size: 18px;
 	text-align: left;
+	color: #e9edef;
+}
+.date {
 	font-size: 14px;
+	align-self: flex-end;
+	color: #8696a0;
 }
 
-.last-message {
+.lastMessage {
 	color: #8696a0;
-	font-size: 12px;
+	font-size: 15px;
+	text-align: left;
 }
