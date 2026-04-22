@@ -4,10 +4,24 @@ import useChat from './hooks/useChat';
 import useUser from './hooks/useUser';
 
 import MainPageWrapper from './components/MainPageWrapper/MainPageWrapper';
+import Loader from './components/UI/Loader/Loader';
 
 import './styles';
 
 function App() {
+	const {
+		setCurrentChatId,
+		chatWithUser,
+		currentChatId,
+		currentChat,
+		inputChat,
+		setInputChat,
+		sendMessage,
+		messages,
+		chatWrapperRef,
+		endOfMessagesRef,
+	} = useChat();
+
 	const {
 		users,
 		user,
@@ -15,10 +29,9 @@ function App() {
 		userContactList,
 		userChats,
 		getUsersFromChatList,
-	} = useUser();
-
-	const { setCurrentChatId, chatWithUser, currentChatId, currentChat } =
-		useChat();
+		chatList,
+		isUserLoading,
+	} = useUser(messages);
 
 	return (
 		<MessengerContext.Provider
@@ -33,9 +46,15 @@ function App() {
 				chatWithUser,
 				currentChatId,
 				currentChat,
+				chatList,
+				inputChat,
+				setInputChat,
+				sendMessage,
+				chatWrapperRef,
+				endOfMessagesRef,
 			}}
 		>
-			<MainPageWrapper />
+			{isUserLoading ? <Loader /> : <MainPageWrapper />}
 		</MessengerContext.Provider>
 	);
 }

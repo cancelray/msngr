@@ -3,12 +3,14 @@ import { useEffect, useState } from 'react';
 import chatsAPI from '../api/chatsAPI';
 import usersAPI from '../api/usersAPI';
 
-const useUser = () => {
+const useUser = (messages) => {
 	const [users, setUsers] = useState([]);
 	const [user, setUser] = useState({});
 	const [userContactListId, setUserContactListId] = useState([]);
 	const [userContactList, setUserContactList] = useState([]);
 	const [userChats, setUserChats] = useState([]);
+	const [chatList, setChatList] = useState([]);
+	const [isUserLoading, setIsUserLoading] = useState(true);
 
 	const getContactList = (contactListId) => {
 		return Promise.all(
@@ -35,29 +37,35 @@ const useUser = () => {
 		});
 	};
 
-	const getUsersFromChatList = (users, chatList) => {
+	const getUsersFromChatList = async (users, userChats) => {
 		const usersFromChatList = [];
 
-		chatList.forEach((chat, i) => {
-			const user = users.find((user) => Number(user.id) === chat.membersId[1]);
-			user.chatId = chatList[i].id;
+		userChats.forEach((chat, i) => {
+			const user = structuredClone(
+				users.find((user) => Number(user.id) === chat.membersId[1]),
+			);
 
+			user.chatId = userChats[i].id;
 			usersFromChatList.push(user);
 		});
 
-		usersFromChatList.map((userChat) => {
-			chatsAPI
-				.getMessangersByChatId(Number(userChat.chatId))
-				.then((messangers) => {
-					messangers.sort((a, b) => a.createdAt - b.createdAt);
+		const chatsData = usersFromChatList.map(async (userChat) => {
+			const messangesData = await chatsAPI.getMessagesByChatId(
+				Number(userChat.chatId),
+			);
 
-					userChat.lastMessage = messangers.at(-1).content;
-					userChat.lastMessageAuthor = messangers.at(-1).senderId;
-					userChat.lastMessageTime = messangers.at(-1).createdAt;
-				});
+			messangesData.sort((a, b) => a.createdAt - b.createdAt);
+
+			userChat.lastMessage = messangesData.at(-1).content;
+			userChat.lastMessageAuthor = messangesData.at(-1).senderId;
+			userChat.lastMessageTime = messangesData.at(-1).createdAt;
+
+			return { ...userChat, extra: messangesData };
 		});
 
-		return usersFromChatList;
+		const chatsResult = await Promise.all(chatsData);
+
+		return chatsResult;
 	};
 
 	useEffect(() => {
@@ -65,7 +73,8 @@ const useUser = () => {
 		usersAPI.getUser(localStorage.getItem('loginUserId')).then(setUser);
 		usersAPI
 			.getContactList(localStorage.getItem('loginUserId'))
-			.then(setUserContactListId);
+			.then(setUserContactListId)
+			.finally(() => setIsUserLoading(false));
 
 		getChatList(localStorage.getItem('loginUserId'));
 	}, []);
@@ -73,6 +82,27 @@ const useUser = () => {
 	useEffect(() => {
 		getContactList(userContactListId);
 	}, [userContactListId]);
+
+	useEffect(() => {
+		getUsersFromChatList(users, userChats).then(setChatList);
+	}, [users, userChats]);
+
+	useEffect(() => {
+		const lastMessage = messages.at(-1);
+
+		const newChatList = structuredClone(chatList);
+
+		newChatList.forEach((chat) => {
+			if (Number(chat?.chatId) === lastMessage?.chatId) {
+				chat.lastMessage = lastMessage.content;
+				chat.lastMessageAuthor = lastMessage.senderId;
+				chat.lastMessageTime = lastMessage.createdAt;
+
+				setChatList(newChatList);
+			}
+		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [messages]);
 
 	return {
 		users,
@@ -82,6 +112,8 @@ const useUser = () => {
 		userContactList,
 		userChats,
 		getUsersFromChatList,
+		chatList,
+		isUserLoading,
 	};
 };
 

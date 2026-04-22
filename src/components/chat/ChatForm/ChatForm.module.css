@@ -1,0 +1,49 @@
+.input {
+	display: flex;
+	justify-content: space-between;
+	width: 95%;
+	margin: 20px 10px;
+	resize: vertical;
+	outline: none;
+	min-height: 80px;
+}
+
+.inputField {
+	width: 90%;
+	max-height: 80px;
+	height: 100%;
+	padding: 10px;
+	border: 1px solid black;
+	border-radius: 10px;
+	outline: none;
+	resize: none;
+}
+
+.button {
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	border: black;
+	background-color: #344ea3;
+	margin: auto 0;
+}
+
+.blocked {
+	background-color: #555555;
+}
+
+.button.blocked:hover {
+	cursor: default;
+	background-color: #555555;
+}
+
+.button:hover {
+	background-color: #e9edef;
+}
+
+.button img {
+	width: 30px;
+	height: 30px;
+	rotate: -45deg;
+	margin: 0 auto;
+}

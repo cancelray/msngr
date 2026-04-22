@@ -6,10 +6,7 @@ import ChatListElement from '../../UI/ChatListElement/ChatListElement';
 import styles from './ChatList.module.css';
 
 const Contacts = () => {
-	const { users, userChats, getUsersFromChatList, setCurrentChatId } =
-		useContext(MessengerContext);
-
-	const currentChatList = getUsersFromChatList(users, userChats);
+	const { setCurrentChatId, chatList } = useContext(MessengerContext);
 
 	const clickHandler = (event) => {
 		const chatId = event.currentTarget.dataset.chatId;
@@ -18,7 +15,7 @@ const Contacts = () => {
 
 	return (
 		<div className={styles.chats}>
-			{currentChatList?.map((chat) => (
+			{chatList?.map((chat) => (
 				<ChatListElement
 					chat={chat}
 					key={chat.id}
