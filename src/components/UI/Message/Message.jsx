@@ -1,9 +1,14 @@
+import { useContext } from 'react';
+
+import { MessengerContext } from '../../../context/MessengerContext';
+
 import styles from './Message.module.css';
 
 const Message = (props) => {
+	const { loginUserId } = useContext(MessengerContext);
 	const { message } = props;
-
-	const currentUserId = Number(localStorage.getItem('loginUserId'));
+	
+	const currentUserId = loginUserId;
 	const messageCreatedDate = new Date(message.createdAt);
 
 	const day = String(messageCreatedDate.getDate()).padStart(2, '0');
@@ -23,7 +28,7 @@ const Message = (props) => {
 				${message.senderId === currentUserId ? styles.me : styles.other}`}
 		>
 			<div className={styles.messageContent}>
-				<p>{message.content}</p>
+				<p className={styles.messageBody}>{message.content}</p>
 				<p className={styles.createdAt}>{`${date} ${time}`}</p>
 			</div>
 		</div>

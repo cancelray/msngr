@@ -15,6 +15,10 @@ const usersAPI = {
 		return fetch(`${usersURL}/${userId}`).then((response) => response.json());
 	},
 
+	getUserByLogin: (login) => {
+		return fetch(`${usersURL}?login=${login}`).then((response) => response.json());
+	},
+
 	getContactList: (userId) => {
 		return fetch(`${contactsURL}?userId=${userId}`).then((response) =>
 			response.json(),

@@ -13,9 +13,9 @@ const ChatForm = () => {
 			onSubmit={sendMessage}
 		>
 			<textarea
-				type='text'
-				placeholder='Введите сообщение'
+				id='input-field'
 				className={styles.inputField}
+				placeholder='Введите сообщение'
 				value={inputChat}
 				onChange={(event) => setInputChat(event.target.value)}
 			/>

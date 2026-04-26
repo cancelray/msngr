@@ -28,6 +28,10 @@
 	background-color: rgb(53, 156, 156);
 }
 
+.messageBody {
+	white-space: pre-line;
+}
+
 .createdAt {
 	font-size: 12px;
 	color: #365161;

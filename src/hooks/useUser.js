@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import chatsAPI from '../api/chatsAPI';
 import usersAPI from '../api/usersAPI';
 
-const useUser = (messages) => {
+const useUser = (messages, loginUserId) => {
 	const [users, setUsers] = useState([]);
 	const [user, setUser] = useState({});
 	const [userContactListId, setUserContactListId] = useState([]);
@@ -69,15 +69,17 @@ const useUser = (messages) => {
 	};
 
 	useEffect(() => {
-		usersAPI.getAllUsers().then(setUsers);
-		usersAPI.getUser(localStorage.getItem('loginUserId')).then(setUser);
-		usersAPI
-			.getContactList(localStorage.getItem('loginUserId'))
-			.then(setUserContactListId)
-			.finally(() => setIsUserLoading(false));
+		if (loginUserId) {
+			usersAPI.getAllUsers().then(setUsers);
+			usersAPI.getUser(loginUserId).then(setUser);
+			usersAPI
+				.getContactList(loginUserId)
+				.then(setUserContactListId)
+				.finally(() => setIsUserLoading(false));
 
-		getChatList(localStorage.getItem('loginUserId'));
-	}, []);
+			getChatList(loginUserId);
+		}
+	}, [loginUserId]);
 
 	useEffect(() => {
 		getContactList(userContactListId);
@@ -105,13 +107,10 @@ const useUser = (messages) => {
 	}, [messages]);
 
 	return {
-		users,
 		user,
-		getContactList,
 		userContactListId,
 		userContactList,
 		userChats,
-		getUsersFromChatList,
 		chatList,
 		isUserLoading,
 	};

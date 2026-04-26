@@ -6,9 +6,9 @@ import styles from './ChatListElement.module.css';
 
 const ChatListElement = (props) => {
 	const { chat, clickHandler } = props;
-	const { currentChatId } = useContext(MessengerContext);
+	const { currentChatId, loginUserId } = useContext(MessengerContext);
 
-	const currentUserId = Number(localStorage.getItem('loginUserId'));
+	const currentUserId = loginUserId;
 
 	const lastMessageTime = new Date(chat.lastMessageTime);
 	const day = String(lastMessageTime.getDate()).padStart(2, '0');

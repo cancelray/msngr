@@ -1,14 +1,25 @@
 import { MessengerContext } from './context/MessengerContext';
 
 import useChat from './hooks/useChat';
+import useLogin from './hooks/useLogin';
 import useUser from './hooks/useUser';
 
 import MainPageWrapper from './components/MainPageWrapper/MainPageWrapper';
-import Loader from './components/UI/Loader/Loader';
+
+import LoginPage from './components/LoginPage/LoginPage';
 
 import './styles';
 
 function App() {
+	const {
+		loginUserId,
+		loginInput,
+		setLoginInput,
+		passwordInput,
+		setPasswordInput,
+		loginSubmit,
+	} = useLogin();
+
 	const {
 		setCurrentChatId,
 		chatWithUser,
@@ -20,28 +31,31 @@ function App() {
 		messages,
 		chatWrapperRef,
 		endOfMessagesRef,
-	} = useChat();
+	} = useChat(loginUserId);
 
 	const {
-		users,
 		user,
 		userContactListId,
 		userContactList,
 		userChats,
-		getUsersFromChatList,
 		chatList,
 		isUserLoading,
-	} = useUser(messages);
+	} = useUser(messages, loginUserId);
 
 	return (
 		<MessengerContext.Provider
 			value={{
-				users,
+				loginUserId,
+				loginInput,
+				setLoginInput,
+				passwordInput,
+				setPasswordInput,
+				loginSubmit,
 				user,
+				isUserLoading,
 				userContactListId,
 				userContactList,
 				userChats,
-				getUsersFromChatList,
 				setCurrentChatId,
 				chatWithUser,
 				currentChatId,
@@ -54,7 +68,7 @@ function App() {
 				endOfMessagesRef,
 			}}
 		>
-			{isUserLoading ? <Loader /> : <MainPageWrapper />}
+			{loginUserId ? <MainPageWrapper /> : <LoginPage />}
 		</MessengerContext.Provider>
 	);
 }

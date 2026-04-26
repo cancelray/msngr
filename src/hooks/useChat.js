@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import chatsAPI from '../api/chatsAPI';
 import usersAPI from '../api/usersAPI';
 
-const useChat = () => {
+const useChat = (loginUserId) => {
 	const [messages, setMessages] = useState([]);
 	const [currentChatId, setCurrentChatId] = useState(null);
 	const [chatWithUser, setChatWithUser] = useState(null);
@@ -27,7 +27,7 @@ const useChat = () => {
 		const newMessage = {
 			id: crypto.randomUUID(),
 			chatId: Number(currentChatId),
-			senderId: Number(localStorage.getItem('loginUserId')),
+			senderId: loginUserId,
 			content: inputChat,
 			createdAt: messageDate,
 		};
@@ -55,7 +55,7 @@ const useChat = () => {
 		if (currentChatId) {
 			chatsAPI.getChatById(currentChatId).then((chat) => {
 				const chatWithUserId = chat.membersId.filter(
-					(id) => id !== Number(localStorage.getItem('loginUserId')),
+					(id) => id !== loginUserId,
 				);
 				usersAPI.getUser(chatWithUserId[0]).then(setChatWithUser);
 			});
@@ -65,6 +65,7 @@ const useChat = () => {
 				setLastMessageId(chat.at(-1).id);
 			});
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentChatId]);
 
 	useEffect(() => {
