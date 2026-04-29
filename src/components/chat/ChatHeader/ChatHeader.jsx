@@ -8,17 +8,21 @@ const ChatHeader = () => {
 	if (chatWithUser) {
 		return (
 			<div className={styles.chatHeader}>
-				<img
-					src={chatWithUser.avatar}
-					alt='avatar'
-					className={styles.avatar}
-				></img>
+				{chatWithUser.avatar.length > 0 ? (
+					<img
+						className={styles.avatar}
+						src={chatWithUser.avatar}
+						alt='avatar'
+					></img>
+				) : (
+					<div className={styles.avatarAlt}>
+						{chatWithUser.name ? chatWithUser?.name[0] : ''}
+					</div>
+				)}
 				<div>{chatWithUser.name + ' ' + chatWithUser.lastName}</div>
 			</div>
 		);
 	}
-
-	return null;
 };
 
 export default ChatHeader;

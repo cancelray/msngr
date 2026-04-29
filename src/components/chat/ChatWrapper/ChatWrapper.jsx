@@ -8,7 +8,7 @@ import styles from './ChatWrapper.module.css';
 const ChatWrapper = () => {
 	const { currentChat, chatWrapperRef, endOfMessagesRef } =
 		useContext(MessengerContext);
-
+	
 	return (
 		<div
 			className={styles.chatWrapper}

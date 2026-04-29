@@ -1,0 +1,43 @@
+.registerForm {
+	display: flex;
+	flex-direction: column;
+	margin: auto auto;
+}
+
+.registerForm div {
+	position: relative;
+	align-self: flex-end;
+	margin-bottom: 30px;
+}
+
+.registerForm input {
+	margin-left: 20px;
+	border-radius: 10px;
+}
+
+.optional {
+	position: absolute;
+	font-size: 16px;
+	top: 100%;
+	left: 60%;
+}
+
+.error {
+	position: absolute;
+	font-size: 14px;
+	color: rgb(219, 14, 14);
+	top: 100%;
+	left: 40%;
+}
+
+.registerForm button {
+	width: 100px;
+	margin: 10px auto;
+}
+.registerForm button:disabled {
+	background-color: #555555;
+}
+.registerForm button:disabled:hover {
+	cursor: default;
+	background-color: #555555;
+}

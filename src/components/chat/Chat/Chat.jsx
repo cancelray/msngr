@@ -8,13 +8,13 @@ import ChatWrapper from '../ChatWrapper/ChatWrapper';
 import styles from './Chat.module.css';
 
 const Chat = () => {
-	const { currentChat } = useContext(MessengerContext);
+	const { currentChatId } = useContext(MessengerContext);
 
 	return (
 		<div className={styles.chat}>
-			<ChatHeader />
-			{currentChat.length > 0 ? (
+			{currentChatId ? (
 				<>
+					<ChatHeader />
 					<ChatWrapper />
 					<ChatForm />
 				</>

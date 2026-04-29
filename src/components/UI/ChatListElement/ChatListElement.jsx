@@ -8,15 +8,11 @@ const ChatListElement = (props) => {
 	const { chat, clickHandler } = props;
 	const { currentChatId, loginUserId } = useContext(MessengerContext);
 
-	const currentUserId = loginUserId;
-
 	const lastMessageTime = new Date(chat.lastMessageTime);
 	const day = String(lastMessageTime.getDate()).padStart(2, '0');
 	const month = String(lastMessageTime.getMonth() + 1).padStart(2, '0');
 	const year = String(lastMessageTime.getFullYear()).slice(-2);
 	const date = `${day}.${month}.${year}`;
-
-	const lastMessageAuthorId = chat.lastMessageAuthor;
 
 	return (
 		<div
@@ -41,7 +37,7 @@ const ChatListElement = (props) => {
 				</div>
 				<div
 					className={styles.lastMessage}
-				>{`${lastMessageAuthorId === currentUserId ? 'You' : chat.name}: ${chat.lastMessage}`}</div>
+				>{`${chat.lastMessageAuthor === loginUserId ? 'You' : chat.name}: ${chat.lastMessage}`}</div>
 			</div>
 		</div>
 	);

@@ -1,16 +1,20 @@
 import { useContext } from 'react';
 import { MessengerContext } from '../../../context/MessengerContext';
 
+import DropdownMenu from '../DropdownMenu/DropdownMenu';
 import styles from './SidebarHeader.module.css';
 
 const SidebarHeader = () => {
-	const { user } = useContext(MessengerContext);
+	const { user, isDropdownShow, userNameClick } = useContext(MessengerContext);
 
 	return (
 		<div className={styles.sidebarHeader}>
 			<div className={styles.head}>
 				<h2>Чаты</h2>
-				<div className={styles.userInfo}>
+				<a
+					className={styles.userInfo}
+					onClick={userNameClick}
+				>
 					<p>{user.name + ' ' + user.lastName}</p>
 					{user.avatar?.length > 0 ? (
 						<img
@@ -23,8 +27,9 @@ const SidebarHeader = () => {
 							{user.name ? user.name[0] : ''}
 						</div>
 					)}
-				</div>
+				</a>
 			</div>
+			{isDropdownShow ? <DropdownMenu /> : null}
 			<div className={styles.search}>
 				<input
 					type='text'

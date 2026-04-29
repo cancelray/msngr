@@ -5,7 +5,7 @@ import ChatListElement from '../../UI/ChatListElement/ChatListElement';
 
 import styles from './ChatList.module.css';
 
-const Contacts = () => {
+const ChatList = () => {
 	const { setCurrentChatId, chatList } = useContext(MessengerContext);
 
 	const clickHandler = (event) => {
@@ -26,4 +26,4 @@ const Contacts = () => {
 	);
 };
 
-export default Contacts;
+export default ChatList;

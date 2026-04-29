@@ -27,6 +27,20 @@ const chatsAPI = {
 			body: JSON.stringify(newMessage),
 		}).then((response) => response.json());
 	},
+
+	createNewChat: (newChat) => {
+		return fetch(chatsURL, {
+			method: 'POST',
+			headers,
+			body: JSON.stringify(newChat),
+		}).then((response) => response.json());
+	},
+
+	deleteChat: (chatId) => {
+		return fetch(`${chatsURL}/${chatId}`, {
+			method: 'DELETE',
+		}).then((response) => response.json());
+	},
 };
 
 export default chatsAPI;

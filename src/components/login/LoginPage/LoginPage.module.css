@@ -1,0 +1,56 @@
+.loginForm {
+	display: flex;
+	flex-direction: column;
+	max-width: 400px;
+	width: 100%;
+	margin: auto auto;
+}
+
+.loginForm div {
+	position: relative;
+	align-self: flex-end;
+	margin-bottom: 30px;
+}
+
+.loginForm input {
+	margin-left: 20px;
+	border-radius: 10px;
+}
+
+.error {
+	position: absolute;
+	font-size: 14px;
+	color: rgb(219, 14, 14);
+	top: 100%;
+	left: 50%;
+}
+
+.buttonWrapper {
+	max-width: 250px;
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+}
+
+.loginForm button {
+	width: 100px;
+	margin: 0 auto;
+}
+.loginForm button:disabled {
+	background-color: #555555;
+}
+.loginForm button:disabled:hover {
+	cursor: default;
+	background-color: #555555;
+}
+
+.loginForm a {
+	font-size: 18px;
+	color: rgb(54, 144, 185);
+	text-decoration: underline solid rgb(54, 144, 185);
+}
+.loginForm a:hover {
+	color: rgb(92, 52, 236);
+	text-decoration: underline solid rgb(92, 52, 236);
+	cursor: pointer;
+}

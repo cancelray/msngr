@@ -1,4 +1,5 @@
 .sidebarHeader {
+	position: relative;
 	padding: 14px;
 	display: flex;
 	flex-direction: column;
@@ -17,6 +18,9 @@
 .userInfo {
 	display: flex;
 	align-items: center;
+}
+.userInfo:hover {
+	cursor: pointer;
 }
 
 .userAvatar {

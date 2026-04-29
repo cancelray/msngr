@@ -16,7 +16,17 @@ const usersAPI = {
 	},
 
 	getUserByLogin: (login) => {
-		return fetch(`${usersURL}?login=${login}`).then((response) => response.json());
+		return fetch(`${usersURL}?login=${login}`).then((response) =>
+			response.json(),
+		);
+	},
+
+	addNewUser: (newUser) => {
+		return fetch(usersURL, {
+			method: 'POST',
+			headers,
+			body: JSON.stringify(newUser),
+		}).then((response) => response.json());
 	},
 
 	getContactList: (userId) => {

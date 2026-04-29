@@ -7,7 +7,7 @@ import styles from './Message.module.css';
 const Message = (props) => {
 	const { loginUserId } = useContext(MessengerContext);
 	const { message } = props;
-	
+
 	const currentUserId = loginUserId;
 	const messageCreatedDate = new Date(message.createdAt);
 
@@ -25,7 +25,7 @@ const Message = (props) => {
 		<div
 			className={`
 				${styles.message} 
-				${message.senderId === currentUserId ? styles.me : styles.other}`}
+				${String(message.senderId) === currentUserId ? styles.me : styles.other}`}
 		>
 			<div className={styles.messageContent}>
 				<p className={styles.messageBody}>{message.content}</p>
