@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { MessengerContext } from '../../../context/MessengerContext';
 
 import DropdownMenu from '../DropdownMenu/DropdownMenu';
+import Search from '../Search/Search';
 import styles from './SidebarHeader.module.css';
 
 const SidebarHeader = () => {
@@ -30,12 +31,7 @@ const SidebarHeader = () => {
 				</a>
 			</div>
 			{isDropdownShow ? <DropdownMenu /> : null}
-			<div className={styles.search}>
-				<input
-					type='text'
-					placeholder='Поиск или новый чат'
-				/>
-			</div>
+			<Search />
 		</div>
 	);
 };

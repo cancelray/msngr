@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
 
+import contactsAPI from '../api/contactsAPI';
 import usersAPI from '../api/usersAPI';
 
 const useContacts = (
+	loginUserId,
+	chatWithUser,
 	setCurrentChatId,
 	setIsDropdownShow,
 	isContactListShow,
@@ -20,8 +23,21 @@ const useContacts = (
 		});
 	};
 
+	const addContact = () => {
+		const newContact = {
+			userId: loginUserId,
+			contactId: chatWithUser.id,
+		};
+
+		contactsAPI
+			.addContact(newContact)
+			.then(setUserContactListId((prev) => [...prev, newContact]))
+			.finally(getContactList(userContactListId));
+	};
+
 	const showContacts = (event) => {
 		event.preventDefault();
+
 		setIsDropdownShow(false);
 		setCurrentChatId(null);
 
@@ -39,8 +55,7 @@ const useContacts = (
 		setUserContactListId,
 		userContactList,
 		showContacts,
-		isContactListShow,
-		setIsContactListShow,
+		addContact,
 	};
 };
 

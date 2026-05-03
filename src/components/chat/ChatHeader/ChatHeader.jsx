@@ -1,9 +1,14 @@
 import { useContext } from 'react';
+
 import { MessengerContext } from '../../../context/MessengerContext';
+
+import Button from '../../UI/Button/Button';
+
 import styles from './ChatHeader.module.css';
 
 const ChatHeader = () => {
-	const { chatWithUser } = useContext(MessengerContext);
+	const { chatWithUser, userContactList, addContact, deleteChat } =
+		useContext(MessengerContext);
 
 	if (chatWithUser) {
 		return (
@@ -20,6 +25,16 @@ const ChatHeader = () => {
 					</div>
 				)}
 				<div>{chatWithUser.name + ' ' + chatWithUser.lastName}</div>
+				<div className={styles.contactInfo}>
+					{userContactList.find(
+						(contact) => String(contact?.id) === String(chatWithUser?.id),
+					) ? (
+						'(in contacts)'
+					) : (
+						<a onClick={addContact}>(add contact)</a>
+					)}
+				</div>
+				<Button onClick={deleteChat}>Delete chat</Button>
 			</div>
 		);
 	}

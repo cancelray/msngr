@@ -6,6 +6,10 @@ const headers = {
 };
 
 const chatsAPI = {
+	getAllChats: () => {
+		return fetch(`${chatsURL}`).then((response) => response.json());
+	},
+
 	getAllMessanges: () => {
 		return fetch(messagesURL).then((response) => response.json());
 	},
@@ -38,6 +42,12 @@ const chatsAPI = {
 
 	deleteChat: (chatId) => {
 		return fetch(`${chatsURL}/${chatId}`, {
+			method: 'DELETE',
+		}).then((response) => response.json());
+	},
+
+	deleteMessageById: (id) => {
+		return fetch(`${messagesURL}/${id}`, {
 			method: 'DELETE',
 		}).then((response) => response.json());
 	},

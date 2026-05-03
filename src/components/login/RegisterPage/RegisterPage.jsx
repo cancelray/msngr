@@ -2,6 +2,8 @@ import { useContext } from 'react';
 
 import { MessengerContext } from '../../../context/MessengerContext';
 
+import Button from '../../UI/Button/Button';
+
 import styles from './RegisterPage.module.css';
 
 const RegisterPage = () => {
@@ -18,7 +20,20 @@ const RegisterPage = () => {
 		setNewSecondName,
 		registerSubmit,
 		registerErrors,
+		setIsLoginPageShow,
 	} = useContext(MessengerContext);
+
+	const backClickHandler = (event) => {
+		event.preventDefault();
+
+		setNewLogin('');
+		setNewPassword('');
+		setNewPasswordRepeat('');
+		setNewName('');
+		setNewSecondName('');
+
+		setIsLoginPageShow(true);
+	};
 
 	return (
 		<form
@@ -44,7 +59,7 @@ const RegisterPage = () => {
 				<input
 					id='new-password'
 					type='password'
-					autoComplete='new-password'
+					autoComplete='new- password'
 					value={newPassword}
 					onChange={(event) => setNewPassword(event.target.value)}
 				/>
@@ -89,16 +104,19 @@ const RegisterPage = () => {
 				/>
 				<span className={styles.optional}>optional</span>
 			</div>
-			<button
-				disabled={
-					newLogin.trim().length === 0 ||
-					newPassword.trim().length === 0 ||
-					newPasswordRepeat.trim().length === 0 ||
-					newName.trim().length === 0
-				}
-			>
-				Sign up
-			</button>
+			<div className={styles.buttonWrapper}>
+				<Button
+					disabled={
+						newLogin.trim().length === 0 ||
+						newPassword.trim().length === 0 ||
+						newPasswordRepeat.trim().length === 0 ||
+						newName.trim().length === 0
+					}
+				>
+					Sign up
+				</Button>
+				<a onClick={backClickHandler}>Back</a>
+			</div>
 		</form>
 	);
 };

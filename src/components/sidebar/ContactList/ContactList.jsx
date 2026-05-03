@@ -17,12 +17,12 @@ const ContactList = () => {
 
 	const contactListClickHandler = (event) => {
 		const chatId = event.currentTarget.dataset.chatId;
-		
+
 		if (chatId) {
 			setIsContactListShow(false);
 			setCurrentChatId(chatId);
 		} else {
-			const userId = event.currentTarget.dataset.userId
+			const userId = event.currentTarget.dataset.userId;
 			createNewChat(userId);
 		}
 	};

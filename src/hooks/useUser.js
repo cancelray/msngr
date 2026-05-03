@@ -1,9 +1,17 @@
 import { useEffect, useState } from 'react';
 
 import chatsAPI from '../api/chatsAPI';
+import contactsAPI from '../api/contactsAPI';
 import usersAPI from '../api/usersAPI';
 
-const useUser = (messages, loginUserId, setUserContactListId) => {
+const useUser = (
+	messages,
+	loginUserId,
+	setUserContactListId,
+	newChatId,
+	setNewChatId,
+	currentChatId,
+) => {
 	const [users, setUsers] = useState([]);
 	const [user, setUser] = useState({});
 	const [userChats, setUserChats] = useState([]);
@@ -11,7 +19,7 @@ const useUser = (messages, loginUserId, setUserContactListId) => {
 	const [isUserLoading, setIsUserLoading] = useState(true);
 
 	const getChatList = (userId) => {
-		usersAPI.getAllChats().then((chats) => {
+		chatsAPI.getAllChats().then((chats) => {
 			const filteredChats = chats.filter((chat) =>
 				chat.membersId.includes(userId),
 			);
@@ -38,6 +46,11 @@ const useUser = (messages, loginUserId, setUserContactListId) => {
 			);
 
 			user.chatId = userChats[i].id;
+
+			if (user.chatId === newChatId) {
+				return;
+			}
+
 			usersFromChatList.push(user);
 		});
 
@@ -54,6 +67,7 @@ const useUser = (messages, loginUserId, setUserContactListId) => {
 		});
 
 		const chatsResult = await Promise.all(chatsData);
+		chatsResult.sort((a, b) => b.lastMessageTime - a.lastMessageTime);
 
 		return chatsResult;
 	};
@@ -62,13 +76,14 @@ const useUser = (messages, loginUserId, setUserContactListId) => {
 		if (loginUserId) {
 			usersAPI.getAllUsers().then(setUsers);
 			usersAPI.getUser(loginUserId).then(setUser);
-			usersAPI
-				.getContactList(loginUserId)
+			contactsAPI
+				.getContactListByUser(loginUserId)
 				.then(setUserContactListId)
 				.finally(() => setIsUserLoading(false));
 
 			getChatList(loginUserId);
 		}
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [loginUserId]);
 
@@ -78,6 +93,11 @@ const useUser = (messages, loginUserId, setUserContactListId) => {
 
 	useEffect(() => {
 		const lastMessage = messages.at(-1);
+
+		if (newChatId && currentChatId === newChatId) {
+			getChatList(loginUserId);
+			getUsersFromChatList(users, userChats).then(setChatList);
+		}
 
 		const newChatList = structuredClone(chatList);
 
@@ -89,11 +109,22 @@ const useUser = (messages, loginUserId, setUserContactListId) => {
 			}
 		});
 
+		newChatList.sort((a, b) => b.lastMessageTime - a.lastMessageTime);
 		setChatList(newChatList);
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [messages]);
 
+	useEffect(() => {
+		if (!currentChatId) {
+			getChatList(loginUserId)?.then(() => console.log(chatList));
+		}
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [currentChatId]);
+
 	return {
+		users,
 		user,
 		userChats,
 		chatList,

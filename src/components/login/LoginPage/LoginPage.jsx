@@ -2,6 +2,8 @@ import { useContext } from 'react';
 
 import { MessengerContext } from '../../../context/MessengerContext';
 
+import Button from '../../UI/Button/Button';
+
 import styles from './LoginPage.module.css';
 
 const LoginPage = () => {
@@ -46,13 +48,13 @@ const LoginPage = () => {
 				) : null}
 			</div>
 			<div className={styles.buttonWrapper}>
-				<button
+				<Button
 					disabled={
 						loginInput.trim().length === 0 || passwordInput.trim().length === 0
 					}
 				>
 					Log in
-				</button>
+				</Button>
 				<a onClick={toRegisterPage}>Sign up</a>
 			</div>
 		</form>

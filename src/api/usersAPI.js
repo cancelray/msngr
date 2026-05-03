@@ -1,6 +1,4 @@
 const usersURL = 'http://localhost:3001/users';
-const contactsURL = 'http://localhost:3001/contacts';
-const chatsURL = 'http://localhost:3001/chats';
 
 const headers = {
 	'Content-Type': 'application/json',
@@ -27,16 +25,6 @@ const usersAPI = {
 			headers,
 			body: JSON.stringify(newUser),
 		}).then((response) => response.json());
-	},
-
-	getContactList: (userId) => {
-		return fetch(`${contactsURL}?userId=${userId}`).then((response) =>
-			response.json(),
-		);
-	},
-
-	getAllChats: () => {
-		return fetch(`${chatsURL}`).then((response) => response.json());
 	},
 };
 

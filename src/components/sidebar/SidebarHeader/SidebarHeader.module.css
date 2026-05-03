@@ -1,6 +1,6 @@
 .sidebarHeader {
 	position: relative;
-	padding: 14px;
+	padding: 10px;
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
@@ -41,18 +41,4 @@
 	border-radius: 50px;
 	background: #284253;
 	margin-left: 10px;
-}
-
-.search {
-	padding: 10px;
-	background: #111b21;
-}
-
-.search input {
-	width: 100%;
-	padding: 8px 12px;
-	border-radius: 8px;
-	border: none;
-	background: #202c33;
-	color: #e9edef;
 }

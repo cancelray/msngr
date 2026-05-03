@@ -12,6 +12,7 @@ import useUser from './hooks/useUser';
 import MainPageWrapper from './components/MainPageWrapper/MainPageWrapper';
 import LoginPageWrapper from './components/login/LoginPageWrapper/LoginPageWrapper';
 
+import useSearch from './hooks/useSearch';
 import './styles';
 
 function App() {
@@ -60,6 +61,9 @@ function App() {
 		endOfMessagesRef,
 		createNewChat,
 		showChats,
+		newChatId,
+		setNewChatId,
+		deleteChat,
 	} = useChat(
 		loginUserId,
 		isContactListShow,
@@ -72,18 +76,27 @@ function App() {
 		setUserContactListId,
 		userContactList,
 		showContacts,
+		addContact,
 	} = useContacts(
+		loginUserId,
+		chatWithUser,
 		setCurrentChatId,
 		setIsDropdownShow,
 		isContactListShow,
 		setIsContactListShow,
 	);
 
-	const { user, userChats, chatList, isUserLoading } = useUser(
+	const { users, user, userChats, chatList, isUserLoading } = useUser(
 		messages,
 		loginUserId,
 		setUserContactListId,
+		newChatId,
+		setNewChatId,
+		currentChatId,
 	);
+
+	const { searchInput, setSearchInput, isSearch, setIsSearch, searchResults } =
+		useSearch(chatList, userContactList, users);
 
 	const { userNameClick, dropdownRef, logout } = useDropdown(
 		isDropdownShow,
@@ -101,6 +114,7 @@ function App() {
 				setIsContactListShow,
 				isDropdownShow,
 
+				//useLogin
 				loginUserId,
 				setLoginUserId,
 				loginInput,
@@ -113,6 +127,7 @@ function App() {
 				toRegisterPage,
 				setIsLoginPageShow,
 
+				//useRegister
 				newLogin,
 				setNewLogin,
 				newPassword,
@@ -126,6 +141,7 @@ function App() {
 				registerSubmit,
 				registerErrors,
 
+				//useChats
 				setCurrentChatId,
 				chatWithUser,
 				currentChatId,
@@ -137,17 +153,29 @@ function App() {
 				endOfMessagesRef,
 				createNewChat,
 				showChats,
+				deleteChat,
 
+				//useContacts
 				userContactListId,
 				setUserContactListId,
 				userContactList,
 				showContacts,
+				addContact,
 
+				//useUser
 				user,
 				userChats,
 				chatList,
 				isUserLoading,
 
+				//useSearch
+				searchInput,
+				setSearchInput,
+				isSearch,
+				setIsSearch,
+				searchResults,
+
+				//useDropdown
 				userNameClick,
 				dropdownRef,
 				logout,

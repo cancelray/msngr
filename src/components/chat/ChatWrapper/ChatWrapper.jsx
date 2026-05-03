@@ -8,7 +8,7 @@ import styles from './ChatWrapper.module.css';
 const ChatWrapper = () => {
 	const { currentChat, chatWrapperRef, endOfMessagesRef } =
 		useContext(MessengerContext);
-	
+
 	return (
 		<div
 			className={styles.chatWrapper}
@@ -17,7 +17,7 @@ const ChatWrapper = () => {
 			{currentChat.map((message) => (
 				<Message
 					message={message}
-					key={message.id}
+					key={message.id ? message.id : crypto.randomUUID()}
 				/>
 			))}
 			<div ref={endOfMessagesRef} />

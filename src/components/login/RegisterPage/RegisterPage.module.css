@@ -22,22 +22,33 @@
 	left: 60%;
 }
 
+.buttonWrapper {
+	max-width: 250px;
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.registerForm button {
+	margin: 10px auto;
+}
+
+.registerForm a {
+	font-size: 18px;
+	color: rgb(54, 144, 185);
+	text-decoration: underline solid rgb(54, 144, 185);
+}
+.registerForm a:hover {
+	color: rgb(92, 52, 236);
+	text-decoration: underline solid rgb(92, 52, 236);
+	cursor: pointer;
+}
+
 .error {
 	position: absolute;
 	font-size: 14px;
 	color: rgb(219, 14, 14);
 	top: 100%;
 	left: 40%;
-}
-
-.registerForm button {
-	width: 100px;
-	margin: 10px auto;
-}
-.registerForm button:disabled {
-	background-color: #555555;
-}
-.registerForm button:disabled:hover {
-	cursor: default;
-	background-color: #555555;
 }

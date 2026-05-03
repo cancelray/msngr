@@ -33,15 +33,7 @@
 }
 
 .loginForm button {
-	width: 100px;
 	margin: 0 auto;
-}
-.loginForm button:disabled {
-	background-color: #555555;
-}
-.loginForm button:disabled:hover {
-	cursor: default;
-	background-color: #555555;
 }
 
 .loginForm a {
