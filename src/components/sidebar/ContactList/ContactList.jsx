@@ -13,6 +13,9 @@ const ContactList = () => {
 		setCurrentChatId,
 		setIsContactListShow,
 		createNewChat,
+		setChatWithUser,
+		setGroupChat,
+		setisCurrentChatGroup,
 	} = useContext(MessengerContext);
 
 	const contactListClickHandler = (event) => {
@@ -21,20 +24,29 @@ const ContactList = () => {
 		if (chatId) {
 			setIsContactListShow(false);
 			setCurrentChatId(chatId);
+			setisCurrentChatGroup(false);
 		} else {
 			const userId = event.currentTarget.dataset.userId;
 			createNewChat(userId);
 		}
+
+		setChatWithUser(null);
+		setGroupChat(null);
 	};
 
 	return (
 		<div className={styles.contacts}>
+			<h3>Contacts</h3>
 			{userContactList?.map((contact) => (
 				<ContactListElement
 					contact={contact}
 					key={contact.id}
 					dataChatId={
-						userChats?.find((chat) => chat.membersId.includes(contact.id))?.id
+						userChats?.find(
+							(chat) =>
+								chat.membersId.length === 2 &&
+								chat.membersId.includes(contact.id),
+						)?.id
 					}
 					contactListClickHandler={contactListClickHandler}
 				/>

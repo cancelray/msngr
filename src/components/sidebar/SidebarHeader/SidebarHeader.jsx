@@ -1,12 +1,20 @@
 import { useContext } from 'react';
 import { MessengerContext } from '../../../context/MessengerContext';
 
-import DropdownMenu from '../DropdownMenu/DropdownMenu';
+import DropdownMenu from '../../UI/DropdownMenu/DropdownMenu';
 import Search from '../Search/Search';
 import styles from './SidebarHeader.module.css';
 
 const SidebarHeader = () => {
-	const { user, isDropdownShow, userNameClick } = useContext(MessengerContext);
+	const {
+		user,
+		isSidebarDropdownShow,
+		userNameClick,
+		sidebarDropdownRef,
+		logout,
+		showContacts,
+		showChats,
+	} = useContext(MessengerContext);
 
 	return (
 		<div className={styles.sidebarHeader}>
@@ -30,7 +38,14 @@ const SidebarHeader = () => {
 					)}
 				</a>
 			</div>
-			{isDropdownShow ? <DropdownMenu /> : null}
+
+			{isSidebarDropdownShow ? (
+				<DropdownMenu ref={sidebarDropdownRef}>
+					<a onClick={showChats}>Chats</a>
+					<a onClick={showContacts}>Contacts</a>
+					<a onClick={logout}>Log out</a>
+				</DropdownMenu>
+			) : null}
 			<Search />
 		</div>
 	);

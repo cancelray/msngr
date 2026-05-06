@@ -1,10 +1,20 @@
 .chatHeader {
+	position: relative;
 	display: flex;
 	align-items: center;
 	gap: 12px;
 	padding: 10px 16px;
 	background: #394850;
 	color: rgb(195, 196, 197);
+}
+
+.chatHeader a {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+.chatHeader a:hover {
+	cursor: pointer;
 }
 
 .avatar {
@@ -46,4 +56,24 @@
 }
 .chatHeader button:hover {
 	background: #244556;
+}
+
+.chatHeader .dropdowChathead {
+	left: 0%;
+	top: 100%;
+	max-width: 150px;
+	height: 90px;
+	align-items: flex-start;
+}
+
+.chatHeader .dropdowChathead div {
+	color: rgb(213, 215, 216);
+}
+
+.chatHeader .dropdowChathead .disable {
+	color: grey;
+}
+.chatHeader .dropdowChathead .disable:hover {
+	cursor: default;
+	color: grey;
 }

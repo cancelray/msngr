@@ -1,16 +1,22 @@
 import { useEffect, useRef } from 'react';
 
 const useDropdown = (
-	isDropdownShow,
-	setIsDropdownShow,
+	setIsSidebarDropdownShow,
+	setIsChatheadDropdownShow,
 	setLoginUserId,
 	setCurrentChatId,
 ) => {
-	const dropdownRef = useRef(null);
+	const sidebarDropdownRef = useRef(null);
+	const chatheadDropdownRef = useRef(null);
 
 	const userNameClick = (event) => {
 		event.preventDefault();
-		setIsDropdownShow(true);
+		setIsSidebarDropdownShow(true);
+	};
+
+	const chatheadNameClick = (event) => {
+		event.preventDefault();
+		setIsChatheadDropdownShow(true);
 	};
 
 	const logout = (event) => {
@@ -19,7 +25,7 @@ const useDropdown = (
 		const isLogout = confirm('Are you sure you want to log out?');
 
 		if (isLogout) {
-			setIsDropdownShow(false);
+			setIsSidebarDropdownShow(false);
 			setLoginUserId(null);
 			setCurrentChatId(null);
 
@@ -31,8 +37,18 @@ const useDropdown = (
 
 	useEffect(() => {
 		const handleClickOutside = (event) => {
-			if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-				setIsDropdownShow(false);
+			if (
+				sidebarDropdownRef.current &&
+				!sidebarDropdownRef.current.contains(event.target)
+			) {
+				setIsSidebarDropdownShow(false);
+			}
+
+			if (
+				chatheadDropdownRef.current &&
+				!chatheadDropdownRef.current.contains(event.target)
+			) {
+				setIsChatheadDropdownShow(false);
 			}
 		};
 
@@ -46,10 +62,10 @@ const useDropdown = (
 	}, []);
 
 	return {
-		isDropdownShow,
-		setIsDropdownShow,
 		userNameClick,
-		dropdownRef,
+		chatheadNameClick,
+		sidebarDropdownRef,
+		chatheadDropdownRef,
 		logout,
 	};
 };

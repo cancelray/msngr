@@ -7,15 +7,17 @@ const useChat = (
 	loginUserId,
 	isContactListShow,
 	setIsContactListShow,
-	setIsDropdownShow,
+	setIsSidebarDropdownShow,
 ) => {
 	const [messages, setMessages] = useState([]);
 	const [currentChatId, setCurrentChatId] = useState(null);
 	const [chatWithUser, setChatWithUser] = useState(null);
+	const [groupChat, setGroupChat] = useState(null);
 	const [currentChat, setCurrentChat] = useState([]);
 	const [inputChat, setInputChat] = useState('');
 	const [isNewMessage, setIsNewMessage] = useState(false);
 	const [newChatId, setNewChatId] = useState(null);
+	const [isCurrentChatGroup, setisCurrentChatGroup] = useState(false);
 
 	const chatWrapperRef = useRef(null);
 	const endOfMessagesRef = useRef(null);
@@ -78,7 +80,7 @@ const useChat = (
 
 	const showChats = (event) => {
 		event.preventDefault();
-		setIsDropdownShow(false);
+		setIsSidebarDropdownShow(false);
 
 		if (isContactListShow) {
 			setIsContactListShow(false);
@@ -107,7 +109,21 @@ const useChat = (
 					(id) => id !== loginUserId,
 				);
 
-				usersAPI.getUser(chatWithUserId[0]).then(setChatWithUser);
+				if (chatWithUserId.length < 2) {
+					usersAPI.getUser(chatWithUserId[0]).then((user) => {
+						setChatWithUser(user);
+					});
+				} else {
+					const groupChat = [];
+
+					chatWithUserId.forEach((userId) => {
+						usersAPI.getUser(userId).then((user) => {
+							groupChat.push(user);
+						});
+					});
+
+					setGroupChat(groupChat);
+				}
 			});
 
 			chatsAPI.getMessagesByChatId(currentChatId).then(setCurrentChat);
@@ -143,6 +159,9 @@ const useChat = (
 	return {
 		setCurrentChatId,
 		chatWithUser,
+		setChatWithUser,
+		groupChat,
+		setGroupChat,
 		currentChatId,
 		currentChat,
 		inputChat,
@@ -156,6 +175,8 @@ const useChat = (
 		newChatId,
 		setNewChatId,
 		deleteChat,
+		isCurrentChatGroup,
+		setisCurrentChatGroup,
 	};
 };
 

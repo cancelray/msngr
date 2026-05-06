@@ -7,7 +7,7 @@ const useContacts = (
 	loginUserId,
 	chatWithUser,
 	setCurrentChatId,
-	setIsDropdownShow,
+	setIsSidebarDropdownShow,
 	isContactListShow,
 	setIsContactListShow,
 ) => {
@@ -19,14 +19,17 @@ const useContacts = (
 			contactListId?.map((contact) => usersAPI.getUser(contact.contactId)),
 		).then((contactList) => {
 			contactList.sort((a, b) => a.name.localeCompare(b.name));
+
 			setUserContactList(contactList);
 		});
 	};
 
 	const addContact = () => {
 		const newContact = {
-			userId: loginUserId,
-			contactId: chatWithUser.id,
+			userId: !isNaN(Number(loginUserId)) ? Number(loginUserId) : loginUserId,
+			contactId: !isNaN(Number(chatWithUser.id))
+				? Number(chatWithUser.id)
+				: chatWithUser.id,
 		};
 
 		contactsAPI
@@ -35,10 +38,22 @@ const useContacts = (
 			.finally(getContactList(userContactListId));
 	};
 
+	const deleteContact = async (event) => {
+		event.preventDefault();
+
+		try {
+			const resp = await contactsAPI.getContact(loginUserId, chatWithUser.id);
+			await contactsAPI.deleteContact(resp[0].id);
+		} finally {
+			const resp = await contactsAPI.getContactListByUser(loginUserId);
+			setUserContactListId(resp);
+		}
+	};
+
 	const showContacts = (event) => {
 		event.preventDefault();
 
-		setIsDropdownShow(false);
+		setIsSidebarDropdownShow(false);
 		setCurrentChatId(null);
 
 		if (!isContactListShow) {
@@ -56,6 +71,7 @@ const useContacts = (
 		userContactList,
 		showContacts,
 		addContact,
+		deleteContact,
 	};
 };
 

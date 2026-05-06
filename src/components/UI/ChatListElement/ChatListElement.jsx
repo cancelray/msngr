@@ -19,6 +19,7 @@ const ChatListElement = (props) => {
 			className={`${styles.chatListElement} ${currentChatId === chat.chatId ? styles.currentChat : ''}`}
 			onClick={clickHandler}
 			data-chat-id={chat.chatId}
+			data-is-group={chat.isGroup}
 		>
 			{chat.avatar?.length > 0 ? (
 				<img
@@ -32,12 +33,22 @@ const ChatListElement = (props) => {
 
 			<div className={styles.contactInfo}>
 				<div className={styles.contactHead}>
-					<p className={styles.name}>{chat.name + ' ' + chat.lastName}</p>
+					{!chat.isGroup ? (
+						<p className={styles.name}>{chat.name + ' ' + chat?.lastName}</p>
+					) : (
+						<p className={styles.name}>{chat.name}</p>
+					)}
 					<p className={styles.date}>{date}</p>
 				</div>
-				<div
-					className={styles.lastMessage}
-				>{`${chat.lastMessageAuthor === loginUserId ? 'You' : chat.name}: ${chat.lastMessage}`}</div>
+				<div className={styles.lastMessage}>
+					{chat.isGroup
+						? `${
+								chat.lastMessageAuthor === loginUserId
+									? 'You'
+									: chat.lastMessageAuthorName
+							}: ${chat.lastMessage}`
+						: `${chat.lastMessageAuthor === loginUserId ? 'You' : chat.name}: ${chat.lastMessage}`}
+				</div>
 			</div>
 		</div>
 	);

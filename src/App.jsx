@@ -17,7 +17,8 @@ import './styles';
 
 function App() {
 	const [isContactListShow, setIsContactListShow] = useState(false);
-	const [isDropdownShow, setIsDropdownShow] = useState(false);
+	const [isSidebarDropdownShow, setIsSidebarDropdownShow] = useState(false);
+	const [isChatheadDropdownShow, setIsChatheadDropdownShow] = useState(false);
 
 	const {
 		loginUserId,
@@ -51,6 +52,9 @@ function App() {
 	const {
 		setCurrentChatId,
 		chatWithUser,
+		setChatWithUser,
+		groupChat,
+		setGroupChat,
 		currentChatId,
 		currentChat,
 		inputChat,
@@ -64,11 +68,14 @@ function App() {
 		newChatId,
 		setNewChatId,
 		deleteChat,
+		isCurrentChatGroup,
+		setisCurrentChatGroup,
 	} = useChat(
 		loginUserId,
 		isContactListShow,
 		setIsContactListShow,
-		setIsDropdownShow,
+		setIsSidebarDropdownShow,
+		setIsChatheadDropdownShow,
 	);
 
 	const {
@@ -77,11 +84,12 @@ function App() {
 		userContactList,
 		showContacts,
 		addContact,
+		deleteContact,
 	} = useContacts(
 		loginUserId,
 		chatWithUser,
 		setCurrentChatId,
-		setIsDropdownShow,
+		setIsSidebarDropdownShow,
 		isContactListShow,
 		setIsContactListShow,
 	);
@@ -98,13 +106,17 @@ function App() {
 	const { searchInput, setSearchInput, isSearch, setIsSearch, searchResults } =
 		useSearch(chatList, userContactList, users);
 
-	const { userNameClick, dropdownRef, logout } = useDropdown(
-		isDropdownShow,
-		setIsDropdownShow,
+	const {
+		userNameClick,
+		chatheadNameClick,
+		sidebarDropdownRef,
+		chatheadDropdownRef,
+		logout,
+	} = useDropdown(
+		setIsSidebarDropdownShow,
+		setIsChatheadDropdownShow,
 		setLoginUserId,
 		setCurrentChatId,
-		isContactListShow,
-		setIsContactListShow,
 	);
 
 	return (
@@ -112,7 +124,8 @@ function App() {
 			value={{
 				isContactListShow,
 				setIsContactListShow,
-				isDropdownShow,
+				isSidebarDropdownShow,
+				isChatheadDropdownShow,
 
 				//useLogin
 				loginUserId,
@@ -144,6 +157,9 @@ function App() {
 				//useChats
 				setCurrentChatId,
 				chatWithUser,
+				setChatWithUser,
+				groupChat,
+				setGroupChat,
 				currentChatId,
 				currentChat,
 				inputChat,
@@ -154,6 +170,8 @@ function App() {
 				createNewChat,
 				showChats,
 				deleteChat,
+				isCurrentChatGroup,
+				setisCurrentChatGroup,
 
 				//useContacts
 				userContactListId,
@@ -161,9 +179,11 @@ function App() {
 				userContactList,
 				showContacts,
 				addContact,
+				deleteContact,
 
 				//useUser
 				user,
+				users,
 				userChats,
 				chatList,
 				isUserLoading,
@@ -177,7 +197,9 @@ function App() {
 
 				//useDropdown
 				userNameClick,
-				dropdownRef,
+				chatheadNameClick,
+				sidebarDropdownRef,
+				chatheadDropdownRef,
 				logout,
 			}}
 		>

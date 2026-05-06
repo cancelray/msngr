@@ -23,9 +23,14 @@
 	max-width: 60%;
 	text-align: left;
 }
-
 .me .messageContent {
 	background-color: rgb(53, 156, 156);
+}
+
+.senderName {
+	font-size: 15px;
+	color: #577c92;
+	text-align: left;
 }
 
 .messageBody {
@@ -34,6 +39,6 @@
 
 .createdAt {
 	font-size: 12px;
-	color: #365161;
+	color: #577c92;
 	text-align: right;
 }

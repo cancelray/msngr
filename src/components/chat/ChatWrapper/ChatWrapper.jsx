@@ -6,8 +6,9 @@ import Message from '../../UI/Message/Message';
 import styles from './ChatWrapper.module.css';
 
 const ChatWrapper = () => {
-	const { currentChat, chatWrapperRef, endOfMessagesRef } =
+	const { currentChat, chatWrapperRef, endOfMessagesRef, isCurrentChatGroup } =
 		useContext(MessengerContext);
+
 
 	return (
 		<div
@@ -17,6 +18,7 @@ const ChatWrapper = () => {
 			{currentChat.map((message) => (
 				<Message
 					message={message}
+					isCurrentChatGroup={isCurrentChatGroup}
 					key={message.id ? message.id : crypto.randomUUID()}
 				/>
 			))}
