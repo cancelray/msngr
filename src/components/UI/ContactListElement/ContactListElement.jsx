@@ -1,7 +1,13 @@
 import styles from './ContactListElement.module.css';
 
 const ContactListElement = (props) => {
-	const { contact, contactListClickHandler, dataChatId } = props;
+	const {
+		contact,
+		contactListClickHandler,
+		dataChatId,
+		isCreateGroupChatShow,
+		isChecked,
+	} = props;
 
 	return (
 		<div
@@ -24,6 +30,13 @@ const ContactListElement = (props) => {
 			<div className={styles.contact}>
 				<p className={styles.name}>{contact.name + ' ' + contact.lastName}</p>
 			</div>
+			{isCreateGroupChatShow ? (
+				<input
+					type='checkbox'
+					checked={isChecked}
+					readOnly
+				/>
+			) : null}
 		</div>
 	);
 };

@@ -2,21 +2,25 @@ import { useEffect, useRef } from 'react';
 
 const useDropdown = (
 	setIsSidebarDropdownShow,
-	setIsChatheadDropdownShow,
+	setIsChatHeadDropdownShow,
 	setLoginUserId,
 	setCurrentChatId,
+	setIsContactListShow,
+	setIsCreateGroupChatShow,
+	setIsChecked,
+	setGroupChatName,
 ) => {
 	const sidebarDropdownRef = useRef(null);
-	const chatheadDropdownRef = useRef(null);
+	const chatHeadDropdownRef = useRef(null);
 
 	const userNameClick = (event) => {
 		event.preventDefault();
 		setIsSidebarDropdownShow(true);
 	};
 
-	const chatheadNameClick = (event) => {
+	const chatHeadNameClick = (event) => {
 		event.preventDefault();
-		setIsChatheadDropdownShow(true);
+		setIsChatHeadDropdownShow(true);
 	};
 
 	const logout = (event) => {
@@ -25,9 +29,16 @@ const useDropdown = (
 		const isLogout = confirm('Are you sure you want to log out?');
 
 		if (isLogout) {
-			setIsSidebarDropdownShow(false);
 			setLoginUserId(null);
 			setCurrentChatId(null);
+
+			setIsSidebarDropdownShow(false);
+			setIsChatHeadDropdownShow(false);
+
+			setIsContactListShow(false);
+			setIsCreateGroupChatShow(false);
+			setIsChecked({});
+			setGroupChatName('');
 
 			localStorage.removeItem('LoginUserId');
 		} else {
@@ -45,10 +56,10 @@ const useDropdown = (
 			}
 
 			if (
-				chatheadDropdownRef.current &&
-				!chatheadDropdownRef.current.contains(event.target)
+				chatHeadDropdownRef.current &&
+				!chatHeadDropdownRef.current.contains(event.target)
 			) {
-				setIsChatheadDropdownShow(false);
+				setIsChatHeadDropdownShow(false);
 			}
 		};
 
@@ -63,9 +74,9 @@ const useDropdown = (
 
 	return {
 		userNameClick,
-		chatheadNameClick,
+		chatHeadNameClick,
 		sidebarDropdownRef,
-		chatheadDropdownRef,
+		chatHeadDropdownRef,
 		logout,
 	};
 };

@@ -7,9 +7,11 @@ const useChat = (
 	loginUserId,
 	isContactListShow,
 	setIsContactListShow,
+	setIsCreateGroupChatShow,
 	setIsSidebarDropdownShow,
 ) => {
 	const [messages, setMessages] = useState([]);
+	const [chatList, setChatList] = useState([]);
 	const [currentChatId, setCurrentChatId] = useState(null);
 	const [chatWithUser, setChatWithUser] = useState(null);
 	const [groupChat, setGroupChat] = useState(null);
@@ -17,7 +19,10 @@ const useChat = (
 	const [inputChat, setInputChat] = useState('');
 	const [isNewMessage, setIsNewMessage] = useState(false);
 	const [newChatId, setNewChatId] = useState(null);
-	const [isCurrentChatGroup, setisCurrentChatGroup] = useState(false);
+	const [isNewChatGroup, setIsNewChatGroup] = useState(false);
+	const [isCurrentChatGroup, setIsCurrentChatGroup] = useState(false);
+	const [isChecked, setIsChecked] = useState({});
+	const [groupChatName, setGroupChatName] = useState('');
 
 	const chatWrapperRef = useRef(null);
 	const endOfMessagesRef = useRef(null);
@@ -48,6 +53,8 @@ const useChat = (
 	};
 
 	const createNewChat = (userId) => {
+		setIsNewChatGroup(false);
+
 		const newChat = {
 			membersId: [loginUserId, userId],
 			isGroup: false,
@@ -65,14 +72,61 @@ const useChat = (
 		});
 	};
 
+	const createGroupChat = () => {
+		setIsNewChatGroup(true);
+
+		const usersInGroupChat = Object.getOwnPropertyNames(isChecked);
+
+		if (usersInGroupChat.length < 2) {
+			return;
+		}
+
+		usersInGroupChat.push(loginUserId);
+
+		const newGroupChat = {
+			membersId: usersInGroupChat,
+			isGroup: true,
+			name: groupChatName.trim(),
+			chatImg: '',
+			groupChatAdminId: loginUserId,
+		};
+
+		chatsAPI.createNewChat(newGroupChat).then((newChatResp) => {
+			setCurrentChatId(newChatResp.id);
+			setNewChatId(newChatResp.id);
+
+			setIsCurrentChatGroup(true);
+
+			setIsCreateGroupChatShow(false);
+			setIsContactListShow(false);
+			setIsChecked({});
+			setGroupChatName('');
+		});
+	};
+
 	const deleteChat = () => {
+		if (isCurrentChatGroup) {
+			const currentChat = chatList.find((chat) => chat.id === currentChatId);
+
+			if (currentChat.groupChatAdminId !== loginUserId) {
+				alert('Only admin can delete group chat');
+				return;
+			}
+		}
+
 		const isDeleteChat = confirm(
 			'Are you sure you want to delete chat? (This will delete all messages from all chat members)',
 		);
 
 		if (isDeleteChat) {
-			chatsAPI.deleteChat(currentChatId);
-			currentChat.forEach((message) => chatsAPI.deleteMessageById(message.id));
+			chatsAPI
+				.deleteChat(currentChatId)
+				.then(() => {
+					currentChat.forEach((message) =>
+						chatsAPI.deleteMessageById(message.id),
+					);
+				})
+				.then(chatsAPI.getAllMessages().then(setMessages));
 
 			setCurrentChatId(null);
 		}
@@ -80,7 +134,10 @@ const useChat = (
 
 	const showChats = (event) => {
 		event.preventDefault();
+
 		setIsSidebarDropdownShow(false);
+		setIsChecked({});
+		setGroupChatName('');
 
 		if (isContactListShow) {
 			setIsContactListShow(false);
@@ -88,7 +145,7 @@ const useChat = (
 	};
 
 	useEffect(() => {
-		chatsAPI.getAllMessanges().then(setMessages);
+		chatsAPI.getAllMessages().then(setMessages);
 	}, []);
 
 	useEffect(() => {
@@ -99,7 +156,11 @@ const useChat = (
 	}, [isNewMessage]);
 
 	useEffect(() => {
-		if (newChatId && newChatId !== currentChatId) {
+		if (
+			newChatId &&
+			!isNewChatGroup &&
+			!messages.find((message) => message.id === newChatId)
+		) {
 			chatsAPI.deleteChat(newChatId).then(() => setNewChatId(null));
 		}
 
@@ -110,10 +171,14 @@ const useChat = (
 				);
 
 				if (chatWithUserId.length < 2) {
+					setGroupChat(null);
+
 					usersAPI.getUser(chatWithUserId[0]).then((user) => {
 						setChatWithUser(user);
 					});
 				} else {
+					setChatWithUser(null);
+
 					const groupChat = [];
 
 					chatWithUserId.forEach((userId) => {
@@ -141,6 +206,16 @@ const useChat = (
 	}, [currentChat]);
 
 	useEffect(() => {
+		const handleBeforeUnload = () => {
+			if (
+				newChatId &&
+				!isNewChatGroup &&
+				!messages.find((message) => message.id === newChatId)
+			) {
+				chatsAPI.deleteChat(newChatId);
+			}
+		};
+
 		const handleClickEsc = (event) => {
 			if (event.key === 'Escape') {
 				setCurrentChatId(null);
@@ -149,14 +224,20 @@ const useChat = (
 			}
 		};
 
+		window.addEventListener('beforeunload', handleBeforeUnload);
 		document.addEventListener('keydown', handleClickEsc);
 
 		return () => {
 			document.removeEventListener('keydown', handleClickEsc);
+			window.removeEventListener('beforeunload', handleBeforeUnload);
 		};
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return {
+		chatList,
+		setChatList,
 		setCurrentChatId,
 		chatWithUser,
 		setChatWithUser,
@@ -176,7 +257,12 @@ const useChat = (
 		setNewChatId,
 		deleteChat,
 		isCurrentChatGroup,
-		setisCurrentChatGroup,
+		setIsCurrentChatGroup,
+		createGroupChat,
+		isChecked,
+		setIsChecked,
+		groupChatName,
+		setGroupChatName,
 	};
 };
 

@@ -9,3 +9,13 @@
 	width: 100%;
 	border-bottom: 1px solid rgb(106, 111, 114);
 }
+
+.contacts button {
+	width: 200px;
+	margin-bottom: 10px;
+}
+
+.contacts input {
+	margin: 5px 0;
+	border-radius: 10px;
+}

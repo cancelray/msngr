@@ -58,22 +58,29 @@
 	background: #244556;
 }
 
-.chatHeader .dropdowChathead {
+.chatHeader .dropdownChatHead {
 	left: 0%;
 	top: 100%;
-	max-width: 150px;
-	height: 90px;
 	align-items: flex-start;
 }
 
-.chatHeader .dropdowChathead div {
+.chatHeader .dropdownChatHead p {
 	color: rgb(213, 215, 216);
+	margin-bottom: 10px;
 }
 
-.chatHeader .dropdowChathead .disable {
+.chatHeader .dropdownChatHead .disable {
 	color: grey;
 }
-.chatHeader .dropdowChathead .disable:hover {
+.chatHeader .dropdownChatHead .disable:hover {
 	cursor: default;
 	color: grey;
+}
+
+.chatHeader .dropdownChatHead a {
+	font-size: 14px;
+}
+.chatHeader .dropdownChatHead a:hover {
+	cursor: pointer;
+	color: rgb(106, 223, 255);
 }

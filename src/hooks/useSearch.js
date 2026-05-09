@@ -11,23 +11,23 @@ const useSearch = (chatList, userContactList, users) => {
 		const searchByChats = chatList.filter(
 			(chat) =>
 				chat.name.toLowerCase().includes(searchInput.toLowerCase()) ||
-				chat.lastName.toLowerCase().includes(searchInput.toLowerCase()) ||
-				chat.login.toLowerCase().includes(searchInput.toLowerCase()),
+				chat.lastName?.toLowerCase().includes(searchInput.toLowerCase()) ||
+				chat.login?.toLowerCase().includes(searchInput.toLowerCase()),
 		);
 
-		const saerchByContacts = userContactList.filter(
+		const searchByContacts = userContactList.filter(
 			(contact) =>
 				contact.name.toLowerCase().includes(searchInput.toLowerCase()) ||
 				contact.lastName.toLowerCase().includes(searchInput.toLowerCase()) ||
 				contact.login.toLowerCase().includes(searchInput.toLowerCase()),
 		);
 
-		const searchResult = [...searchByChats, ...saerchByContacts];
-		const uniquSearchResults = [
+		const searchResult = [...searchByChats, ...searchByContacts];
+		const uniqueSearchResults = [
 			...new Map(searchResult.map((result) => [result.id, result])).values(),
 		];
 
-		if (uniquSearchResults.length === 0) {
+		if (uniqueSearchResults.length === 0) {
 			const searchInUsers = users.filter(
 				(user) =>
 					user.name.toLowerCase().includes(searchInput.toLowerCase()) ||
@@ -37,7 +37,7 @@ const useSearch = (chatList, userContactList, users) => {
 
 			setSearchResults(searchInUsers);
 		} else {
-			setSearchResults(uniquSearchResults);
+			setSearchResults(uniqueSearchResults);
 		}
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps

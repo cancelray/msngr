@@ -10,7 +10,13 @@ const chatsAPI = {
 		return fetch(`${chatsURL}`).then((response) => response.json());
 	},
 
-	getAllMessanges: () => {
+	getAllNotGroupChats: () => {
+		return fetch(`${chatsURL}?isGroup=false`).then((response) =>
+			response.json(),
+		);
+	},
+
+	getAllMessages: () => {
 		return fetch(messagesURL).then((response) => response.json());
 	},
 

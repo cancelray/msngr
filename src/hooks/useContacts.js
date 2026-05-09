@@ -10,6 +10,9 @@ const useContacts = (
 	setIsSidebarDropdownShow,
 	isContactListShow,
 	setIsContactListShow,
+	setIsCreateGroupChatShow,
+	setIsChecked,
+	setGroupChatName,
 ) => {
 	const [userContactListId, setUserContactListId] = useState([]);
 	const [userContactList, setUserContactList] = useState([]);
@@ -41,6 +44,10 @@ const useContacts = (
 	const deleteContact = async (event) => {
 		event.preventDefault();
 
+		if (event.currentTarget.dataset.isDisable) {
+			return;
+		}
+
 		try {
 			const resp = await contactsAPI.getContact(loginUserId, chatWithUser.id);
 			await contactsAPI.deleteContact(resp[0].id);
@@ -52,6 +59,10 @@ const useContacts = (
 
 	const showContacts = (event) => {
 		event.preventDefault();
+
+		setIsCreateGroupChatShow(false);
+		setIsChecked({});
+		setGroupChatName('');
 
 		setIsSidebarDropdownShow(false);
 		setCurrentChatId(null);

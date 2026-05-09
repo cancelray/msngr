@@ -9,12 +9,25 @@ const SidebarHeader = () => {
 	const {
 		user,
 		isSidebarDropdownShow,
+		setIsSidebarDropdownShow,
+		setCurrentChatId,
 		userNameClick,
 		sidebarDropdownRef,
 		logout,
 		showContacts,
 		showChats,
+		setIsContactListShow,
+		setIsCreateGroupChatShow,
 	} = useContext(MessengerContext);
+
+	const createGroupChatClick = () => {
+		setCurrentChatId(null);
+
+		setIsCreateGroupChatShow(true);
+		setIsContactListShow(true);
+
+		setIsSidebarDropdownShow(false);
+	};
 
 	return (
 		<div className={styles.sidebarHeader}>
@@ -43,6 +56,7 @@ const SidebarHeader = () => {
 				<DropdownMenu ref={sidebarDropdownRef}>
 					<a onClick={showChats}>Chats</a>
 					<a onClick={showContacts}>Contacts</a>
+					<a onClick={createGroupChatClick}>Create group chat</a>
 					<a onClick={logout}>Log out</a>
 				</DropdownMenu>
 			) : null}

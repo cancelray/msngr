@@ -6,19 +6,20 @@ import usersAPI from '../api/usersAPI';
 
 const useUser = (
 	messages,
+	chatList,
+	setChatList,
 	loginUserId,
 	setUserContactListId,
 	newChatId,
 	setNewChatId,
-	currentChatId,
+	isCurrentChatGroup,
 ) => {
 	const [users, setUsers] = useState([]);
 	const [user, setUser] = useState({});
 	const [userChats, setUserChats] = useState([]);
-	const [chatList, setChatList] = useState([]);
 	const [isUserLoading, setIsUserLoading] = useState(true);
 
-	const getChatList = (userId) => {
+	const getChatList = async (userId) => {
 		chatsAPI.getAllChats().then((chats) => {
 			const filteredChats = chats.filter((chat) =>
 				chat.membersId.includes(userId),
@@ -83,17 +84,17 @@ const useUser = (
 
 			messagesData.sort((a, b) => a.createdAt - b.createdAt);
 
-			userChat.lastMessage = messagesData.at(-1).content;
-			userChat.lastMessageAuthor = messagesData.at(-1).senderId;
-			userChat.lastMessageTime = messagesData.at(-1).createdAt;
+			userChat.lastMessage = messagesData.at(-1)?.content;
+			userChat.lastMessageAuthor = messagesData.at(-1)?.senderId;
+			userChat.lastMessageTime = messagesData.at(-1)?.createdAt;
 
 			if (userChat.isGroup) {
 				const lastMessageAuthor = users.find(
 					(user) => user.id === userChat.lastMessageAuthor,
 				);
 
-				userChat.lastMessageAuthorName = lastMessageAuthor.name;
-				userChat.lastMessageAuthorLastName = lastMessageAuthor.lastName;
+				userChat.lastMessageAuthorName = lastMessageAuthor?.name;
+				userChat.lastMessageAuthorLastName = lastMessageAuthor?.lastName;
 			}
 
 			return { ...userChat, extra: messagesData };
@@ -124,15 +125,29 @@ const useUser = (
 		getUsersFromChatList(users, userChats).then(setChatList);
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [users, userChats]);
+	}, [userChats]);
 
 	useEffect(() => {
-		const lastMessage = messages.at(-1);
-
-		if (newChatId && currentChatId === newChatId) {
-			getChatList(loginUserId);
-			getUsersFromChatList(users, userChats).then(setChatList);
+		if (newChatId && isCurrentChatGroup) {
+			getChatList(loginUserId).then(
+				getUsersFromChatList(users, userChats).then(setChatList),
+			);
 		}
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [newChatId, isCurrentChatGroup]);
+
+	useEffect(() => {
+		try {
+			getChatList(loginUserId);
+		} finally {
+			getUsersFromChatList(users, userChats).then(setChatList);
+			if (newChatId) {
+				setNewChatId(null);
+			}
+		}
+
+		const lastMessage = messages.at(-1);
 
 		const newChatList = structuredClone(chatList);
 

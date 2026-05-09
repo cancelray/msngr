@@ -8,25 +8,37 @@ import styles from './searchResultList.module.css';
 
 const SearchResultList = () => {
 	const {
+		chatList,
+		currentChatId,
 		searchResults,
 		setSearchInput,
 		setIsSearch,
 		userChats,
 		setCurrentChatId,
 		createNewChat,
+		setChatWithUser,
+		setGroupChat,
 	} = useContext(MessengerContext);
 
 	const searchResultListClickHandler = (event) => {
 		setSearchInput('');
+
 		const chatId = event.currentTarget.dataset.chatId;
 
-		if (chatId) {
+		if (currentChatId === chatId) {
+			return;
+		}
+
+		if (chatList.find((chat) => chat.id === chatList)) {
 			setIsSearch(false);
 			setCurrentChatId(chatId);
 		} else {
 			const userId = event.currentTarget.dataset.userId;
 			createNewChat(userId);
 		}
+
+		setChatWithUser(null);
+		setGroupChat(null);
 	};
 
 	return (
@@ -36,8 +48,11 @@ const SearchResultList = () => {
 					searchResult={searchResult}
 					key={searchResult.id}
 					dataChatId={
-						userChats?.find((chat) => chat.membersId.includes(searchResult.id))
-							?.id
+						userChats?.find(
+							(chat) =>
+								chat.membersId.length === 2 &&
+								chat.membersId.includes(searchResult.id),
+						)?.id
 					}
 					searchResultListClickHandler={searchResultListClickHandler}
 				/>

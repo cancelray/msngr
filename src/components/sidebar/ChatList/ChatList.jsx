@@ -10,7 +10,7 @@ const ChatList = () => {
 		currentChatId,
 		setCurrentChatId,
 		chatList,
-		setisCurrentChatGroup,
+		setIsCurrentChatGroup,
 		setChatWithUser,
 		setGroupChat,
 	} = useContext(MessengerContext);
@@ -28,8 +28,8 @@ const ChatList = () => {
 
 		setCurrentChatId(chatId);
 		isGroup === 'true'
-			? setisCurrentChatGroup(true)
-			: setisCurrentChatGroup(false);
+			? setIsCurrentChatGroup(true)
+			: setIsCurrentChatGroup(false);
 	};
 
 	return (

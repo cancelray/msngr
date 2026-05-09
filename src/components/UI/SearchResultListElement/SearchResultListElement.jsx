@@ -24,7 +24,7 @@ const SearchResultListElement = (props) => {
 			<div className={styles.contact}>
 				<p
 					className={styles.name}
-				>{`${searchResult.name} ${searchResult.lastName} (@${searchResult.login})`}</p>
+				>{`${searchResult.name} ${searchResult.lastName || ''} ${searchResult.login ? '(@' + searchResult.login + ')' : ''}`}</p>
 			</div>
 		</div>
 	);

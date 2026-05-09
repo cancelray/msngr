@@ -9,6 +9,8 @@ const ChatListElement = (props) => {
 	const { currentChatId, loginUserId } = useContext(MessengerContext);
 
 	const lastMessageTime = new Date(chat.lastMessageTime);
+	const dateIsNaN = isNaN(lastMessageTime);
+
 	const day = String(lastMessageTime.getDate()).padStart(2, '0');
 	const month = String(lastMessageTime.getMonth() + 1).padStart(2, '0');
 	const year = String(lastMessageTime.getFullYear()).slice(-2);
@@ -30,7 +32,6 @@ const ChatListElement = (props) => {
 			) : (
 				<div className={styles.avatarAlt}>{chat.name ? chat.name[0] : ''}</div>
 			)}
-
 			<div className={styles.contactInfo}>
 				<div className={styles.contactHead}>
 					{!chat.isGroup ? (
@@ -38,17 +39,19 @@ const ChatListElement = (props) => {
 					) : (
 						<p className={styles.name}>{chat.name}</p>
 					)}
-					<p className={styles.date}>{date}</p>
+					{dateIsNaN ? null : <p className={styles.date}>{date}</p>}
 				</div>
-				<div className={styles.lastMessage}>
-					{chat.isGroup
-						? `${
-								chat.lastMessageAuthor === loginUserId
-									? 'You'
-									: chat.lastMessageAuthorName
-							}: ${chat.lastMessage}`
-						: `${chat.lastMessageAuthor === loginUserId ? 'You' : chat.name}: ${chat.lastMessage}`}
-				</div>
+				{chat.lastMessageAuthor ? (
+					<div className={styles.lastMessage}>
+						{chat.isGroup
+							? `${
+									chat.lastMessageAuthor === loginUserId
+										? 'You'
+										: chat.lastMessageAuthorName
+								}: ${chat.lastMessage}`
+							: `${chat.lastMessageAuthor === loginUserId ? 'You' : chat.name}: ${chat.lastMessage}`}
+					</div>
+				) : null}
 			</div>
 		</div>
 	);

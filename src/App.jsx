@@ -17,8 +17,9 @@ import './styles';
 
 function App() {
 	const [isContactListShow, setIsContactListShow] = useState(false);
+	const [isCreateGroupChatShow, setIsCreateGroupChatShow] = useState(false);
 	const [isSidebarDropdownShow, setIsSidebarDropdownShow] = useState(false);
-	const [isChatheadDropdownShow, setIsChatheadDropdownShow] = useState(false);
+	const [isChatHeadDropdownShow, setIsChatHeadDropdownShow] = useState(false);
 
 	const {
 		loginUserId,
@@ -50,6 +51,8 @@ function App() {
 	} = useRegister(setIsLoginPageShow);
 
 	const {
+		chatList,
+		setChatList,
 		setCurrentChatId,
 		chatWithUser,
 		setChatWithUser,
@@ -69,13 +72,18 @@ function App() {
 		setNewChatId,
 		deleteChat,
 		isCurrentChatGroup,
-		setisCurrentChatGroup,
+		setIsCurrentChatGroup,
+		createGroupChat,
+		isChecked,
+		setIsChecked,
+		groupChatName,
+		setGroupChatName,
 	} = useChat(
 		loginUserId,
 		isContactListShow,
 		setIsContactListShow,
+		setIsCreateGroupChatShow,
 		setIsSidebarDropdownShow,
-		setIsChatheadDropdownShow,
 	);
 
 	const {
@@ -92,15 +100,21 @@ function App() {
 		setIsSidebarDropdownShow,
 		isContactListShow,
 		setIsContactListShow,
+		setIsCreateGroupChatShow,
+		setIsChecked,
+		setGroupChatName,
 	);
 
-	const { users, user, userChats, chatList, isUserLoading } = useUser(
+	const { users, user, userChats, isUserLoading } = useUser(
 		messages,
+		chatList,
+		setChatList,
 		loginUserId,
 		setUserContactListId,
 		newChatId,
 		setNewChatId,
 		currentChatId,
+		isCurrentChatGroup,
 	);
 
 	const { searchInput, setSearchInput, isSearch, setIsSearch, searchResults } =
@@ -108,15 +122,19 @@ function App() {
 
 	const {
 		userNameClick,
-		chatheadNameClick,
+		chatHeadNameClick,
 		sidebarDropdownRef,
-		chatheadDropdownRef,
+		chatHeadDropdownRef,
 		logout,
 	} = useDropdown(
 		setIsSidebarDropdownShow,
-		setIsChatheadDropdownShow,
+		setIsChatHeadDropdownShow,
 		setLoginUserId,
 		setCurrentChatId,
+		setIsContactListShow,
+		setIsCreateGroupChatShow,
+		setIsChecked,
+		setGroupChatName,
 	);
 
 	return (
@@ -125,7 +143,11 @@ function App() {
 				isContactListShow,
 				setIsContactListShow,
 				isSidebarDropdownShow,
-				isChatheadDropdownShow,
+				setIsSidebarDropdownShow,
+				isChatHeadDropdownShow,
+				setIsChatHeadDropdownShow,
+				isCreateGroupChatShow,
+				setIsCreateGroupChatShow,
 
 				//useLogin
 				loginUserId,
@@ -155,6 +177,7 @@ function App() {
 				registerErrors,
 
 				//useChats
+				chatList,
 				setCurrentChatId,
 				chatWithUser,
 				setChatWithUser,
@@ -171,7 +194,12 @@ function App() {
 				showChats,
 				deleteChat,
 				isCurrentChatGroup,
-				setisCurrentChatGroup,
+				setIsCurrentChatGroup,
+				createGroupChat,
+				isChecked,
+				setIsChecked,
+				groupChatName,
+				setGroupChatName,
 
 				//useContacts
 				userContactListId,
@@ -185,7 +213,6 @@ function App() {
 				user,
 				users,
 				userChats,
-				chatList,
 				isUserLoading,
 
 				//useSearch
@@ -197,9 +224,9 @@ function App() {
 
 				//useDropdown
 				userNameClick,
-				chatheadNameClick,
+				chatHeadNameClick,
 				sidebarDropdownRef,
-				chatheadDropdownRef,
+				chatHeadDropdownRef,
 				logout,
 			}}
 		>
