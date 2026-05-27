@@ -1,49 +1,76 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 
-const useSearch = (chatList, userContactList, users) => {
+const useSearch = (
+	chatList,
+	userContactList,
+	users,
+	newChatId,
+	currentChatId,
+	setCurrentChatId,
+) => {
 	const [searchInput, setSearchInput] = useState('');
 	const [isSearch, setIsSearch] = useState(false);
 	const [searchResults, setSearchResults] = useState([]);
 
-	useEffect(() => {
-		setIsSearch(searchInput.trim().length > 0);
+	const search = useCallback(
+		(event) => {
+			const searchInput = event.target.value.trim();
+			setIsSearch(searchInput.length > 0);
 
-		const searchByChats = chatList.filter(
-			(chat) =>
-				chat.name.toLowerCase().includes(searchInput.toLowerCase()) ||
-				chat.lastName?.toLowerCase().includes(searchInput.toLowerCase()) ||
-				chat.login?.toLowerCase().includes(searchInput.toLowerCase()),
-		);
+			if (searchInput.length > 0 && currentChatId === newChatId) {
+				setCurrentChatId(null);
+			}
 
-		const searchByContacts = userContactList.filter(
-			(contact) =>
-				contact.name.toLowerCase().includes(searchInput.toLowerCase()) ||
-				contact.lastName.toLowerCase().includes(searchInput.toLowerCase()) ||
-				contact.login.toLowerCase().includes(searchInput.toLowerCase()),
-		);
-
-		const searchResult = [...searchByChats, ...searchByContacts];
-		const uniqueSearchResults = [
-			...new Map(searchResult.map((result) => [result.id, result])).values(),
-		];
-
-		if (uniqueSearchResults.length === 0) {
-			const searchInUsers = users.filter(
-				(user) =>
-					user.name.toLowerCase().includes(searchInput.toLowerCase()) ||
-					user.lastName.toLowerCase().includes(searchInput.toLowerCase()) ||
-					user.login.toLowerCase().includes(searchInput.toLowerCase()),
+			const searchByChats = chatList.filter(
+				(chat) =>
+					chat.name.toLowerCase().includes(searchInput.toLowerCase()) ||
+					chat.lastName?.toLowerCase().includes(searchInput.toLowerCase()) ||
+					chat.login?.toLowerCase().includes(searchInput.toLowerCase()),
 			);
 
-			setSearchResults(searchInUsers);
-		} else {
-			setSearchResults(uniqueSearchResults);
-		}
+			const searchByContacts = userContactList.filter(
+				(contact) =>
+					contact.name.toLowerCase().includes(searchInput.toLowerCase()) ||
+					contact.lastName.toLowerCase().includes(searchInput.toLowerCase()) ||
+					contact.login.toLowerCase().includes(searchInput.toLowerCase()),
+			);
 
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [searchInput]);
+			const searchResult = [...searchByChats, ...searchByContacts];
+			const uniqueSearchResults = [
+				...new Map(searchResult.map((result) => [result.id, result])).values(),
+			];
 
-	return { searchInput, setSearchInput, isSearch, setIsSearch, searchResults };
+			if (uniqueSearchResults.length === 0) {
+				const searchInUsers = users.filter(
+					(user) =>
+						user.name.toLowerCase().includes(searchInput.toLowerCase()) ||
+						user.lastName.toLowerCase().includes(searchInput.toLowerCase()) ||
+						user.login.toLowerCase().includes(searchInput.toLowerCase()),
+				);
+
+				setSearchResults(searchInUsers);
+			} else {
+				setSearchResults(uniqueSearchResults);
+			}
+		},
+		[
+			users,
+			chatList,
+			userContactList,
+			newChatId,
+			currentChatId,
+			setCurrentChatId,
+		],
+	);
+
+	return {
+		search,
+		searchInput,
+		setSearchInput,
+		isSearch,
+		setIsSearch,
+		searchResults,
+	};
 };
 
 export default useSearch;

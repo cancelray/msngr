@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import usersAPI from '../api/usersAPI';
 
@@ -7,8 +7,7 @@ const useLogin = () => {
 		const loginId = localStorage.getItem('LoginUserId');
 		return loginId ? loginId : null;
 	});
-	const [loginInput, setLoginInput] = useState('');
-	const [passwordInput, setPasswordInput] = useState('');
+
 	const [isLoginPageShow, setIsLoginPageShow] = useState(true);
 	const [loginErrors, setLoginErrors] = useState({
 		isError: false,
@@ -16,62 +15,55 @@ const useLogin = () => {
 		errorBody: '',
 	});
 
-	const toRegisterPage = (event) => {
-		event.preventDefault();
-
+	const toRegisterPage = useCallback((callbackClear) => {
 		setLoginErrors({
 			isError: false,
 			errorTarget: '',
 			errorBody: '',
 		});
-		setLoginInput('');
-		setPasswordInput('');
 
+		callbackClear();
 		setIsLoginPageShow(false);
-	};
+	}, []);
 
-	const loginSubmit = (event) => {
-		event.preventDefault();
+	const loginSubmit = useCallback(
+		(loginInput, passwordInput, callbackClear) => {
+			usersAPI.getUserByLogin(loginInput).then((user) => {
+				if (user.length === 0) {
+					setLoginErrors({
+						isError: true,
+						errorTarget: 'login-log',
+						errorBody: 'User not found',
+					});
+					return;
+				}
 
-		usersAPI.getUserByLogin(loginInput).then((user) => {
-			if (user.length === 0) {
+				if (user[0].password === passwordInput) {
+					setLoginUserId(user[0].id);
+					localStorage.setItem('LoginUserId', user[0].id);
+				} else {
+					setLoginErrors({
+						isError: true,
+						errorTarget: 'login-pass',
+						errorBody: 'Incorrect password',
+					});
+					return;
+				}
+
 				setLoginErrors({
-					isError: true,
-					errorTarget: 'login-log',
-					errorBody: 'User not found',
+					isError: false,
+					errorTarget: '',
+					errorBody: '',
 				});
-				return;
-			}
-
-			if (user[0].password === passwordInput) {
-				setLoginUserId(user[0].id);
-				localStorage.setItem('LoginUserId', user[0].id);
-			} else {
-				setLoginErrors({
-					isError: true,
-					errorTarget: 'login-pass',
-					errorBody: 'Incorrect password',
-				});
-				return;
-			}
-
-			setLoginErrors({
-				isError: false,
-				errorTarget: '',
-				errorBody: '',
+				callbackClear();
 			});
-			setLoginInput('');
-			setPasswordInput('');
-		});
-	};
+		},
+		[],
+	);
 
 	return {
 		loginUserId,
 		setLoginUserId,
-		loginInput,
-		setLoginInput,
-		passwordInput,
-		setPasswordInput,
 		loginSubmit,
 		loginErrors,
 		isLoginPageShow,

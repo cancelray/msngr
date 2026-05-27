@@ -1,15 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-const useDropdown = (
-	setIsSidebarDropdownShow,
-	setIsChatHeadDropdownShow,
-	setLoginUserId,
-	setCurrentChatId,
-	setIsContactListShow,
-	setIsCreateGroupChatShow,
-	setIsChecked,
-	setGroupChatName,
-) => {
+const useDropdown = (setIsSidebarDropdownShow, setIsChatHeadDropdownShow) => {
 	const sidebarDropdownRef = useRef(null);
 	const chatHeadDropdownRef = useRef(null);
 
@@ -21,29 +12,6 @@ const useDropdown = (
 	const chatHeadNameClick = (event) => {
 		event.preventDefault();
 		setIsChatHeadDropdownShow(true);
-	};
-
-	const logout = (event) => {
-		event.preventDefault();
-
-		const isLogout = confirm('Are you sure you want to log out?');
-
-		if (isLogout) {
-			setLoginUserId(null);
-			setCurrentChatId(null);
-
-			setIsSidebarDropdownShow(false);
-			setIsChatHeadDropdownShow(false);
-
-			setIsContactListShow(false);
-			setIsCreateGroupChatShow(false);
-			setIsChecked({});
-			setGroupChatName('');
-
-			localStorage.removeItem('LoginUserId');
-		} else {
-			return;
-		}
 	};
 
 	useEffect(() => {
@@ -68,16 +36,13 @@ const useDropdown = (
 		return () => {
 			document.removeEventListener('mousedown', handleClickOutside);
 		};
-
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [setIsChatHeadDropdownShow, setIsSidebarDropdownShow]);
 
 	return {
 		userNameClick,
 		chatHeadNameClick,
 		sidebarDropdownRef,
 		chatHeadDropdownRef,
-		logout,
 	};
 };
 

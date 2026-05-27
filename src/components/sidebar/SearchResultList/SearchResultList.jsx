@@ -10,11 +10,11 @@ const SearchResultList = () => {
 	const {
 		chatList,
 		currentChatId,
+		setCurrentChatId,
 		searchResults,
 		setSearchInput,
 		setIsSearch,
-		userChats,
-		setCurrentChatId,
+		setIsContactListShow,
 		createNewChat,
 		setChatWithUser,
 		setGroupChat,
@@ -26,16 +26,21 @@ const SearchResultList = () => {
 		const chatId = event.currentTarget.dataset.chatId;
 
 		if (currentChatId === chatId) {
+			setIsSearch(false);
 			return;
 		}
 
-		if (chatList.find((chat) => chat.id === chatList)) {
-			setIsSearch(false);
+		if (chatId) {
 			setCurrentChatId(chatId);
 		} else {
+			setCurrentChatId(null);
+
 			const userId = event.currentTarget.dataset.userId;
 			createNewChat(userId);
 		}
+
+		setIsSearch(false);
+		setIsContactListShow(false);
 
 		setChatWithUser(null);
 		setGroupChat(null);
@@ -48,11 +53,11 @@ const SearchResultList = () => {
 					searchResult={searchResult}
 					key={searchResult.id}
 					dataChatId={
-						userChats?.find(
-							(chat) =>
-								chat.membersId.length === 2 &&
-								chat.membersId.includes(searchResult.id),
-						)?.id
+						chatList?.find((chat) =>
+							chat.isGroup
+								? chat.name === searchResult.name
+								: chat.login === searchResult.login,
+						)?.chatId
 					}
 					searchResultListClickHandler={searchResultListClickHandler}
 				/>

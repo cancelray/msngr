@@ -1,16 +1,30 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
+
 import send from '../../../assets/send.svg';
 
 import { MessengerContext } from '../../../context/MessengerContext';
+
 import styles from './ChatForm.module.css';
 
 const ChatForm = () => {
-	const { inputChat, setInputChat, sendMessage } = useContext(MessengerContext);
+	const [inputChat, setInputChat] = useState('');
+
+	const { sendMessage } = useContext(MessengerContext);
+
+	const trimmedInput = inputChat.trim();
+
+	const onSubmit = (event) => {
+		event.preventDefault();
+
+		if (trimmedInput) {
+			sendMessage(trimmedInput, () => setInputChat(''));
+		}
+	};
 
 	return (
 		<form
 			className={styles.input}
-			onSubmit={sendMessage}
+			onSubmit={onSubmit}
 		>
 			<textarea
 				id='input-field'

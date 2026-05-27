@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { MessengerContext } from './context/MessengerContext';
+
+import chatsAPI from './api/chatsAPI';
 
 import useChat from './hooks/useChat';
 import useContacts from './hooks/useContacts';
@@ -16,6 +18,7 @@ import useSearch from './hooks/useSearch';
 import './styles';
 
 function App() {
+	const [messages, setMessages] = useState([]);
 	const [isContactListShow, setIsContactListShow] = useState(false);
 	const [isCreateGroupChatShow, setIsCreateGroupChatShow] = useState(false);
 	const [isSidebarDropdownShow, setIsSidebarDropdownShow] = useState(false);
@@ -24,10 +27,6 @@ function App() {
 	const {
 		loginUserId,
 		setLoginUserId,
-		loginInput,
-		setLoginInput,
-		passwordInput,
-		setPasswordInput,
 		loginSubmit,
 		loginErrors,
 		isLoginPageShow,
@@ -35,20 +34,7 @@ function App() {
 		setIsLoginPageShow,
 	} = useLogin();
 
-	const {
-		newLogin,
-		setNewLogin,
-		newPassword,
-		setNewPassword,
-		newPasswordRepeat,
-		setNewPasswordRepeat,
-		newName,
-		setNewName,
-		newSecondName,
-		setNewSecondName,
-		registerSubmit,
-		registerErrors,
-	} = useRegister(setIsLoginPageShow);
+	const { registerSubmit, registerErrors } = useRegister(setIsLoginPageShow);
 
 	const {
 		chatList,
@@ -60,14 +46,10 @@ function App() {
 		setGroupChat,
 		currentChatId,
 		currentChat,
-		inputChat,
-		setInputChat,
 		sendMessage,
-		messages,
 		chatWrapperRef,
 		endOfMessagesRef,
 		createNewChat,
-		showChats,
 		newChatId,
 		setNewChatId,
 		deleteChat,
@@ -79,31 +61,21 @@ function App() {
 		groupChatName,
 		setGroupChatName,
 	} = useChat(
+		messages,
+		setMessages,
 		loginUserId,
 		isContactListShow,
 		setIsContactListShow,
 		setIsCreateGroupChatShow,
-		setIsSidebarDropdownShow,
 	);
 
 	const {
 		userContactListId,
 		setUserContactListId,
 		userContactList,
-		showContacts,
 		addContact,
 		deleteContact,
-	} = useContacts(
-		loginUserId,
-		chatWithUser,
-		setCurrentChatId,
-		setIsSidebarDropdownShow,
-		isContactListShow,
-		setIsContactListShow,
-		setIsCreateGroupChatShow,
-		setIsChecked,
-		setGroupChatName,
-	);
+	} = useContacts(loginUserId, chatWithUser);
 
 	const { users, user, userChats, isUserLoading } = useUser(
 		messages,
@@ -117,119 +89,188 @@ function App() {
 		isCurrentChatGroup,
 	);
 
-	const { searchInput, setSearchInput, isSearch, setIsSearch, searchResults } =
-		useSearch(chatList, userContactList, users);
+	const {
+		search,
+		searchInput,
+		setSearchInput,
+		isSearch,
+		setIsSearch,
+		searchResults,
+	} = useSearch(
+		chatList,
+		userContactList,
+		users,
+		newChatId,
+		currentChatId,
+		setCurrentChatId,
+	);
 
 	const {
 		userNameClick,
 		chatHeadNameClick,
 		sidebarDropdownRef,
 		chatHeadDropdownRef,
-		logout,
-	} = useDropdown(
-		setIsSidebarDropdownShow,
-		setIsChatHeadDropdownShow,
-		setLoginUserId,
-		setCurrentChatId,
-		setIsContactListShow,
-		setIsCreateGroupChatShow,
-		setIsChecked,
-		setGroupChatName,
+	} = useDropdown(setIsSidebarDropdownShow, setIsChatHeadDropdownShow);
+
+	useEffect(() => {
+		chatsAPI.getAllMessages().then(setMessages);
+	}, []);
+
+	const value = useMemo(
+		() => ({
+			isContactListShow,
+			setIsContactListShow,
+			isSidebarDropdownShow,
+			setIsSidebarDropdownShow,
+			isChatHeadDropdownShow,
+			setIsChatHeadDropdownShow,
+			isCreateGroupChatShow,
+			setIsCreateGroupChatShow,
+
+			//useLogin
+			loginUserId,
+			setLoginUserId,
+			loginSubmit,
+			loginErrors,
+			isLoginPageShow,
+			toRegisterPage,
+			setIsLoginPageShow,
+
+			//useRegister
+			registerSubmit,
+			registerErrors,
+
+			//useChat
+			chatList,
+			setChatList,
+			setCurrentChatId,
+			chatWithUser,
+			setChatWithUser,
+			groupChat,
+			setGroupChat,
+			currentChatId,
+			currentChat,
+			sendMessage,
+			chatWrapperRef,
+			endOfMessagesRef,
+			createNewChat,
+			newChatId,
+			setNewChatId,
+			deleteChat,
+			isCurrentChatGroup,
+			setIsCurrentChatGroup,
+			createGroupChat,
+			isChecked,
+			setIsChecked,
+			groupChatName,
+			setGroupChatName,
+
+			//useContacts
+			userContactListId,
+			setUserContactListId,
+			userContactList,
+			addContact,
+			deleteContact,
+
+			//useUser
+			user,
+			users,
+			userChats,
+			isUserLoading,
+
+			//useSearch
+			search,
+			searchInput,
+			setSearchInput,
+			isSearch,
+			setIsSearch,
+			searchResults,
+
+			//useDropdown
+			userNameClick,
+			chatHeadNameClick,
+			sidebarDropdownRef,
+			chatHeadDropdownRef,
+		}),
+		[
+			isContactListShow,
+			setIsContactListShow,
+			isSidebarDropdownShow,
+			setIsSidebarDropdownShow,
+			isChatHeadDropdownShow,
+			setIsChatHeadDropdownShow,
+			isCreateGroupChatShow,
+			setIsCreateGroupChatShow,
+
+			//useLogin
+			loginUserId,
+			setLoginUserId,
+			loginSubmit,
+			loginErrors,
+			isLoginPageShow,
+			toRegisterPage,
+			setIsLoginPageShow,
+
+			//useRegister
+			registerSubmit,
+			registerErrors,
+
+			//useChat
+			chatList,
+			setChatList,
+			setCurrentChatId,
+			chatWithUser,
+			setChatWithUser,
+			groupChat,
+			setGroupChat,
+			currentChatId,
+			currentChat,
+			sendMessage,
+			chatWrapperRef,
+			endOfMessagesRef,
+			createNewChat,
+			newChatId,
+			setNewChatId,
+			deleteChat,
+			isCurrentChatGroup,
+			setIsCurrentChatGroup,
+			createGroupChat,
+			isChecked,
+			setIsChecked,
+			groupChatName,
+			setGroupChatName,
+
+			//useContacts
+			userContactListId,
+			setUserContactListId,
+			userContactList,
+			addContact,
+			deleteContact,
+
+			//useUser
+			user,
+			users,
+			userChats,
+			isUserLoading,
+
+			//useSearch
+			search,
+			searchInput,
+			setSearchInput,
+			isSearch,
+			setIsSearch,
+			searchResults,
+
+			//useDropdown
+			userNameClick,
+			chatHeadNameClick,
+			sidebarDropdownRef,
+			chatHeadDropdownRef,
+		],
 	);
 
 	return (
-		<MessengerContext.Provider
-			value={{
-				isContactListShow,
-				setIsContactListShow,
-				isSidebarDropdownShow,
-				setIsSidebarDropdownShow,
-				isChatHeadDropdownShow,
-				setIsChatHeadDropdownShow,
-				isCreateGroupChatShow,
-				setIsCreateGroupChatShow,
-
-				//useLogin
-				loginUserId,
-				setLoginUserId,
-				loginInput,
-				setLoginInput,
-				passwordInput,
-				setPasswordInput,
-				loginSubmit,
-				loginErrors,
-				isLoginPageShow,
-				toRegisterPage,
-				setIsLoginPageShow,
-
-				//useRegister
-				newLogin,
-				setNewLogin,
-				newPassword,
-				setNewPassword,
-				newPasswordRepeat,
-				setNewPasswordRepeat,
-				newName,
-				setNewName,
-				newSecondName,
-				setNewSecondName,
-				registerSubmit,
-				registerErrors,
-
-				//useChats
-				chatList,
-				setCurrentChatId,
-				chatWithUser,
-				setChatWithUser,
-				groupChat,
-				setGroupChat,
-				currentChatId,
-				currentChat,
-				inputChat,
-				setInputChat,
-				sendMessage,
-				chatWrapperRef,
-				endOfMessagesRef,
-				createNewChat,
-				showChats,
-				deleteChat,
-				isCurrentChatGroup,
-				setIsCurrentChatGroup,
-				createGroupChat,
-				isChecked,
-				setIsChecked,
-				groupChatName,
-				setGroupChatName,
-
-				//useContacts
-				userContactListId,
-				setUserContactListId,
-				userContactList,
-				showContacts,
-				addContact,
-				deleteContact,
-
-				//useUser
-				user,
-				users,
-				userChats,
-				isUserLoading,
-
-				//useSearch
-				searchInput,
-				setSearchInput,
-				isSearch,
-				setIsSearch,
-				searchResults,
-
-				//useDropdown
-				userNameClick,
-				chatHeadNameClick,
-				sidebarDropdownRef,
-				chatHeadDropdownRef,
-				logout,
-			}}
-		>
+		<MessengerContext.Provider value={value}>
 			{loginUserId ? <MainPageWrapper /> : <LoginPageWrapper />}
 		</MessengerContext.Provider>
 	);

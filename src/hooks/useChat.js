@@ -1,23 +1,21 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import chatsAPI from '../api/chatsAPI';
 import usersAPI from '../api/usersAPI';
 
 const useChat = (
+	messages,
+	setMessages,
 	loginUserId,
 	isContactListShow,
 	setIsContactListShow,
 	setIsCreateGroupChatShow,
-	setIsSidebarDropdownShow,
 ) => {
-	const [messages, setMessages] = useState([]);
 	const [chatList, setChatList] = useState([]);
 	const [currentChatId, setCurrentChatId] = useState(null);
 	const [chatWithUser, setChatWithUser] = useState(null);
 	const [groupChat, setGroupChat] = useState(null);
 	const [currentChat, setCurrentChat] = useState([]);
-	const [inputChat, setInputChat] = useState('');
-	const [isNewMessage, setIsNewMessage] = useState(false);
 	const [newChatId, setNewChatId] = useState(null);
 	const [isNewChatGroup, setIsNewChatGroup] = useState(false);
 	const [isCurrentChatGroup, setIsCurrentChatGroup] = useState(false);
@@ -27,52 +25,57 @@ const useChat = (
 	const chatWrapperRef = useRef(null);
 	const endOfMessagesRef = useRef(null);
 
-	const sendMessage = (event) => {
-		event.preventDefault();
-
-		if (inputChat.trim().length === 0) {
-			return;
-		}
-
-		const messageDate = Date.now();
-
-		const newMessage = {
-			chatId: currentChatId,
-			senderId: loginUserId,
-			content: inputChat,
-			createdAt: messageDate,
-		};
-
-		chatsAPI.addMessage(newMessage).then((respNewMessage) => {
-			setMessages((prev) => [...prev, respNewMessage]);
-			setCurrentChat((prev) => [...prev, respNewMessage]);
-		});
-
-		setIsNewMessage(true);
-		setInputChat('');
-	};
-
-	const createNewChat = (userId) => {
-		setIsNewChatGroup(false);
-
-		const newChat = {
-			membersId: [loginUserId, userId],
-			isGroup: false,
-			name: '',
-			chatImg: '',
-		};
-
-		chatsAPI.createNewChat(newChat).then((newChatResp) => {
-			setCurrentChatId(newChatResp.id);
-			setNewChatId(newChatResp.id);
-
-			if (isContactListShow) {
-				setIsContactListShow(false);
+	const sendMessage = useCallback(
+		(clearInput, callbackInputClear) => {
+			if (newChatId) {
+				setNewChatId(null);
 			}
-		});
-	};
 
-	const createGroupChat = () => {
+			const messageDate = Date.now();
+
+			const newMessage = {
+				chatId: currentChatId,
+				senderId: loginUserId,
+				content: clearInput,
+				createdAt: messageDate,
+			};
+
+			chatsAPI.addMessage(newMessage).then((respNewMessage) => {
+				setMessages((prev) => [...prev, respNewMessage]);
+				setCurrentChat((prev) => [...prev, respNewMessage]);
+			});
+
+			endOfMessagesRef.current.scrollIntoView({ behavior: 'smooth' });
+
+			callbackInputClear();
+		},
+		[loginUserId, currentChatId, newChatId, setMessages],
+	);
+
+	const createNewChat = useCallback(
+		(userId) => {
+			setIsNewChatGroup(false);
+
+			const newChat = {
+				membersId: [loginUserId, userId],
+				isGroup: false,
+				name: '',
+				chatImg: '',
+			};
+
+			chatsAPI.createNewChat(newChat).then((newChatResp) => {
+				setCurrentChatId(newChatResp.id);
+				setNewChatId(newChatResp.id);
+
+				if (isContactListShow) {
+					setIsContactListShow(false);
+				}
+			});
+		},
+		[loginUserId, isContactListShow, setIsContactListShow],
+	);
+
+	const createGroupChat = useCallback(() => {
 		setIsNewChatGroup(true);
 
 		const usersInGroupChat = Object.getOwnPropertyNames(isChecked);
@@ -102,9 +105,15 @@ const useChat = (
 			setIsChecked({});
 			setGroupChatName('');
 		});
-	};
+	}, [
+		loginUserId,
+		groupChatName,
+		isChecked,
+		setIsContactListShow,
+		setIsCreateGroupChatShow,
+	]);
 
-	const deleteChat = () => {
+	const deleteChat = useCallback(() => {
 		if (isCurrentChatGroup) {
 			const currentChat = chatList.find((chat) => chat.id === currentChatId);
 
@@ -130,34 +139,19 @@ const useChat = (
 
 			setCurrentChatId(null);
 		}
-	};
-
-	const showChats = (event) => {
-		event.preventDefault();
-
-		setIsSidebarDropdownShow(false);
-		setIsChecked({});
-		setGroupChatName('');
-
-		if (isContactListShow) {
-			setIsContactListShow(false);
-		}
-	};
-
-	useEffect(() => {
-		chatsAPI.getAllMessages().then(setMessages);
-	}, []);
-
-	useEffect(() => {
-		if (isNewMessage) {
-			endOfMessagesRef.current.scrollIntoView({ behavior: 'smooth' });
-			setIsNewMessage(false);
-		}
-	}, [isNewMessage]);
+	}, [
+		loginUserId,
+		chatList,
+		currentChat,
+		currentChatId,
+		isCurrentChatGroup,
+		setMessages,
+	]);
 
 	useEffect(() => {
 		if (
 			newChatId &&
+			newChatId !== currentChatId &&
 			!isNewChatGroup &&
 			!messages.find((message) => message.id === newChatId)
 		) {
@@ -193,9 +187,7 @@ const useChat = (
 
 			chatsAPI.getMessagesByChatId(currentChatId).then(setCurrentChat);
 		}
-
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [currentChatId]);
+	}, [currentChatId, isNewChatGroup, messages, loginUserId, newChatId]);
 
 	useEffect(() => {
 		requestAnimationFrame(() => {
@@ -207,13 +199,7 @@ const useChat = (
 
 	useEffect(() => {
 		const handleBeforeUnload = () => {
-			if (
-				newChatId &&
-				!isNewChatGroup &&
-				!messages.find((message) => message.id === newChatId)
-			) {
-				chatsAPI.deleteChat(newChatId);
-			}
+			setCurrentChatId(null);
 		};
 
 		const handleClickEsc = (event) => {
@@ -231,8 +217,6 @@ const useChat = (
 			document.removeEventListener('keydown', handleClickEsc);
 			window.removeEventListener('beforeunload', handleBeforeUnload);
 		};
-
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return {
@@ -245,14 +229,10 @@ const useChat = (
 		setGroupChat,
 		currentChatId,
 		currentChat,
-		inputChat,
-		setInputChat,
 		sendMessage,
-		messages,
 		chatWrapperRef,
 		endOfMessagesRef,
 		createNewChat,
-		showChats,
 		newChatId,
 		setNewChatId,
 		deleteChat,

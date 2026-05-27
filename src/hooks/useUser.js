@@ -68,6 +68,7 @@ const useUser = (
 					users.find((user) => user.id === chat.membersId[1]),
 				);
 
+				delete user.password;
 				user.chatId = userChats[i].id;
 				user.isGroup = false;
 
@@ -79,8 +80,10 @@ const useUser = (
 			}
 		});
 
-		const chatsData = allUserChats.map(async (userChat) => {
-			const messagesData = await chatsAPI.getMessagesByChatId(userChat.chatId);
+		const chatsResult = allUserChats.map((userChat) => {
+			const messagesData = structuredClone(
+				messages.filter((message) => userChat.chatId === message.chatId),
+			);
 
 			messagesData.sort((a, b) => a.createdAt - b.createdAt);
 
@@ -100,7 +103,7 @@ const useUser = (
 			return { ...userChat, extra: messagesData };
 		});
 
-		const chatsResult = await Promise.all(chatsData);
+		// const chatsResult = await Promise.all(chatsData);
 		chatsResult.sort((a, b) => b.lastMessageTime - a.lastMessageTime);
 
 		return chatsResult;
@@ -117,9 +120,7 @@ const useUser = (
 
 			getChatList(loginUserId);
 		}
-
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [loginUserId]);
+	}, [loginUserId, setUserContactListId]);
 
 	useEffect(() => {
 		getUsersFromChatList(users, userChats).then(setChatList);
@@ -138,14 +139,9 @@ const useUser = (
 	}, [newChatId, isCurrentChatGroup]);
 
 	useEffect(() => {
-		try {
-			getChatList(loginUserId);
-		} finally {
-			getUsersFromChatList(users, userChats).then(setChatList);
-			if (newChatId) {
-				setNewChatId(null);
-			}
-		}
+		getChatList(loginUserId).then(
+			getUsersFromChatList(users, userChats).then(setChatList),
+		);
 
 		const lastMessage = messages.at(-1);
 

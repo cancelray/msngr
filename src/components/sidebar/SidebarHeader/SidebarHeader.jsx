@@ -8,26 +8,84 @@ import styles from './SidebarHeader.module.css';
 const SidebarHeader = () => {
 	const {
 		user,
+		setLoginUserId,
+		setIsChatHeadDropdownShow,
 		isSidebarDropdownShow,
 		setIsSidebarDropdownShow,
 		setCurrentChatId,
 		userNameClick,
 		sidebarDropdownRef,
-		logout,
-		showContacts,
-		showChats,
+		setIsChecked,
+		setGroupChatName,
+		isContactListShow,
 		setIsContactListShow,
 		setIsCreateGroupChatShow,
 	} = useContext(MessengerContext);
 
-	const createGroupChatClick = () => {
-		setCurrentChatId(null);
+	const dropdownMenuClickHandler = (event) => {
+		event.preventDefault();
 
-		setIsCreateGroupChatShow(true);
-		setIsContactListShow(true);
+		const targetAction = event.currentTarget.dataset.action;
 
-		setIsSidebarDropdownShow(false);
+		switch (targetAction) {
+			case 'toChats': {
+				setIsSidebarDropdownShow(false);
+				setIsChecked({});
+				setGroupChatName('');
+
+				if (isContactListShow) {
+					setIsContactListShow(false);
+				}
+
+				break;
+			}
+			case 'toContacts': {
+				setIsCreateGroupChatShow(false);
+				setIsChecked({});
+				setGroupChatName('');
+
+				setIsSidebarDropdownShow(false);
+				setCurrentChatId(null);
+
+				if (!isContactListShow) {
+					setIsContactListShow(true);
+				}
+
+				break;
+			}
+			case 'toCreateGroupChat': {
+				setCurrentChatId(null);
+				setIsCreateGroupChatShow(true);
+				setIsContactListShow(true);
+
+				setIsSidebarDropdownShow(false);
+
+				break;
+			}
+			case 'logout': {
+				const isLogout = confirm('Are you sure you want to log out?');
+
+				if (isLogout) {
+					setLoginUserId(null);
+					setCurrentChatId(null);
+
+					setIsSidebarDropdownShow(false);
+					setIsChatHeadDropdownShow(false);
+
+					setIsContactListShow(false);
+					setIsCreateGroupChatShow(false);
+					setIsChecked({});
+					setGroupChatName('');
+
+					localStorage.removeItem('LoginUserId');
+				}
+
+				break;
+			}
+		}
 	};
+
+	// const createGroupChatHandler = () => {};
 
 	return (
 		<div className={styles.sidebarHeader}>
@@ -54,10 +112,30 @@ const SidebarHeader = () => {
 
 			{isSidebarDropdownShow ? (
 				<DropdownMenu ref={sidebarDropdownRef}>
-					<a onClick={showChats}>Chats</a>
-					<a onClick={showContacts}>Contacts</a>
-					<a onClick={createGroupChatClick}>Create group chat</a>
-					<a onClick={logout}>Log out</a>
+					<a
+						onClick={dropdownMenuClickHandler}
+						data-action='toChats'
+					>
+						Chats
+					</a>
+					<a
+						onClick={dropdownMenuClickHandler}
+						data-action='toContacts'
+					>
+						Contacts
+					</a>
+					<a
+						onClick={dropdownMenuClickHandler}
+						data-action='toCreateGroupChat'
+					>
+						Create group chat
+					</a>
+					<a
+						onClick={dropdownMenuClickHandler}
+						data-action='logout'
+					>
+						Log out
+					</a>
 				</DropdownMenu>
 			) : null}
 			<Search />

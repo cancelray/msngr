@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 
 import { MessengerContext } from '../../../context/MessengerContext';
 
@@ -7,21 +7,35 @@ import Button from '../../UI/Button/Button';
 import styles from './RegisterPage.module.css';
 
 const RegisterPage = () => {
-	const {
-		newLogin,
-		setNewLogin,
-		newPassword,
-		setNewPassword,
-		newPasswordRepeat,
-		setNewPasswordRepeat,
-		newName,
-		setNewName,
-		newSecondName,
-		setNewSecondName,
-		registerSubmit,
-		registerErrors,
-		setIsLoginPageShow,
-	} = useContext(MessengerContext);
+	const [newLogin, setNewLogin] = useState('');
+	const [newPassword, setNewPassword] = useState('');
+	const [newPasswordRepeat, setNewPasswordRepeat] = useState('');
+	const [newName, setNewName] = useState('');
+	const [newSecondName, setNewSecondName] = useState('');
+
+	const { registerSubmit, registerErrors, setIsLoginPageShow } =
+		useContext(MessengerContext);
+
+	const inputClear = () => {
+		setNewLogin('');
+		setNewPassword('');
+		setNewPasswordRepeat('');
+		setNewName('');
+		setNewSecondName('');
+	};
+
+	const onSubmit = (event) => {
+		event.preventDefault();
+
+		registerSubmit(
+			newLogin,
+			newPassword,
+			newPasswordRepeat,
+			newName,
+			newSecondName,
+			inputClear,
+		);
+	};
 
 	const backClickHandler = (event) => {
 		event.preventDefault();
@@ -38,7 +52,7 @@ const RegisterPage = () => {
 	return (
 		<form
 			className={styles.registerForm}
-			onSubmit={registerSubmit}
+			onSubmit={onSubmit}
 		>
 			<div>
 				<label htmlFor='new-login'>Login:</label>

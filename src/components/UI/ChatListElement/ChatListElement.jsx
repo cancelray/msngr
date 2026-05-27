@@ -37,7 +37,7 @@ const ChatListElement = (props) => {
 					{!chat.isGroup ? (
 						<p className={styles.name}>{chat.name + ' ' + chat?.lastName}</p>
 					) : (
-						<p className={styles.name}>{chat.name}</p>
+						<p className={styles.name}>{chat.name} (group)</p>
 					)}
 					{dateIsNaN ? null : <p className={styles.date}>{date}</p>}
 				</div>

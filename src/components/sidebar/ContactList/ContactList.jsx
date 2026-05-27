@@ -10,7 +10,6 @@ import styles from './ContactList.module.css';
 const ContactList = () => {
 	const {
 		userContactList,
-		userChats,
 		setCurrentChatId,
 		setIsContactListShow,
 		createNewChat,
@@ -23,6 +22,7 @@ const ContactList = () => {
 		setIsChecked,
 		groupChatName,
 		setGroupChatName,
+		chatList,
 	} = useContext(MessengerContext);
 
 	const contactListClickHandler = (event) => {
@@ -44,7 +44,9 @@ const ContactList = () => {
 
 			if (chatId) {
 				setIsContactListShow(false);
+
 				setCurrentChatId(chatId);
+
 				setIsCurrentChatGroup(false);
 			} else {
 				const userId = event.currentTarget.dataset.userId;
@@ -68,7 +70,10 @@ const ContactList = () => {
 					/>
 					<Button
 						onClick={createGroupChat}
-						disabled={groupChatName.trim().length === 0}
+						disabled={
+							groupChatName.trim().length === 0 ||
+							Object.keys(isChecked).length < 2
+						}
 					>
 						Create group chat
 					</Button>
@@ -81,12 +86,11 @@ const ContactList = () => {
 					<ContactListElement
 						contact={contact}
 						key={contact.id}
-						data-chat-id={
-							userChats?.find(
+						dataChatId={
+							chatList?.find(
 								(chat) =>
-									chat.membersId.length === 2 &&
-									chat.membersId.includes(contact.id),
-							)?.id
+									chat.isGroup === false && chat.login === contact.login,
+							)?.chatId
 						}
 						data-user-id={contact.id}
 						isCreateGroupChatShow={isCreateGroupChatShow}

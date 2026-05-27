@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import contactsAPI from '../api/contactsAPI';
 import usersAPI from '../api/usersAPI';
@@ -6,13 +6,6 @@ import usersAPI from '../api/usersAPI';
 const useContacts = (
 	loginUserId,
 	chatWithUser,
-	setCurrentChatId,
-	setIsSidebarDropdownShow,
-	isContactListShow,
-	setIsContactListShow,
-	setIsCreateGroupChatShow,
-	setIsChecked,
-	setGroupChatName,
 ) => {
 	const [userContactListId, setUserContactListId] = useState([]);
 	const [userContactList, setUserContactList] = useState([]);
@@ -27,7 +20,7 @@ const useContacts = (
 		});
 	};
 
-	const addContact = () => {
+	const addContact = useCallback(() => {
 		const newContact = {
 			userId: !isNaN(Number(loginUserId)) ? Number(loginUserId) : loginUserId,
 			contactId: !isNaN(Number(chatWithUser.id))
@@ -39,38 +32,26 @@ const useContacts = (
 			.addContact(newContact)
 			.then(setUserContactListId((prev) => [...prev, newContact]))
 			.finally(getContactList(userContactListId));
-	};
+	}, [loginUserId, userContactListId, chatWithUser]);
 
-	const deleteContact = async (event) => {
-		event.preventDefault();
+	const deleteContact = useCallback(
+		async (event) => {
+			event.preventDefault();
 
-		if (event.currentTarget.dataset.isDisable) {
-			return;
-		}
+			if (event.currentTarget.dataset.isDisable) {
+				return;
+			}
 
-		try {
-			const resp = await contactsAPI.getContact(loginUserId, chatWithUser.id);
-			await contactsAPI.deleteContact(resp[0].id);
-		} finally {
-			const resp = await contactsAPI.getContactListByUser(loginUserId);
-			setUserContactListId(resp);
-		}
-	};
-
-	const showContacts = (event) => {
-		event.preventDefault();
-
-		setIsCreateGroupChatShow(false);
-		setIsChecked({});
-		setGroupChatName('');
-
-		setIsSidebarDropdownShow(false);
-		setCurrentChatId(null);
-
-		if (!isContactListShow) {
-			setIsContactListShow(true);
-		}
-	};
+			try {
+				const resp = await contactsAPI.getContact(loginUserId, chatWithUser.id);
+				await contactsAPI.deleteContact(resp[0].id);
+			} finally {
+				const resp = await contactsAPI.getContactListByUser(loginUserId);
+				setUserContactListId(resp);
+			}
+		},
+		[loginUserId, chatWithUser],
+	);
 
 	useEffect(() => {
 		getContactList(userContactListId);
@@ -80,7 +61,6 @@ const useContacts = (
 		userContactListId,
 		setUserContactListId,
 		userContactList,
-		showContacts,
 		addContact,
 		deleteContact,
 	};

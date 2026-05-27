@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 
 import { MessengerContext } from '../../../context/MessengerContext';
 
@@ -7,20 +7,31 @@ import Button from '../../UI/Button/Button';
 import styles from './LoginPage.module.css';
 
 const LoginPage = () => {
-	const {
-		loginInput,
-		setLoginInput,
-		passwordInput,
-		setPasswordInput,
-		loginSubmit,
-		loginErrors,
-		toRegisterPage,
-	} = useContext(MessengerContext);
+	const [loginInput, setLoginInput] = useState('');
+	const [passwordInput, setPasswordInput] = useState('');
+
+	const { loginSubmit, loginErrors, toRegisterPage } =
+		useContext(MessengerContext);
+
+	const inputsClear = () => {
+		setLoginInput('');
+		setPasswordInput('');
+	};
+
+	const onSubmit = (event) => {
+		event.preventDefault();
+		loginSubmit(loginInput, passwordInput, inputsClear);
+	};
+
+	const onClick = (event) => {
+		event.preventDefault();
+		toRegisterPage(inputsClear);
+	};
 
 	return (
 		<form
 			className={styles.loginForm}
-			onSubmit={loginSubmit}
+			onSubmit={onSubmit}
 		>
 			<div>
 				<label htmlFor='login-log'>Login:</label>
@@ -55,7 +66,7 @@ const LoginPage = () => {
 				>
 					Log in
 				</Button>
-				<a onClick={toRegisterPage}>Sign up</a>
+				<a onClick={onClick}>Sign up</a>
 			</div>
 		</form>
 	);
