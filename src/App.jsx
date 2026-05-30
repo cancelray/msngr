@@ -291,12 +291,6 @@ function App() {
 		],
 	);
 
-	// return (
-	// 	<MessengerContext.Provider value={value}>
-	// 		{loginUserId ? <MainPageWrapper /> : <LoginPageWrapper />}
-	// 	</MessengerContext.Provider>
-	// );
-
 	return (
 		<AppProviders
 			authValue={authValue}
