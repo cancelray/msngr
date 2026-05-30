@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 
-import { MessengerContext } from '../../../context/MessengerContext';
+import { UIContext } from '../../../context/UIContext';
 
 import LoginPage from '../LoginPage/LoginPage';
 import RegisterPage from '../RegisterPage/RegisterPage';
@@ -8,7 +8,7 @@ import RegisterPage from '../RegisterPage/RegisterPage';
 import styles from './LoginPageWrapper.module.css';
 
 const LoginPageWrapper = () => {
-	const { isLoginPageShow } = useContext(MessengerContext);
+	const { isLoginPageShow } = useContext(UIContext);
 
 	return (
 		<div className={styles.loginPageWrapper}>

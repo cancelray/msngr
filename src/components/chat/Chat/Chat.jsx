@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { MessengerContext } from '../../../context/MessengerContext';
+import { ChatContext } from '../../../context/ChatContext';
 
 import ChatForm from '../ChatForm/ChatForm';
 import ChatHeader from '../ChatHeader/ChatHeader';
@@ -8,7 +8,7 @@ import ChatWrapper from '../ChatWrapper/ChatWrapper';
 import styles from './Chat.module.css';
 
 const Chat = () => {
-	const { currentChatId } = useContext(MessengerContext);
+	const { currentChatId } = useContext(ChatContext);
 
 	return (
 		<div className={styles.chat}>

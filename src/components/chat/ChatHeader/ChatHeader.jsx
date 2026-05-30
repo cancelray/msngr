@@ -1,15 +1,17 @@
 import { useContext } from 'react';
 
-import { MessengerContext } from '../../../context/MessengerContext';
+import { AuthContext } from '../../../context/AuthContext';
+import { ChatContext } from '../../../context/ChatContext';
 
+import { UIContext } from '../../../context/UIContext';
 import Button from '../../UI/Button/Button';
 import DropdownMenu from '../../UI/DropdownMenu/DropdownMenu';
 
 import styles from './ChatHeader.module.css';
 
 const ChatHeader = () => {
+	const { loginUserId } = useContext(AuthContext);
 	const {
-		loginUserId,
 		chatWithUser,
 		groupChat,
 		chatList,
@@ -17,10 +19,6 @@ const ChatHeader = () => {
 		userContactList,
 		addContact,
 		deleteChat,
-		isChatHeadDropdownShow,
-		setIsChatHeadDropdownShow,
-		chatHeadNameClick,
-		chatHeadDropdownRef,
 		deleteContact,
 		setChatWithUser,
 		setGroupChat,
@@ -28,7 +26,13 @@ const ChatHeader = () => {
 		setIsCurrentChatGroup,
 		createNewChat,
 		userChats,
-	} = useContext(MessengerContext);
+	} = useContext(ChatContext);
+	const {
+		isChatHeadDropdownShow,
+		setIsChatHeadDropdownShow,
+		chatHeadNameClick,
+		chatHeadDropdownRef,
+	} = useContext(UIContext);
 
 	if (chatWithUser) {
 		const isInContact = userContactList.find(

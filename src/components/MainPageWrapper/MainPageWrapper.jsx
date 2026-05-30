@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 
-import { MessengerContext } from '../../context/MessengerContext';
+import { UIContext } from '../../context/UIContext';
 
 import Loader from '../UI/Loader/Loader';
 import Chat from '../chat/Chat/Chat';
@@ -9,7 +9,7 @@ import Sidebar from '../sidebar/Sidebar/Sidebar';
 import styles from './MainPageWrapper.module.css';
 
 const MainPageWrapper = () => {
-	const { isUserLoading } = useContext(MessengerContext);
+	const { isUserLoading } = useContext(UIContext);
 
 	return (
 		<>

@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 
-import { MessengerContext } from '../../../context/MessengerContext';
+import { UIContext } from '../../../context/UIContext';
 
 import ChatList from '../ChatList/ChatList';
 import ContactList from '../ContactList/ContactList';
@@ -10,7 +10,7 @@ import SidebarHeader from '../SidebarHeader/SidebarHeader';
 import styles from './Sidebar.module.css';
 
 const Sidebar = () => {
-	const { isContactListShow, isSearch } = useContext(MessengerContext);
+	const { isContactListShow, isSearch } = useContext(UIContext);
 
 	return (
 		<div className={styles.sidebar}>

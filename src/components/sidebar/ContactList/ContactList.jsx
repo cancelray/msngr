@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 
-import { MessengerContext } from '../../../context/MessengerContext';
+import { ChatContext } from '../../../context/ChatContext';
+import { UIContext } from '../../../context/UIContext';
 
 import Button from '../../UI/Button/Button';
 import ContactListElement from '../../UI/ContactListElement/ContactListElement';
@@ -9,21 +10,23 @@ import styles from './ContactList.module.css';
 
 const ContactList = () => {
 	const {
+		chatList,
 		userContactList,
 		setCurrentChatId,
-		setIsContactListShow,
 		createNewChat,
 		setChatWithUser,
 		setGroupChat,
 		setIsCurrentChatGroup,
-		isCreateGroupChatShow,
 		createGroupChat,
-		isChecked,
-		setIsChecked,
 		groupChatName,
 		setGroupChatName,
-		chatList,
-	} = useContext(MessengerContext);
+	} = useContext(ChatContext);
+	const {
+		setIsContactListShow,
+		isChecked,
+		setIsChecked,
+		isCreateGroupChatShow,
+	} = useContext(UIContext);
 
 	const contactListClickHandler = (event) => {
 		if (isCreateGroupChatShow) {

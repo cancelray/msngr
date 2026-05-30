@@ -1,15 +1,15 @@
 import { useContext, useState } from 'react';
 
-import send from '../../../assets/send.svg';
+import { ChatContext } from '../../../context/ChatContext';
 
-import { MessengerContext } from '../../../context/MessengerContext';
+import send from '../../../assets/send.svg';
 
 import styles from './ChatForm.module.css';
 
 const ChatForm = () => {
 	const [inputChat, setInputChat] = useState('');
 
-	const { sendMessage } = useContext(MessengerContext);
+	const { sendMessage } = useContext(ChatContext);
 
 	const trimmedInput = inputChat.trim();
 

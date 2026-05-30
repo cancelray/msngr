@@ -1,12 +1,15 @@
 import { useContext } from 'react';
 
-import { MessengerContext } from '../../../context/MessengerContext';
+import { AuthContext } from '../../../context/AuthContext';
+import { ChatContext } from '../../../context/ChatContext';
 
 import styles from './ChatListElement.module.css';
 
 const ChatListElement = (props) => {
 	const { chat, clickHandler } = props;
-	const { currentChatId, loginUserId } = useContext(MessengerContext);
+
+	const { loginUserId } = useContext(AuthContext);
+	const { currentChatId } = useContext(ChatContext);
 
 	const lastMessageTime = new Date(chat.lastMessageTime);
 	const dateIsNaN = isNaN(lastMessageTime);

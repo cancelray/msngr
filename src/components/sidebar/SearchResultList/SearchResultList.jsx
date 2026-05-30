@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 
-import { MessengerContext } from '../../../context/MessengerContext';
+import { ChatContext } from '../../../context/ChatContext';
+import { UIContext } from '../../../context/UIContext';
 
 import SearchResultListElement from '../../UI/SearchResultListElement/SearchResultListElement';
 
@@ -11,14 +12,12 @@ const SearchResultList = () => {
 		chatList,
 		currentChatId,
 		setCurrentChatId,
-		searchResults,
-		setSearchInput,
-		setIsSearch,
-		setIsContactListShow,
 		createNewChat,
 		setChatWithUser,
 		setGroupChat,
-	} = useContext(MessengerContext);
+	} = useContext(ChatContext);
+	const { searchResults, setSearchInput, setIsSearch, setIsContactListShow } =
+		useContext(UIContext);
 
 	const searchResultListClickHandler = (event) => {
 		setSearchInput('');

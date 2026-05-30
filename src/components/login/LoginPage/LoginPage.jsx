@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react';
 
-import { MessengerContext } from '../../../context/MessengerContext';
+import { AuthContext } from '../../../context/AuthContext';
+import { UIContext } from '../../../context/UIContext';
 
 import Button from '../../UI/Button/Button';
 
@@ -10,8 +11,8 @@ const LoginPage = () => {
 	const [loginInput, setLoginInput] = useState('');
 	const [passwordInput, setPasswordInput] = useState('');
 
-	const { loginSubmit, loginErrors, toRegisterPage } =
-		useContext(MessengerContext);
+	const { loginSubmit, loginErrors } = useContext(AuthContext);
+	const { toRegisterPage } = useContext(UIContext);
 
 	const inputsClear = () => {
 		setLoginInput('');

@@ -1,26 +1,27 @@
 import { useContext } from 'react';
-import { MessengerContext } from '../../../context/MessengerContext';
+
+import { AuthContext } from '../../../context/AuthContext';
+import { ChatContext } from '../../../context/ChatContext';
+import { UIContext } from '../../../context/UIContext';
 
 import DropdownMenu from '../../UI/DropdownMenu/DropdownMenu';
 import Search from '../Search/Search';
 import styles from './SidebarHeader.module.css';
 
 const SidebarHeader = () => {
+	const { user, setLoginUserId } = useContext(AuthContext);
+	const { setCurrentChatId, setGroupChatName } = useContext(ChatContext);
 	const {
-		user,
-		setLoginUserId,
 		setIsChatHeadDropdownShow,
 		isSidebarDropdownShow,
 		setIsSidebarDropdownShow,
-		setCurrentChatId,
 		userNameClick,
 		sidebarDropdownRef,
 		setIsChecked,
-		setGroupChatName,
 		isContactListShow,
 		setIsContactListShow,
 		setIsCreateGroupChatShow,
-	} = useContext(MessengerContext);
+	} = useContext(UIContext);
 
 	const dropdownMenuClickHandler = (event) => {
 		event.preventDefault();

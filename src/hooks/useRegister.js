@@ -10,7 +10,7 @@ const useRegister = (setIsLoginPageShow) => {
 	});
 
 	const registerSubmit = useCallback(
-		(
+		async (
 			newLogin,
 			newPassword,
 			newPasswordRepeat,
@@ -18,16 +18,16 @@ const useRegister = (setIsLoginPageShow) => {
 			newSecondName,
 			clearCallback,
 		) => {
-			usersAPI.getUserByLogin(newLogin).then((user) => {
-				if (user.length > 0) {
-					setRegisterErrors({
-						isError: true,
-						errorTarget: 'new-login',
-						errorBody: 'Login already exists',
-					});
-					return;
-				}
-			});
+			const user = await usersAPI.getUserByLogin(newLogin);
+
+			if (user.length > 0) {
+				setRegisterErrors({
+					isError: true,
+					errorTarget: 'new-login',
+					errorBody: 'Login already exists',
+				});
+				return;
+			}
 
 			if (newLogin.length < 3) {
 				setRegisterErrors({

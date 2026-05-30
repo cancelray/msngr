@@ -1,11 +1,11 @@
 import { useContext } from 'react';
 
-import { MessengerContext } from '../../../context/MessengerContext';
+import { UIContext } from '../../../context/UIContext';
 
 import styles from './Search.module.css';
 
 const Search = () => {
-	const { search, searchInput, setSearchInput } = useContext(MessengerContext);
+	const { search, searchInput, setSearchInput } = useContext(UIContext);
 
 	return (
 		<div className={styles.search}>

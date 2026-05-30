@@ -130,7 +130,7 @@ const useUser = (
 
 	useEffect(() => {
 		if (newChatId && isCurrentChatGroup) {
-			getChatList(loginUserId).then(
+			getChatList(loginUserId).then(() =>
 				getUsersFromChatList(users, userChats).then(setChatList),
 			);
 		}
@@ -139,7 +139,7 @@ const useUser = (
 	}, [newChatId, isCurrentChatGroup]);
 
 	useEffect(() => {
-		getChatList(loginUserId).then(
+		getChatList(loginUserId).then(() =>
 			getUsersFromChatList(users, userChats).then(setChatList),
 		);
 

@@ -1,5 +1,6 @@
 import { useContext } from 'react';
-import { MessengerContext } from '../../../context/MessengerContext';
+
+import { ChatContext } from '../../../context/ChatContext';
 
 import Message from '../../UI/Message/Message';
 
@@ -7,8 +8,7 @@ import styles from './ChatWrapper.module.css';
 
 const ChatWrapper = () => {
 	const { currentChat, chatWrapperRef, endOfMessagesRef, isCurrentChatGroup } =
-		useContext(MessengerContext);
-
+		useContext(ChatContext);
 
 	return (
 		<div

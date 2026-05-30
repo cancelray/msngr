@@ -1,12 +1,15 @@
 import { useContext } from 'react';
 
-import { MessengerContext } from '../../../context/MessengerContext';
+import { AuthContext } from '../../../context/AuthContext';
+import { ChatContext } from '../../../context/ChatContext';
 
 import styles from './Message.module.css';
 
 const Message = (props) => {
-	const { loginUserId, users } = useContext(MessengerContext);
 	const { message, isCurrentChatGroup } = props;
+
+	const { loginUserId } = useContext(AuthContext);
+	const { users } = useContext(ChatContext);
 
 	const messageCreatedDate = new Date(message.createdAt);
 

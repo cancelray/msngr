@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import { MessengerContext } from './context/MessengerContext';
-
 import chatsAPI from './api/chatsAPI';
+
+import AppProviders from './AppProviders';
 
 import useChat from './hooks/useChat';
 import useContacts from './hooks/useContacts';
@@ -116,30 +116,41 @@ function App() {
 		chatsAPI.getAllMessages().then(setMessages);
 	}, []);
 
-	const value = useMemo(
+	const authValue = useMemo(
 		() => ({
-			isContactListShow,
-			setIsContactListShow,
-			isSidebarDropdownShow,
-			setIsSidebarDropdownShow,
-			isChatHeadDropdownShow,
-			setIsChatHeadDropdownShow,
-			isCreateGroupChatShow,
-			setIsCreateGroupChatShow,
-
 			//useLogin
 			loginUserId,
 			setLoginUserId,
 			loginSubmit,
 			loginErrors,
-			isLoginPageShow,
-			toRegisterPage,
-			setIsLoginPageShow,
 
 			//useRegister
 			registerSubmit,
 			registerErrors,
 
+			//useUser
+			user,
+			isUserLoading,
+		}),
+		[
+			//useLogin
+			loginUserId,
+			setLoginUserId,
+			loginSubmit,
+			loginErrors,
+
+			//useRegister
+			registerSubmit,
+			registerErrors,
+
+			//useUser
+			user,
+			isUserLoading,
+		],
+	);
+
+	const chatValue = useMemo(
+		() => ({
 			//useChat
 			chatList,
 			setChatList,
@@ -160,8 +171,6 @@ function App() {
 			isCurrentChatGroup,
 			setIsCurrentChatGroup,
 			createGroupChat,
-			isChecked,
-			setIsChecked,
 			groupChatName,
 			setGroupChatName,
 
@@ -173,10 +182,65 @@ function App() {
 			deleteContact,
 
 			//useUser
-			user,
 			users,
 			userChats,
-			isUserLoading,
+		}),
+		[
+			//useChat
+			chatList,
+			setChatList,
+			setCurrentChatId,
+			chatWithUser,
+			setChatWithUser,
+			groupChat,
+			setGroupChat,
+			currentChatId,
+			currentChat,
+			sendMessage,
+			chatWrapperRef,
+			endOfMessagesRef,
+			createNewChat,
+			newChatId,
+			setNewChatId,
+			deleteChat,
+			isCurrentChatGroup,
+			setIsCurrentChatGroup,
+			createGroupChat,
+			groupChatName,
+			setGroupChatName,
+
+			//useContacts
+			userContactListId,
+			setUserContactListId,
+			userContactList,
+			addContact,
+			deleteContact,
+
+			//useUser
+			users,
+			userChats,
+		],
+	);
+
+	const UIValue = useMemo(
+		() => ({
+			isContactListShow,
+			setIsContactListShow,
+			isSidebarDropdownShow,
+			setIsSidebarDropdownShow,
+			isChatHeadDropdownShow,
+			setIsChatHeadDropdownShow,
+			isCreateGroupChatShow,
+			setIsCreateGroupChatShow,
+
+			//useLogin
+			isLoginPageShow,
+			setIsLoginPageShow,
+			toRegisterPage,
+
+			//useChat
+			isChecked,
+			setIsChecked,
 
 			//useSearch
 			search,
@@ -203,55 +267,13 @@ function App() {
 			setIsCreateGroupChatShow,
 
 			//useLogin
-			loginUserId,
-			setLoginUserId,
-			loginSubmit,
-			loginErrors,
 			isLoginPageShow,
-			toRegisterPage,
 			setIsLoginPageShow,
-
-			//useRegister
-			registerSubmit,
-			registerErrors,
+			toRegisterPage,
 
 			//useChat
-			chatList,
-			setChatList,
-			setCurrentChatId,
-			chatWithUser,
-			setChatWithUser,
-			groupChat,
-			setGroupChat,
-			currentChatId,
-			currentChat,
-			sendMessage,
-			chatWrapperRef,
-			endOfMessagesRef,
-			createNewChat,
-			newChatId,
-			setNewChatId,
-			deleteChat,
-			isCurrentChatGroup,
-			setIsCurrentChatGroup,
-			createGroupChat,
 			isChecked,
 			setIsChecked,
-			groupChatName,
-			setGroupChatName,
-
-			//useContacts
-			userContactListId,
-			setUserContactListId,
-			userContactList,
-			addContact,
-			deleteContact,
-
-			//useUser
-			user,
-			users,
-			userChats,
-			isUserLoading,
 
 			//useSearch
 			search,
@@ -269,10 +291,20 @@ function App() {
 		],
 	);
 
+	// return (
+	// 	<MessengerContext.Provider value={value}>
+	// 		{loginUserId ? <MainPageWrapper /> : <LoginPageWrapper />}
+	// 	</MessengerContext.Provider>
+	// );
+
 	return (
-		<MessengerContext.Provider value={value}>
+		<AppProviders
+			authValue={authValue}
+			chatValue={chatValue}
+			UIValue={UIValue}
+		>
 			{loginUserId ? <MainPageWrapper /> : <LoginPageWrapper />}
-		</MessengerContext.Provider>
+		</AppProviders>
 	);
 }
 

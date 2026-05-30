@@ -1,5 +1,6 @@
 import { useContext } from 'react';
-import { MessengerContext } from '../../../context/MessengerContext';
+
+import { ChatContext } from '../../../context/ChatContext';
 
 import ChatListElement from '../../UI/ChatListElement/ChatListElement';
 
@@ -13,7 +14,7 @@ const ChatList = () => {
 		setIsCurrentChatGroup,
 		setChatWithUser,
 		setGroupChat,
-	} = useContext(MessengerContext);
+	} = useContext(ChatContext);
 
 	const clickHandler = (event) => {
 		const chatId = event.currentTarget.dataset.chatId;

@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react';
 
-import { MessengerContext } from '../../../context/MessengerContext';
+import { AuthContext } from '../../../context/AuthContext';
+import { UIContext } from '../../../context/UIContext';
 
 import Button from '../../UI/Button/Button';
 
@@ -13,8 +14,8 @@ const RegisterPage = () => {
 	const [newName, setNewName] = useState('');
 	const [newSecondName, setNewSecondName] = useState('');
 
-	const { registerSubmit, registerErrors, setIsLoginPageShow } =
-		useContext(MessengerContext);
+	const { registerSubmit, registerErrors } = useContext(AuthContext);
+	const { setIsLoginPageShow } = useContext(UIContext);
 
 	const inputClear = () => {
 		setNewLogin('');
