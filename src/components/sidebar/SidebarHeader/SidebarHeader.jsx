@@ -15,13 +15,17 @@ const SidebarHeader = () => {
 		setIsChatHeadDropdownShow,
 		isSidebarDropdownShow,
 		setIsSidebarDropdownShow,
-		userNameClick,
 		sidebarDropdownRef,
 		setIsChecked,
 		isContactListShow,
 		setIsContactListShow,
 		setIsCreateGroupChatShow,
 	} = useContext(UIContext);
+
+	const userNameClick = (event) => {
+		event.preventDefault();
+		setIsSidebarDropdownShow(true);
+	};
 
 	const dropdownMenuClickHandler = (event) => {
 		event.preventDefault();
@@ -85,8 +89,6 @@ const SidebarHeader = () => {
 			}
 		}
 	};
-
-	// const createGroupChatHandler = () => {};
 
 	return (
 		<div className={styles.sidebarHeader}>

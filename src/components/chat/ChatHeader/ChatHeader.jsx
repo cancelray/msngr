@@ -30,9 +30,13 @@ const ChatHeader = () => {
 	const {
 		isChatHeadDropdownShow,
 		setIsChatHeadDropdownShow,
-		chatHeadNameClick,
 		chatHeadDropdownRef,
 	} = useContext(UIContext);
+
+	const chatHeadNameClick = (event) => {
+		event.preventDefault();
+		setIsChatHeadDropdownShow(true);
+	};
 
 	if (chatWithUser) {
 		const isInContact = userContactList.find(
@@ -123,7 +127,7 @@ const ChatHeader = () => {
 					)}
 					<div>{currentChatInfo?.name}</div>
 				</a>
-				{isUserChatAdmin ? <p>(admin)</p> : ''}
+				{isUserChatAdmin ? <p>(admin)</p> : <p>(group)</p>}
 				{isChatHeadDropdownShow ? (
 					<DropdownMenu
 						ref={chatHeadDropdownRef}

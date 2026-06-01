@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import chatsAPI from '../api/chatsAPI';
 import contactsAPI from '../api/contactsAPI';
@@ -6,6 +6,8 @@ import usersAPI from '../api/usersAPI';
 
 const useUser = (
 	messages,
+	users,
+	setUsers,
 	chatList,
 	setChatList,
 	loginUserId,
@@ -14,15 +16,14 @@ const useUser = (
 	setNewChatId,
 	isCurrentChatGroup,
 ) => {
-	const [users, setUsers] = useState([]);
 	const [user, setUser] = useState({});
 	const [userChats, setUserChats] = useState([]);
 	const [isUserLoading, setIsUserLoading] = useState(true);
 
 	const getChatList = async (userId) => {
 		chatsAPI.getAllChats().then((chats) => {
-			const filteredChats = chats.filter((chat) =>
-				chat.membersId.includes(userId),
+			const filteredChats = structuredClone(
+				chats.filter((chat) => chat.membersId.includes(userId)),
 			);
 
 			filteredChats.forEach((chat) => {
@@ -38,76 +39,78 @@ const useUser = (
 		});
 	};
 
-	const getUsersFromChatList = async (users, userChats) => {
-		const allUserChats = [];
+	const getUsersFromChatList = useCallback(
+		async (users, userChats) => {
+			const allUserChats = [];
 
-		userChats.forEach((chat, i) => {
-			if (chat.isGroup) {
-				const groupChat = {
-					id: chat.id,
-					chatId: chat.id,
-					isGroup: true,
-					name: chat.name,
-					avatar: chat.img,
-					groupChatAdminId: chat.groupChatAdminId,
-				};
+			userChats.forEach((chat, i) => {
+				if (chat.isGroup) {
+					const groupChat = {
+						id: chat.id,
+						chatId: chat.id,
+						isGroup: true,
+						name: chat.name,
+						avatar: chat.img,
+						groupChatAdminId: chat.groupChatAdminId,
+					};
 
-				const members = [];
+					const members = [];
 
-				chat.membersId?.forEach((memberId) =>
-					members.push(
-						structuredClone(users.find((user) => user.id === memberId)),
-					),
+					chat.membersId?.forEach((memberId) =>
+						members.push(
+							structuredClone(users.find((user) => user.id === memberId)),
+						),
+					);
+
+					groupChat.members = members;
+
+					allUserChats.push(groupChat);
+				} else {
+					const user = structuredClone(
+						users.find((user) => user.id === chat.membersId[1]),
+					);
+
+					delete user.password;
+					user.chatId = userChats[i].id;
+					user.isGroup = false;
+
+					if (user.chatId === newChatId) {
+						return;
+					}
+
+					allUserChats.push(user);
+				}
+			});
+
+			const chatsResult = allUserChats.map((userChat) => {
+				const messagesData = structuredClone(
+					messages.filter((message) => userChat.chatId === message.chatId),
 				);
 
-				groupChat.members = members;
+				messagesData.sort((a, b) => a.createdAt - b.createdAt);
 
-				allUserChats.push(groupChat);
-			} else {
-				const user = structuredClone(
-					users.find((user) => user.id === chat.membersId[1]),
-				);
+				userChat.lastMessage = messagesData.at(-1)?.content;
+				userChat.lastMessageAuthor = messagesData.at(-1)?.senderId;
+				userChat.lastMessageTime = messagesData.at(-1)?.createdAt;
 
-				delete user.password;
-				user.chatId = userChats[i].id;
-				user.isGroup = false;
+				if (userChat.isGroup) {
+					const lastMessageAuthor = users.find(
+						(user) => user.id === userChat.lastMessageAuthor,
+					);
 
-				if (user.chatId === newChatId) {
-					return;
+					userChat.lastMessageAuthorName = lastMessageAuthor?.name;
+					userChat.lastMessageAuthorLastName = lastMessageAuthor?.lastName;
 				}
 
-				allUserChats.push(user);
-			}
-		});
+				return { ...userChat, extra: messagesData };
+			});
 
-		const chatsResult = allUserChats.map((userChat) => {
-			const messagesData = structuredClone(
-				messages.filter((message) => userChat.chatId === message.chatId),
-			);
+			chatsResult.sort((a, b) => b.lastMessageTime - a.lastMessageTime);
 
-			messagesData.sort((a, b) => a.createdAt - b.createdAt);
-
-			userChat.lastMessage = messagesData.at(-1)?.content;
-			userChat.lastMessageAuthor = messagesData.at(-1)?.senderId;
-			userChat.lastMessageTime = messagesData.at(-1)?.createdAt;
-
-			if (userChat.isGroup) {
-				const lastMessageAuthor = users.find(
-					(user) => user.id === userChat.lastMessageAuthor,
-				);
-
-				userChat.lastMessageAuthorName = lastMessageAuthor?.name;
-				userChat.lastMessageAuthorLastName = lastMessageAuthor?.lastName;
-			}
-
-			return { ...userChat, extra: messagesData };
-		});
-
-		// const chatsResult = await Promise.all(chatsData);
-		chatsResult.sort((a, b) => b.lastMessageTime - a.lastMessageTime);
-
-		return chatsResult;
-	};
+			return chatsResult;
+		},
+		[messages, newChatId],
+	);
 
 	useEffect(() => {
 		if (loginUserId) {
@@ -120,13 +123,11 @@ const useUser = (
 
 			getChatList(loginUserId);
 		}
-	}, [loginUserId, setUserContactListId]);
+	}, [loginUserId, setUserContactListId, setUsers]);
 
 	useEffect(() => {
 		getUsersFromChatList(users, userChats).then(setChatList);
-
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [userChats]);
+	}, [userChats, getUsersFromChatList, setChatList, users]);
 
 	useEffect(() => {
 		if (newChatId && isCurrentChatGroup) {
@@ -162,7 +163,6 @@ const useUser = (
 	}, [messages]);
 
 	return {
-		users,
 		user,
 		userChats,
 		chatList,

@@ -4,16 +4,6 @@ const useDropdown = (setIsSidebarDropdownShow, setIsChatHeadDropdownShow) => {
 	const sidebarDropdownRef = useRef(null);
 	const chatHeadDropdownRef = useRef(null);
 
-	const userNameClick = (event) => {
-		event.preventDefault();
-		setIsSidebarDropdownShow(true);
-	};
-
-	const chatHeadNameClick = (event) => {
-		event.preventDefault();
-		setIsChatHeadDropdownShow(true);
-	};
-
 	useEffect(() => {
 		const handleClickOutside = (event) => {
 			if (
@@ -39,8 +29,6 @@ const useDropdown = (setIsSidebarDropdownShow, setIsChatHeadDropdownShow) => {
 	}, [setIsChatHeadDropdownShow, setIsSidebarDropdownShow]);
 
 	return {
-		userNameClick,
-		chatHeadNameClick,
 		sidebarDropdownRef,
 		chatHeadDropdownRef,
 	};

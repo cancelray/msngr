@@ -135,7 +135,7 @@ const useChat = (
 						chatsAPI.deleteMessageById(message.id),
 					);
 				})
-				.then(chatsAPI.getAllMessages().then(setMessages));
+				.then(() => chatsAPI.getAllMessages().then(setMessages));
 
 			setCurrentChatId(null);
 		}
@@ -173,15 +173,11 @@ const useChat = (
 				} else {
 					setChatWithUser(null);
 
-					const groupChat = [];
+					const groupChat = chatWithUserId.map((userId) =>
+						usersAPI.getUser(userId),
+					);
 
-					chatWithUserId.forEach((userId) => {
-						usersAPI.getUser(userId).then((user) => {
-							groupChat.push(user);
-						});
-					});
-
-					setGroupChat(groupChat);
+					Promise.all(groupChat).then(setGroupChat);
 				}
 			});
 

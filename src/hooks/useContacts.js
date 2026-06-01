@@ -1,24 +1,28 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import contactsAPI from '../api/contactsAPI';
-import usersAPI from '../api/usersAPI';
 
-const useContacts = (
-	loginUserId,
-	chatWithUser,
-) => {
+const useContacts = (loginUserId, users, chatWithUser) => {
 	const [userContactListId, setUserContactListId] = useState([]);
 	const [userContactList, setUserContactList] = useState([]);
 
-	const getContactList = (contactListId) => {
-		return Promise.all(
-			contactListId?.map((contact) => usersAPI.getUser(contact.contactId)),
-		).then((contactList) => {
-			contactList.sort((a, b) => a.name.localeCompare(b.name));
+	const getContactList = useCallback(
+		(contactListId) => {
+			if (users) {
+				const contactList = contactListId?.map((contact) =>
+					users.find((user) => {
+						return isNaN(Number(user.id))
+							? user.id === contact.contactId
+							: Number(user.id) === contact.contactId;
+					}),
+				);
 
-			setUserContactList(contactList);
-		});
-	};
+				contactList.sort((a, b) => a.name.localeCompare(b.name));
+				setUserContactList(contactList);
+			}
+		},
+		[users],
+	);
 
 	const addContact = useCallback(() => {
 		const newContact = {
@@ -32,7 +36,7 @@ const useContacts = (
 			.addContact(newContact)
 			.then(() => setUserContactListId((prev) => [...prev, newContact]))
 			.finally(() => getContactList(userContactListId));
-	}, [loginUserId, userContactListId, chatWithUser]);
+	}, [loginUserId, userContactListId, chatWithUser, getContactList]);
 
 	const deleteContact = useCallback(
 		async (event) => {
@@ -55,7 +59,7 @@ const useContacts = (
 
 	useEffect(() => {
 		getContactList(userContactListId);
-	}, [userContactListId]);
+	}, [userContactListId, getContactList]);
 
 	return {
 		userContactListId,
