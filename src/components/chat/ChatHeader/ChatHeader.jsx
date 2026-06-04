@@ -91,9 +91,7 @@ const ChatHeader = () => {
 			chatList.find((chat) => chat.id === currentChatId)?.groupChatAdminId ===
 			loginUserId;
 
-		const clickHandler = (event) => {
-			const userId = event.currentTarget.dataset.userId;
-
+		const clickHandler = (userId) => {
 			const chatWithClickedUser = userChats.find(
 				(chat) =>
 					chat.membersId.length === 2 && chat.membersId.includes(userId),
@@ -137,8 +135,7 @@ const ChatHeader = () => {
 							{groupChat.map((user) => (
 								<a
 									key={user.id}
-									data-user-id={user.id}
-									onClick={clickHandler}
+									onClick={() => clickHandler(user.id)}
 								>{`${user.name} ${user.lastName} (@${user.login})`}</a>
 							))}
 						</div>

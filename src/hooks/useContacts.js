@@ -35,7 +35,7 @@ const useContacts = (loginUserId, users, chatWithUser) => {
 		contactsAPI
 			.addContact(newContact)
 			.then(() => setUserContactListId((prev) => [...prev, newContact]))
-			.finally(() => getContactList(userContactListId));
+			.then(() => getContactList(userContactListId));
 	}, [loginUserId, userContactListId, chatWithUser, getContactList]);
 
 	const deleteContact = useCallback(

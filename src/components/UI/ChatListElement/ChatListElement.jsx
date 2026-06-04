@@ -23,8 +23,6 @@ const ChatListElement = (props) => {
 		<div
 			className={`${styles.chatListElement} ${currentChatId === chat.chatId ? styles.currentChat : ''}`}
 			onClick={clickHandler}
-			data-chat-id={chat.chatId}
-			data-is-group={chat.isGroup}
 		>
 			{chat.avatar?.length > 0 ? (
 				<img

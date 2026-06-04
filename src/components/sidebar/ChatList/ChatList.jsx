@@ -16,10 +16,7 @@ const ChatList = () => {
 		setGroupChat,
 	} = useContext(ChatContext);
 
-	const clickHandler = (event) => {
-		const chatId = event.currentTarget.dataset.chatId;
-		const isGroup = event.currentTarget.dataset.isGroup;
-
+	const clickHandler = (chatId, isGroup) => {
 		if (chatId === currentChatId) {
 			return;
 		}
@@ -41,7 +38,7 @@ const ChatList = () => {
 				<ChatListElement
 					chat={chat}
 					key={chat.id}
-					clickHandler={clickHandler}
+					clickHandler={() => clickHandler(chat.chatId, chat.isGroup)}
 				/>
 			))}
 		</div>
