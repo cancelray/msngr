@@ -2,8 +2,13 @@ import { useCallback, useEffect, useState } from 'react';
 
 import contactsAPI from '../api/contactsAPI';
 
-const useContacts = (loginUserId, users, chatWithUser) => {
-	const [userContactListId, setUserContactListId] = useState([]);
+const useContacts = (
+	loginUserId,
+	users,
+	userContactListId,
+	setUserContactListId,
+	chatWithUser,
+) => {
 	const [userContactList, setUserContactList] = useState([]);
 
 	const getContactList = useCallback(
@@ -36,7 +41,13 @@ const useContacts = (loginUserId, users, chatWithUser) => {
 			.addContact(newContact)
 			.then(() => setUserContactListId((prev) => [...prev, newContact]))
 			.then(() => getContactList(userContactListId));
-	}, [loginUserId, userContactListId, chatWithUser, getContactList]);
+	}, [
+		loginUserId,
+		userContactListId,
+		chatWithUser,
+		getContactList,
+		setUserContactListId,
+	]);
 
 	const deleteContact = useCallback(
 		async (event) => {
@@ -54,7 +65,7 @@ const useContacts = (loginUserId, users, chatWithUser) => {
 				setUserContactListId(resp);
 			}
 		},
-		[loginUserId, chatWithUser],
+		[loginUserId, chatWithUser, setUserContactListId],
 	);
 
 	useEffect(() => {

@@ -1,15 +1,7 @@
-import { useContext } from 'react';
-
-import { AuthContext } from '../../../context/AuthContext';
-import { ChatContext } from '../../../context/ChatContext';
-
 import styles from './Message.module.css';
 
 const Message = (props) => {
-	const { message, isCurrentChatGroup } = props;
-
-	const { loginUserId } = useContext(AuthContext);
-	const { users } = useContext(ChatContext);
+	const { message, messageAuthor, isShowAuthorName, loginUserId } = props;
 
 	const messageCreatedDate = new Date(message.createdAt);
 
@@ -22,13 +14,6 @@ const Message = (props) => {
 		hour: '2-digit',
 		minute: '2-digit',
 	});
-
-	const messageAuthor = users?.find(
-		(user) => user.id === message.senderId && user.id !== loginUserId,
-	);
-
-	const isShowAuthorName =
-		isCurrentChatGroup && message.senderId !== loginUserId;
 
 	return (
 		<div

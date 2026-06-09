@@ -24,13 +24,13 @@ const ChatHeader = () => {
 		setGroupChat,
 		setCurrentChatId,
 		setIsCurrentChatGroup,
-		createNewChat,
 		userChats,
 	} = useContext(ChatContext);
 	const {
 		isChatHeadDropdownShow,
 		setIsChatHeadDropdownShow,
 		chatHeadDropdownRef,
+				createNewChat,
 	} = useContext(UIContext);
 
 	const chatHeadNameClick = (event) => {

@@ -12,12 +12,16 @@ const SearchResultList = () => {
 		chatList,
 		currentChatId,
 		setCurrentChatId,
-		createNewChat,
 		setChatWithUser,
 		setGroupChat,
 	} = useContext(ChatContext);
-	const { searchResults, setSearchInput, setIsSearch, setIsContactListShow } =
-		useContext(UIContext);
+	const {
+		searchResults,
+		setSearchInput,
+		setIsSearch,
+		setIsContactListShow,
+		createNewChat,
+	} = useContext(UIContext);
 
 	const searchResultListClickHandler = (event) => {
 		setSearchInput('');

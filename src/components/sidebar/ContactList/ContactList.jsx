@@ -13,19 +13,19 @@ const ContactList = () => {
 		chatList,
 		userContactList,
 		setCurrentChatId,
-		createNewChat,
 		setChatWithUser,
 		setGroupChat,
 		setIsCurrentChatGroup,
-		createGroupChat,
-		groupChatName,
-		setGroupChatName,
 	} = useContext(ChatContext);
 	const {
 		setIsContactListShow,
 		isChecked,
 		setIsChecked,
+		createGroupChat,
 		isCreateGroupChatShow,
+		createNewChat,
+		groupChatName,
+		setGroupChatName,
 	} = useContext(UIContext);
 
 	const contactListClickHandler = (event) => {

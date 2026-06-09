@@ -26,9 +26,7 @@ const ChatList = () => {
 
 		setCurrentChatId(chatId);
 
-		isGroup === 'true'
-			? setIsCurrentChatGroup(true)
-			: setIsCurrentChatGroup(false);
+		isGroup ? setIsCurrentChatGroup(true) : setIsCurrentChatGroup(false);
 	};
 
 	return (

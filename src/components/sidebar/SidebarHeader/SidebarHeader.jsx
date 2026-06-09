@@ -10,7 +10,7 @@ import styles from './SidebarHeader.module.css';
 
 const SidebarHeader = () => {
 	const { user, setLoginUserId } = useContext(AuthContext);
-	const { setCurrentChatId, setGroupChatName } = useContext(ChatContext);
+	const { setCurrentChatId } = useContext(ChatContext);
 	const {
 		setIsChatHeadDropdownShow,
 		isSidebarDropdownShow,
@@ -20,6 +20,7 @@ const SidebarHeader = () => {
 		isContactListShow,
 		setIsContactListShow,
 		setIsCreateGroupChatShow,
+		setGroupChatName,
 	} = useContext(UIContext);
 
 	const userNameClick = (event) => {
