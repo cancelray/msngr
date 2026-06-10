@@ -3,8 +3,6 @@ import { useContext, useMemo } from 'react';
 import useChat from '../hooks/useChat';
 import useChatList from '../hooks/useChatList';
 import useContacts from '../hooks/useContacts';
-// import useCreateChat from '../hooks/useCreateChat';
-import useUser from '../hooks/useUser';
 
 import { AuthContext } from '../context/AuthContext';
 import { ChatContext } from '../context/ChatContext';
@@ -19,22 +17,24 @@ const ChatProvider = ({ children }) => {
 		setIsContactListShow,
 		setIsCreateGroupChatShow,
 	} = useContext(MessengerContext);
-	const { loginUserId, getChatList } = useContext(AuthContext);
 
-	const { userContactListId, setUserContactListId } = useUser(
+	const {
 		loginUserId,
+		userContactListId,
+		setUserContactListId,
 		getChatList,
-	);
+		userChats,
+		setUserChats,
+	} = useContext(AuthContext);
 
 	const {
 		chatList,
 		setChatList,
-		userChats,
-		setUserChats,
 		newChatId,
 		setNewChatId,
 		getUsersFromChatList,
-	} = useChatList(messages, users, loginUserId);
+		setIsDeleteChat,
+	} = useChatList(messages, users, loginUserId, userChats, getChatList);
 
 	const {
 		setCurrentChatId,
@@ -67,19 +67,8 @@ const ChatProvider = ({ children }) => {
 		setNewChatId,
 		getChatList,
 		getUsersFromChatList,
+		setIsDeleteChat,
 	);
-
-	// const { createNewChat, createGroupChat, groupChatName, setGroupChatName } =
-	// 	useCreateChat(
-	// 		loginUserId,
-	// 		setIsNewChatGroup,
-	// 		isContactListShow,
-	// 		setIsContactListShow,
-	// 		setCurrentChatId,
-	// 		setIsCreateGroupChatShow,
-	// 		setNewChatId,
-	// 		setIsCurrentChatGroup,
-	// 	);
 
 	const { userContactList, addContact, deleteContact } = useContacts(
 		loginUserId,
@@ -114,12 +103,6 @@ const ChatProvider = ({ children }) => {
 			isCurrentChatGroup,
 			setIsCurrentChatGroup,
 			setIsNewChatGroup,
-
-			//useCreateChat
-			// createNewChat,
-			// createGroupChat,
-			// groupChatName,
-			// setGroupChatName,
 
 			//useContacts
 			userContactList,

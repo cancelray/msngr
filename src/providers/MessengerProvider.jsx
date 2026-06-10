@@ -16,6 +16,7 @@ const MessengerProvider = ({ children }) => {
 			setMessages,
 			users,
 			setUsers,
+
 			isContactListShow,
 			setIsContactListShow,
 			isCreateGroupChatShow,
@@ -30,6 +31,7 @@ const MessengerProvider = ({ children }) => {
 			setMessages,
 			users,
 			setUsers,
+			
 			isContactListShow,
 			setIsContactListShow,
 			isCreateGroupChatShow,

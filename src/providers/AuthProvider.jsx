@@ -1,29 +1,33 @@
-import { useContext, useMemo } from 'react';
+import { useMemo } from 'react';
 
-import useChatList from '../hooks/useChatList';
 import useLogin from '../hooks/useLogin';
 import useRegister from '../hooks/useRegister';
 import useUser from '../hooks/useUser';
 
-import { MessengerContext } from '../context/MessengerContext';
 import { AuthContext } from '../context/AuthContext';
 
 const AuthProvider = ({ children }) => {
-	const { messages, users } = useContext(MessengerContext);
-
 	const {
 		loginUserId,
 		setLoginUserId,
 		loginSubmit,
 		loginErrors,
+		toRegisterPage,
+		isLoginPageShow,
 		setIsLoginPageShow,
 	} = useLogin();
 
 	const { registerSubmit, registerErrors } = useRegister(setIsLoginPageShow);
 
-	const { getChatList } = useChatList(messages, users, loginUserId);
-
-	const { user, isUserLoading } = useUser(loginUserId, getChatList);
+	const {
+		user,
+		isUserLoading,
+		userContactListId,
+		setUserContactListId,
+		getChatList,
+		userChats,
+		setUserChats,
+	} = useUser(loginUserId);
 
 	const value = useMemo(
 		() => ({
@@ -32,18 +36,22 @@ const AuthProvider = ({ children }) => {
 			setLoginUserId,
 			loginSubmit,
 			loginErrors,
+			toRegisterPage,
+			isLoginPageShow,
 			setIsLoginPageShow,
 
 			//useRegister
 			registerSubmit,
 			registerErrors,
 
-			//useChatList
-			getChatList,
-
 			//useUser
 			user,
 			isUserLoading,
+			userContactListId,
+			setUserContactListId,
+			getChatList,
+			userChats,
+			setUserChats,
 		}),
 		[
 			//useLogin
@@ -51,18 +59,22 @@ const AuthProvider = ({ children }) => {
 			setLoginUserId,
 			loginSubmit,
 			loginErrors,
+			toRegisterPage,
+			isLoginPageShow,
 			setIsLoginPageShow,
 
 			//useRegister
 			registerSubmit,
 			registerErrors,
 
-			//useChatList
-			getChatList,
-
 			//useUser
 			user,
 			isUserLoading,
+			userContactListId,
+			setUserContactListId,
+			getChatList,
+			userChats,
+			setUserChats,
 		],
 	);
 

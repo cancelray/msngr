@@ -66,8 +66,8 @@ const useLogin = () => {
 		setLoginUserId,
 		loginSubmit,
 		loginErrors,
-		isLoginPageShow,
 		toRegisterPage,
+		isLoginPageShow,
 		setIsLoginPageShow,
 	};
 };

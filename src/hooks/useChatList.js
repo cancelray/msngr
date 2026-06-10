@@ -1,33 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import chatsAPI from '../api/chatsAPI';
-
-const useChatList = (messages, users, loginUserId) => {
+const useChatList = (messages, users, loginUserId, userChats, getChatList) => {
 	const [chatList, setChatList] = useState([]);
-	const [userChats, setUserChats] = useState([]);
 	const [newChatId, setNewChatId] = useState(null);
 
-	const getChatList = useCallback(
-		async (userId) => {
-			await chatsAPI.getAllChats().then((chats) => {
-				const filteredChats = structuredClone(
-					chats.filter((chat) => chat.membersId.includes(userId)),
-				);
-
-				filteredChats.forEach((chat) => {
-					const userIndex = chat.membersId.indexOf(userId);
-
-					if (userIndex !== 0) {
-						const [item] = chat.membersId.splice(userIndex, 1);
-						chat.membersId.unshift(item);
-					}
-				});
-
-				setUserChats(filteredChats);
-			});
-		},
-		[setUserChats],
-	);
 
 	const getUsersFromChatList = useCallback(
 		async (users, userChats) => {
@@ -107,12 +83,8 @@ const useChatList = (messages, users, loginUserId) => {
 	);
 
 	useEffect(() => {
-		getChatList(loginUserId).then(() =>
-			getUsersFromChatList(users, userChats).then(setChatList),
-		);
-
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [loginUserId, messages, newChatId]);
+		getChatList(loginUserId);
+	}, [loginUserId, newChatId, getChatList, getUsersFromChatList, users]);
 
 	useEffect(() => {
 		getUsersFromChatList(users, userChats).then(setChatList);

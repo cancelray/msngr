@@ -31,7 +31,7 @@ const useChat = (
 	const endOfMessagesRef = useRef(null);
 
 	const sendMessage = useCallback(
-		(clearInput, callbackInputClear) => {
+		async (clearInput, callbackInputClear) => {
 			if (newChatId) {
 				setNewChatId(null);
 			}
@@ -45,7 +45,7 @@ const useChat = (
 				createdAt: messageDate,
 			};
 
-			chatsAPI.addMessage(newMessage).then((respNewMessage) => {
+			await chatsAPI.addMessage(newMessage).then((respNewMessage) => {
 				setMessages((prev) => [...prev, respNewMessage]);
 				setCurrentChat((prev) => [...prev, respNewMessage]);
 			});
@@ -114,6 +114,8 @@ const useChat = (
 					(id) => id !== loginUserId,
 				);
 
+				setIsCurrentChatGroup(false);
+
 				if (chatWithUserId?.length < 2) {
 					setGroupChat(null);
 
@@ -158,13 +160,22 @@ const useChat = (
 
 	useEffect(() => {
 		if (newChatId && isCurrentChatGroup) {
+			setNewChatId(null);
 			getChatList(loginUserId).then(() =>
 				getUsersFromChatList(users, userChats).then(setChatList),
 			);
 		}
-
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [newChatId, isCurrentChatGroup]);
+	}, [
+		newChatId,
+		isCurrentChatGroup,
+		getChatList,
+		getUsersFromChatList,
+		loginUserId,
+		setChatList,
+		setNewChatId,
+		userChats,
+		users,
+	]);
 
 	useEffect(() => {
 		const handleBeforeUnload = () => {

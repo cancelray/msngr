@@ -2,9 +2,9 @@ import { useContext, useMemo } from 'react';
 
 import useCreateChat from '../hooks/useCreateChat';
 import useDropdown from '../hooks/useDropdown';
-import useLogin from '../hooks/useLogin';
 import useSearch from '../hooks/useSearch';
 
+import { AuthContext } from '../context/AuthContext';
 import { ChatContext } from '../context/ChatContext';
 import { MessengerContext } from '../context/MessengerContext';
 import { UIContext } from '../context/UIContext';
@@ -22,6 +22,9 @@ const UIProvider = ({ children }) => {
 		setIsChatHeadDropdownShow,
 	} = useContext(MessengerContext);
 
+	const { loginUserId, toRegisterPage, isLoginPageShow, setIsLoginPageShow } =
+		useContext(AuthContext);
+
 	const {
 		chatList,
 		newChatId,
@@ -33,10 +36,14 @@ const UIProvider = ({ children }) => {
 		userContactList,
 	} = useContext(ChatContext);
 
-	const { loginUserId, isLoginPageShow, toRegisterPage, setIsLoginPageShow } =
-		useLogin();
-
-	const { createNewChat, createGroupChat, groupChatName, setGroupChatName, isChecked, setIsChecked } = useCreateChat(
+	const {
+		createNewChat,
+		createGroupChat,
+		groupChatName,
+		setGroupChatName,
+		isChecked,
+		setIsChecked,
+	} = useCreateChat(
 		loginUserId,
 		setIsNewChatGroup,
 		isContactListShow,
@@ -85,7 +92,7 @@ const UIProvider = ({ children }) => {
 			toRegisterPage,
 
 			//useCreateChat
-						createNewChat,
+			createNewChat,
 			createGroupChat,
 			groupChatName,
 			setGroupChatName,
@@ -120,7 +127,7 @@ const UIProvider = ({ children }) => {
 			toRegisterPage,
 
 			//useCreateChat
-						createNewChat,
+			createNewChat,
 			createGroupChat,
 			groupChatName,
 			setGroupChatName,
