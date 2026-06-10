@@ -18,7 +18,9 @@ const useRegister = (setIsLoginPageShow) => {
 			newSecondName,
 			clearCallback,
 		) => {
-			const user = await usersAPI.getUserByLogin(newLogin);
+			const user = await usersAPI
+				.getUserByLogin(newLogin)
+				.catch((err) => alert(err));
 
 			if (user.length > 0) {
 				setRegisterErrors({
@@ -64,7 +66,7 @@ const useRegister = (setIsLoginPageShow) => {
 				avatar: '',
 			};
 
-			usersAPI.addNewUser(newUser);
+			usersAPI.addNewUser(newUser).catch((err) => alert(err));
 
 			clearCallback();
 

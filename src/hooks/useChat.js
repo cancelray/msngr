@@ -45,10 +45,13 @@ const useChat = (
 				createdAt: messageDate,
 			};
 
-			await chatsAPI.addMessage(newMessage).then((respNewMessage) => {
-				setMessages((prev) => [...prev, respNewMessage]);
-				setCurrentChat((prev) => [...prev, respNewMessage]);
-			});
+			await chatsAPI
+				.addMessage(newMessage)
+				.then((respNewMessage) => {
+					setMessages((prev) => [...prev, respNewMessage]);
+					setCurrentChat((prev) => [...prev, respNewMessage]);
+				})
+				.catch((err) => alert(err));
 
 			endOfMessagesRef.current.scrollIntoView({ behavior: 'smooth' });
 
@@ -76,11 +79,17 @@ const useChat = (
 				.deleteChat(currentChatId)
 				.then(async () => {
 					const deleteMessages = currentChat.map((message) =>
-						chatsAPI.deleteMessageById(message.id),
+						chatsAPI.deleteMessageById(message.id).catch((err) => alert(err)),
 					);
 					await Promise.all(deleteMessages);
 				})
-				.then(() => chatsAPI.getAllMessages().then(setMessages));
+				.then(() =>
+					chatsAPI
+						.getAllMessages()
+						.then(setMessages)
+						.catch((err) => alert(err)),
+				)
+				.catch((err) => alert(err));
 
 			setCurrentChatId(null);
 			setNewChatId(null);
@@ -105,37 +114,47 @@ const useChat = (
 			chatsAPI
 				.deleteChat(newChatId)
 				.then(() => setNewChatId(null))
-				.then(getUsersFromChatList(users, userChats).then(setChatList));
+				.then(() => getUsersFromChatList(users, userChats).then(setChatList))
+				.catch((err) => alert(err));
 		}
 
 		if (currentChatId) {
-			chatsAPI.getChatById(currentChatId).then((chat) => {
-				const chatWithUserId = chat.membersId?.filter(
-					(id) => id !== loginUserId,
-				);
-
-				setIsCurrentChatGroup(false);
-
-				if (chatWithUserId?.length < 2) {
-					setGroupChat(null);
-
-					usersAPI.getUser(chatWithUserId[0]).then((user) => {
-						setChatWithUser(user);
-					});
-				} else {
-					setChatWithUser(null);
-
-					const groupChat = chatWithUserId?.map((userId) =>
-						usersAPI.getUser(userId),
+			chatsAPI
+				.getChatById(currentChatId)
+				.then((chat) => {
+					const chatWithUserId = chat.membersId?.filter(
+						(id) => id !== loginUserId,
 					);
 
-					if (groupChat) {
-						Promise.all(groupChat).then(setGroupChat);
-					}
-				}
-			});
+					setIsCurrentChatGroup(false);
 
-			chatsAPI.getMessagesByChatId(currentChatId).then(setCurrentChat);
+					if (chatWithUserId?.length < 2) {
+						setGroupChat(null);
+
+						usersAPI
+							.getUser(chatWithUserId[0])
+							.then((user) => {
+								setChatWithUser(user);
+							})
+							.catch((err) => alert(err));
+					} else {
+						setChatWithUser(null);
+
+						const groupChat = chatWithUserId?.map((userId) =>
+							usersAPI.getUser(userId).catch((err) => alert(err)),
+						);
+
+						if (groupChat) {
+							Promise.all(groupChat).then(setGroupChat);
+						}
+					}
+				})
+				.catch((err) => alert(err));
+
+			chatsAPI
+				.getMessagesByChatId(currentChatId)
+				.then(setCurrentChat)
+				.catch((err) => alert(err));
 		}
 	}, [
 		currentChatId,

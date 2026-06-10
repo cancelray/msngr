@@ -28,35 +28,38 @@ const useLogin = () => {
 
 	const loginSubmit = useCallback(
 		(loginInput, passwordInput, callbackClear) => {
-			usersAPI.getUserByLogin(loginInput).then((user) => {
-				if (user.length === 0) {
-					setLoginErrors({
-						isError: true,
-						errorTarget: 'login-log',
-						errorBody: 'User not found',
-					});
-					return;
-				}
+			usersAPI
+				.getUserByLogin(loginInput)
+				.then((user) => {
+					if (user.length === 0) {
+						setLoginErrors({
+							isError: true,
+							errorTarget: 'login-log',
+							errorBody: 'User not found',
+						});
+						return;
+					}
 
-				if (user[0].password === passwordInput) {
-					setLoginUserId(user[0].id);
-					localStorage.setItem('LoginUserId', user[0].id);
-				} else {
-					setLoginErrors({
-						isError: true,
-						errorTarget: 'login-pass',
-						errorBody: 'Incorrect password',
-					});
-					return;
-				}
+					if (user[0].password === passwordInput) {
+						setLoginUserId(user[0].id);
+						localStorage.setItem('LoginUserId', user[0].id);
+					} else {
+						setLoginErrors({
+							isError: true,
+							errorTarget: 'login-pass',
+							errorBody: 'Incorrect password',
+						});
+						return;
+					}
 
-				setLoginErrors({
-					isError: false,
-					errorTarget: '',
-					errorBody: '',
-				});
-				callbackClear();
-			});
+					setLoginErrors({
+						isError: false,
+						errorTarget: '',
+						errorBody: '',
+					});
+					callbackClear();
+				})
+				.catch((err) => alert(err));
 		},
 		[],
 	);

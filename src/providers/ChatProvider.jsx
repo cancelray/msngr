@@ -134,12 +134,6 @@ const ChatProvider = ({ children }) => {
 			setIsCurrentChatGroup,
 			setIsNewChatGroup,
 
-			//useCreateChat
-			// createNewChat,
-			// createGroupChat,
-			// groupChatName,
-			// setGroupChatName,
-
 			//useContacts
 			userContactList,
 			addContact,

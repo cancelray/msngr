@@ -28,18 +28,12 @@ const MessengerProvider = ({ children }) => {
 		}),
 		[
 			messages,
-			setMessages,
 			users,
-			setUsers,
-			
+
 			isContactListShow,
-			setIsContactListShow,
 			isCreateGroupChatShow,
-			setIsCreateGroupChatShow,
 			isSidebarDropdownShow,
-			setIsSidebarDropdownShow,
 			isChatHeadDropdownShow,
-			setIsChatHeadDropdownShow,
 		],
 	);
 

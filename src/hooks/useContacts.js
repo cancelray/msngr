@@ -39,8 +39,11 @@ const useContacts = (
 
 		contactsAPI
 			.addContact(newContact)
-			.then(() => setUserContactListId((prev) => [...prev, newContact]))
-			.then(() => getContactList(userContactListId));
+			.then(
+				async () => await setUserContactListId((prev) => [...prev, newContact]),
+			)
+			.then(() => getContactList(userContactListId))
+			.catch((err) => alert(err));
 	}, [
 		loginUserId,
 		userContactListId,
@@ -58,10 +61,16 @@ const useContacts = (
 			}
 
 			try {
-				const resp = await contactsAPI.getContact(loginUserId, chatWithUser.id);
-				await contactsAPI.deleteContact(resp[0].id);
+				const resp = await contactsAPI
+					.getContact(loginUserId, chatWithUser.id)
+					.catch((err) => alert(err));
+
+				await contactsAPI.deleteContact(resp[0].id).catch((err) => alert(err));
 			} finally {
-				const resp = await contactsAPI.getContactListByUser(loginUserId);
+				const resp = await contactsAPI
+					.getContactListByUser(loginUserId)
+					.catch((err) => alert(err));
+					
 				setUserContactListId(resp);
 			}
 		},

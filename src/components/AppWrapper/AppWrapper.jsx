@@ -14,8 +14,14 @@ const AppWrapper = () => {
 	const { loginUserId } = useContext(AuthContext);
 
 	useEffect(() => {
-		usersAPI.getAllUsers().then(setUsers);
-		chatsAPI.getAllMessages().then(setMessages);
+		usersAPI
+			.getAllUsers()
+			.then(setUsers)
+			.catch((err) => alert(err));
+		chatsAPI
+			.getAllMessages()
+			.then(setMessages)
+			.catch((err) => alert(err));
 	}, [setUsers, setMessages]);
 
 	return loginUserId ? <MainPageWrapper /> : <LoginPageWrapper />;

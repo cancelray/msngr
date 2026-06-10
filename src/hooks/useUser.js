@@ -12,33 +12,41 @@ const useUser = (loginUserId) => {
 
 	const getChatList = useCallback(
 		async (userId) => {
-			await chatsAPI.getAllChats().then((chats) => {
-				const filteredChats = structuredClone(
-					chats.filter((chat) => chat.membersId.includes(userId)),
-				);
+			await chatsAPI
+				.getAllChats()
+				.then((chats) => {
+					const filteredChats = structuredClone(
+						chats.filter((chat) => chat.membersId.includes(userId)),
+					);
 
-				filteredChats.forEach((chat) => {
-					const userIndex = chat.membersId.indexOf(userId);
+					filteredChats.forEach((chat) => {
+						const userIndex = chat.membersId.indexOf(userId);
 
-					if (userIndex !== 0) {
-						const [item] = chat.membersId.splice(userIndex, 1);
-						chat.membersId.unshift(item);
-					}
-				});
+						if (userIndex !== 0) {
+							const [item] = chat.membersId.splice(userIndex, 1);
+							chat.membersId.unshift(item);
+						}
+					});
 
-				setUserChats(filteredChats);
-			});
+					setUserChats(filteredChats);
+				})
+				.catch((err) => alert(err));
 		},
 		[setUserChats],
 	);
 
 	useEffect(() => {
 		if (loginUserId) {
-			usersAPI.getUser(loginUserId).then(setUser);
+			usersAPI
+				.getUser(loginUserId)
+				.then(setUser)
+				.catch((err) => alert(err));
+
 			contactsAPI
 				.getContactListByUser(loginUserId)
 				.then(setUserContactListId)
-				.finally(() => setIsUserLoading(false));
+				.then(() => setIsUserLoading(false))
+				.catch((err) => alert(err));
 
 			getChatList(loginUserId);
 		}

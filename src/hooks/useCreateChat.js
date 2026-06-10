@@ -26,14 +26,17 @@ const useCreateChat = (
 				chatImg: '',
 			};
 
-			chatsAPI.createNewChat(newChat).then((newChatResp) => {
-				setCurrentChatId(newChatResp.id);
-				setNewChatId(newChatResp.id);
+			chatsAPI
+				.createNewChat(newChat)
+				.then((newChatResp) => {
+					setCurrentChatId(newChatResp.id);
+					setNewChatId(newChatResp.id);
 
-				if (isContactListShow) {
-					setIsContactListShow(false);
-				}
-			});
+					if (isContactListShow) {
+						setIsContactListShow(false);
+					}
+				})
+				.catch((err) => alert(err));
 		},
 		[
 			loginUserId,
@@ -64,17 +67,20 @@ const useCreateChat = (
 			groupChatAdminId: loginUserId,
 		};
 
-		chatsAPI.createNewChat(newGroupChat).then((newChatResp) => {
-			setCurrentChatId(newChatResp.id);
-			setNewChatId(newChatResp.id);
+		chatsAPI
+			.createNewChat(newGroupChat)
+			.then((newChatResp) => {
+				setCurrentChatId(newChatResp.id);
+				setNewChatId(newChatResp.id);
 
-			setIsCurrentChatGroup(true);
+				setIsCurrentChatGroup(true);
 
-			setIsCreateGroupChatShow(false);
-			setIsContactListShow(false);
-			setIsChecked({});
-			setGroupChatName('');
-		});
+				setIsCreateGroupChatShow(false);
+				setIsContactListShow(false);
+				setIsChecked({});
+				setGroupChatName('');
+			})
+			.catch((err) => alert(err));
 	}, [
 		loginUserId,
 		groupChatName,

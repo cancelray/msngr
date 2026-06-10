@@ -29,7 +29,7 @@ const ChatWrapper = () => {
 						isCurrentChatGroup && String(message.senderId) !== loginUserId
 					}
 					loginUserId={loginUserId}
-					key={message.id ? message.id : crypto.randomUUID()}
+					key={message.id}
 				/>
 			))}
 			<div ref={endOfMessagesRef} />
