@@ -1,0 +1,11 @@
+.chats {
+	flex: 1;
+	overflow-y: auto;
+}
+
+.chats h3 {
+	font-weight: 400;
+	margin: 0;
+	width: 100%;
+	border-bottom: 1px solid rgb(106, 111, 114);
+}

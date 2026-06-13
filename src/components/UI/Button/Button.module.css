@@ -1,0 +1,19 @@
+.button {
+	width: 100px;
+	border: none;
+	border-radius: 10px;
+	text-decoration: none;
+	color: white;
+	background: #4caec5;
+	box-shadow: 0 5px 0 #434b5f;
+}
+.button:hover {
+	background: #31c9ec;
+}
+.button:disabled {
+	background-color: #555555;
+}
+.button:disabled:hover {
+	cursor: default;
+	background-color: #555555;
+}

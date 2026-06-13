@@ -1,0 +1,43 @@
+.contactListElement {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 12px 14px;
+	cursor: pointer;
+	border-bottom: 1px solid #222e35;
+	transition: background 0.2s;
+}
+
+.contactListElement:hover {
+	background: #4c5a63;
+}
+
+.avatar {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background: #2a3942;
+}
+
+.avatarAlt {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 25px;
+	width: 40px;
+	height: 40px;
+	border-radius: 50px;
+	background: #284253;
+}
+
+.contact {
+	display: flex;
+	justify-content: space-between;
+	width: 250px;
+}
+
+.name {
+	font-size: 18px;
+	text-align: left;
+	color: #e9edef;
+}
