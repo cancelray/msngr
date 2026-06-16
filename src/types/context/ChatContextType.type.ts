@@ -16,15 +16,15 @@ export interface ChatContextType {
 	groupChat: User[] | null;
 	setGroupChat: React.Dispatch<React.SetStateAction<User[] | null>>;
 	currentChatId: string | null;
-	currentChat: Chat[] | [];
+	currentChat: Chat[];
 	sendMessage: (clearInput: string, callbackInputClear: () => void) => void;
-	chatWrapperRef: React.RefObject<HTMLInputElement | null>;
-	endOfMessagesRef: React.RefObject<HTMLInputElement | null>;
+	chatWrapperRef: React.RefObject<HTMLDivElement | null>;
+	endOfMessagesRef: React.RefObject<HTMLDivElement | null>;
 	deleteChat: () => void;
 	isCurrentChatGroup: boolean;
 	setIsCurrentChatGroup: React.Dispatch<React.SetStateAction<boolean>>;
 	setIsNewChatGroup: React.Dispatch<React.SetStateAction<boolean>>;
-	userContactList: User[] | [];
+	userContactList: User[];
 	addContact: () => void;
 	deleteContact: (event: React.MouseEvent<HTMLAnchorElement>) => void;
 }

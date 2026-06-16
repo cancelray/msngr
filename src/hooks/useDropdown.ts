@@ -4,8 +4,8 @@ const useDropdown = (
 	setIsSidebarDropdownShow: React.Dispatch<React.SetStateAction<boolean>>,
 	setIsChatHeadDropdownShow: React.Dispatch<React.SetStateAction<boolean>>,
 ) => {
-	const sidebarDropdownRef = useRef<HTMLInputElement>(null);
-	const chatHeadDropdownRef = useRef<HTMLInputElement>(null);
+	const sidebarDropdownRef = useRef<HTMLDivElement>(null);
+	const chatHeadDropdownRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {

@@ -6,8 +6,8 @@ import type { ChildrenProps } from '../types/props/ChildrenProps.type';
 import type { User } from '../types/User.type';
 
 const MessengerProvider = ({ children }: ChildrenProps) => {
-	const [messages, setMessages] = useState<Message[] | []>([]);
-	const [users, setUsers] = useState<User[] | []>([]);
+	const [messages, setMessages] = useState<Message[]>([]);
+	const [users, setUsers] = useState<User[]>([]);
 
 	const [isContactListShow, setIsContactListShow] = useState<boolean>(false);
 	const [isCreateGroupChatShow, setIsCreateGroupChatShow] =

@@ -1,8 +1,8 @@
-import type { Chat } from '../Chat.type';
+import type { Message } from '../Message.type';
 import type { User } from '../User.type';
 
 export interface MessageProps {
-	message: Chat;
+	message: Message;
 	messageAuthor?: User;
 	isShowAuthorName: boolean;
 	loginUserId: string | null;

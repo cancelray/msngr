@@ -17,11 +17,8 @@ const UIProvider = ({ children }: ChildrenProps) => {
 		users,
 		isContactListShow,
 		setIsContactListShow,
-		isCreateGroupChatShow,
 		setIsCreateGroupChatShow,
-		isSidebarDropdownShow,
 		setIsSidebarDropdownShow,
-		isChatHeadDropdownShow,
 		setIsChatHeadDropdownShow,
 	} = useMessengerContext();
 
@@ -80,15 +77,6 @@ const UIProvider = ({ children }: ChildrenProps) => {
 
 	const value = useMemo(
 		() => ({
-			isContactListShow,
-			setIsContactListShow,
-			isSidebarDropdownShow,
-			setIsSidebarDropdownShow,
-			isChatHeadDropdownShow,
-			setIsChatHeadDropdownShow,
-			isCreateGroupChatShow,
-			setIsCreateGroupChatShow,
-
 			//useLogin
 			isLoginPageShow,
 			setIsLoginPageShow,
@@ -115,15 +103,6 @@ const UIProvider = ({ children }: ChildrenProps) => {
 			chatHeadDropdownRef,
 		}),
 		[
-			isContactListShow,
-			setIsContactListShow,
-			isSidebarDropdownShow,
-			setIsSidebarDropdownShow,
-			isChatHeadDropdownShow,
-			setIsChatHeadDropdownShow,
-			isCreateGroupChatShow,
-			setIsCreateGroupChatShow,
-
 			//useLogin
 			isLoginPageShow,
 			setIsLoginPageShow,

@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 
 import chatsAPI from '../api/chatsAPI';
+import type { Check } from '../types/Check.type';
 
 const useCreateChat = (
 	loginUserId: string | null,
@@ -12,7 +13,7 @@ const useCreateChat = (
 	setNewChatId: React.Dispatch<React.SetStateAction<string | null>>,
 	setIsCurrentChatGroup: React.Dispatch<React.SetStateAction<boolean>>,
 ) => {
-	const [isChecked, setIsChecked] = useState({});
+	const [isChecked, setIsChecked] = useState<Check>({});
 	const [groupChatName, setGroupChatName] = useState<string>('');
 
 	const createNewChat = useCallback(

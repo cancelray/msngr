@@ -12,7 +12,7 @@ const useContacts = (
 	setUserContactListId: React.Dispatch<React.SetStateAction<Contact[]>>,
 	chatWithUser: User | null,
 ) => {
-	const [userContactList, setUserContactList] = useState<User[] | []>([]);
+	const [userContactList, setUserContactList] = useState<User[]>([]);
 
 	const getContactList = useCallback(
 		(contactListId: Contact[]) => {

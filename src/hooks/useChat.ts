@@ -26,12 +26,12 @@ const useChat = (
 	const [currentChatId, setCurrentChatId] = useState<string | null>(null);
 	const [chatWithUser, setChatWithUser] = useState<User | null>(null);
 	const [groupChat, setGroupChat] = useState<User[] | null>(null);
-	const [currentChat, setCurrentChat] = useState<Chat[] | []>([]);
+	const [currentChat, setCurrentChat] = useState<Chat[]>([]);
 	const [isNewChatGroup, setIsNewChatGroup] = useState<boolean>(false);
 	const [isCurrentChatGroup, setIsCurrentChatGroup] = useState<boolean>(false);
 
-	const chatWrapperRef = useRef<HTMLInputElement>(null);
-	const endOfMessagesRef = useRef<HTMLInputElement>(null);
+	const chatWrapperRef = useRef<HTMLDivElement>(null);
+	const endOfMessagesRef = useRef<HTMLDivElement>(null);
 
 	const sendMessage = useCallback(
 		async (clearInput: string, callbackInputClear: () => void) => {

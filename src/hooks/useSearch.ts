@@ -6,7 +6,7 @@ import type { User } from '../types/User.type';
 
 const useSearch = (
 	chatList: ChatListItem[],
-	userContactList: User[] | [],
+	userContactList: User[],
 	users: User[],
 	newChatId: string | null,
 	currentChatId: string | null,
@@ -15,7 +15,7 @@ const useSearch = (
 	const [searchInput, setSearchInput] = useState('');
 	const [isSearch, setIsSearch] = useState(false);
 	const [searchResults, setSearchResults] = useState<
-		(ChatListItem | Contact | User)[] | []
+		(ChatListItem | Contact | User)[]
 	>([]);
 
 	const search = useCallback(

@@ -14,7 +14,7 @@ export interface Chat {
 	createdAt: string;
 	content?: string;
 	avatar: string;
-	lastMessageTime: number;
+	lastMessageTime?: number;
 }
 
 export interface GroupChat extends Chat {

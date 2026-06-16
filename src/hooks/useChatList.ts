@@ -11,7 +11,7 @@ const useChatList = (
 	userChats: Chat[],
 	getChatList: (loginUserId: string) => void,
 ) => {
-	const [chatList, setChatList] = useState<ChatListItem[] | []>([]);
+	const [chatList, setChatList] = useState<ChatListItem[]>([]);
 	const [newChatId, setNewChatId] = useState<string | null>(null);
 
 	const getUsersFromChatList: (
