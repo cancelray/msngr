@@ -1,6 +1,7 @@
+import type { SearchResultListElementProps } from '../../../types/props/SearchResultListElementProps.type';
 import styles from './SearchResultListElement.module.css';
 
-const SearchResultListElement = (props) => {
+const SearchResultListElement = (props: SearchResultListElementProps) => {
 	const { searchResult, searchResultListClickHandler, dataChatId } = props;
 
 	return (
@@ -10,7 +11,7 @@ const SearchResultListElement = (props) => {
 			data-user-id={searchResult.id}
 			data-chat-id={dataChatId}
 		>
-			{searchResult.avatar?.length > 0 ? (
+			{searchResult.avatar && searchResult.avatar.length > 0 ? (
 				<img
 					className={styles.avatar}
 					src={searchResult.avatar}

@@ -1,21 +1,24 @@
 import { useEffect, useRef } from 'react';
 
-const useDropdown = (setIsSidebarDropdownShow, setIsChatHeadDropdownShow) => {
-	const sidebarDropdownRef = useRef(null);
-	const chatHeadDropdownRef = useRef(null);
+const useDropdown = (
+	setIsSidebarDropdownShow: React.Dispatch<React.SetStateAction<boolean>>,
+	setIsChatHeadDropdownShow: React.Dispatch<React.SetStateAction<boolean>>,
+) => {
+	const sidebarDropdownRef = useRef<HTMLInputElement>(null);
+	const chatHeadDropdownRef = useRef<HTMLInputElement>(null);
 
 	useEffect(() => {
-		const handleClickOutside = (event) => {
+		const handleClickOutside = (event: MouseEvent) => {
 			if (
 				sidebarDropdownRef.current &&
-				!sidebarDropdownRef.current.contains(event.target)
+				!sidebarDropdownRef.current.contains(event.target as Node)
 			) {
 				setIsSidebarDropdownShow(false);
 			}
 
 			if (
 				chatHeadDropdownRef.current &&
-				!chatHeadDropdownRef.current.contains(event.target)
+				!chatHeadDropdownRef.current.contains(event.target as Node)
 			) {
 				setIsChatHeadDropdownShow(false);
 			}

@@ -1,11 +1,9 @@
-import { useContext } from 'react';
-
-import { UIContext } from '../../../context/UIContext';
+import useUIContext from '../../../hooks/context/useUIContext';
 
 import styles from './Search.module.css';
 
 const Search = () => {
-	const { search, searchInput, setSearchInput } = useContext(UIContext);
+	const { search, searchInput, setSearchInput } = useUIContext();
 
 	return (
 		<div className={styles.search}>

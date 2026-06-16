@@ -1,8 +1,9 @@
+import type { MessageProps } from '../../../types/props/MessageProps.type';
 import styles from './Message.module.css';
 
-const Message = (props) => {
+const Message = (props: MessageProps) => {
 	const { message, messageAuthor, isShowAuthorName, loginUserId } = props;
-
+	
 	const messageCreatedDate = new Date(message.createdAt);
 
 	const day = String(messageCreatedDate.getDate()).padStart(2, '0');

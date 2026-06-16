@@ -1,22 +1,18 @@
-import { useContext, useMemo } from 'react';
+import { useMemo } from 'react';
 
 import useChat from '../hooks/useChat';
 import useChatList from '../hooks/useChatList';
 import useContacts from '../hooks/useContacts';
 
-import { AuthContext } from '../context/AuthContext';
-import { ChatContext } from '../context/ChatContext';
-import { MessengerContext } from '../context/MessengerContext';
+import useAuthContext from '../hooks/context/useAuthContext';
+import useMessengerContext from '../hooks/context/useMessengerContext';
 
-const ChatProvider = ({ children }) => {
-	const {
-		messages,
-		setMessages,
-		users,
-		isContactListShow,
-		setIsContactListShow,
-		setIsCreateGroupChatShow,
-	} = useContext(MessengerContext);
+import { ChatContext } from '../context/ChatContext';
+
+import type { ChildrenProps } from '../types/props/ChildrenProps.type';
+
+const ChatProvider = ({ children }: ChildrenProps) => {
+	const { messages, setMessages, users } = useMessengerContext();
 
 	const {
 		loginUserId,
@@ -25,7 +21,7 @@ const ChatProvider = ({ children }) => {
 		getChatList,
 		userChats,
 		setUserChats,
-	} = useContext(AuthContext);
+	} = useAuthContext();
 
 	const {
 		chatList,
@@ -33,7 +29,6 @@ const ChatProvider = ({ children }) => {
 		newChatId,
 		setNewChatId,
 		getUsersFromChatList,
-		setIsDeleteChat,
 	} = useChatList(messages, users, loginUserId, userChats, getChatList);
 
 	const {
@@ -56,18 +51,13 @@ const ChatProvider = ({ children }) => {
 		setMessages,
 		users,
 		loginUserId,
-		isContactListShow,
-		setIsContactListShow,
-		setIsCreateGroupChatShow,
 		chatList,
 		setChatList,
 		userChats,
-		setUserChats,
 		newChatId,
 		setNewChatId,
 		getChatList,
 		getUsersFromChatList,
-		setIsDeleteChat,
 	);
 
 	const { userContactList, addContact, deleteContact } = useContacts(

@@ -1,14 +1,21 @@
 import { useMemo, useState } from 'react';
 import { MessengerContext } from '../context/MessengerContext';
 
-const MessengerProvider = ({ children }) => {
-	const [messages, setMessages] = useState([]);
-	const [users, setUsers] = useState([]);
+import type { Message } from '../types/Message.type';
+import type { ChildrenProps } from '../types/props/ChildrenProps.type';
+import type { User } from '../types/User.type';
 
-	const [isContactListShow, setIsContactListShow] = useState(false);
-	const [isCreateGroupChatShow, setIsCreateGroupChatShow] = useState(false);
-	const [isSidebarDropdownShow, setIsSidebarDropdownShow] = useState(false);
-	const [isChatHeadDropdownShow, setIsChatHeadDropdownShow] = useState(false);
+const MessengerProvider = ({ children }: ChildrenProps) => {
+	const [messages, setMessages] = useState<Message[] | []>([]);
+	const [users, setUsers] = useState<User[] | []>([]);
+
+	const [isContactListShow, setIsContactListShow] = useState<boolean>(false);
+	const [isCreateGroupChatShow, setIsCreateGroupChatShow] =
+		useState<boolean>(false);
+	const [isSidebarDropdownShow, setIsSidebarDropdownShow] =
+		useState<boolean>(false);
+	const [isChatHeadDropdownShow, setIsChatHeadDropdownShow] =
+		useState<boolean>(false);
 
 	const value = useMemo(
 		() => ({

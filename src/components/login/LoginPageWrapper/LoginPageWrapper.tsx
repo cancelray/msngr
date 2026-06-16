@@ -1,14 +1,12 @@
-import { useContext } from 'react';
-
-import { UIContext } from '../../../context/UIContext';
-
 import LoginPage from '../LoginPage/LoginPage';
 import RegisterPage from '../RegisterPage/RegisterPage';
+
+import useUIContext from '../../../hooks/context/useUIContext';
 
 import styles from './LoginPageWrapper.module.css';
 
 const LoginPageWrapper = () => {
-	const { isLoginPageShow } = useContext(UIContext);
+	const { isLoginPageShow } = useUIContext();
 
 	return (
 		<div className={styles.loginPageWrapper}>

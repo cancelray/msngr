@@ -1,6 +1,9 @@
 const chatsURL = 'http://localhost:3001/chats';
 const messagesURL = 'http://localhost:3001/messages';
 
+import type { Chat } from '../types/Chat.type';
+import type { Message } from '../types/Message.type';
+
 const headers = {
 	'Content-Type': 'application/json',
 };
@@ -20,17 +23,17 @@ const chatsAPI = {
 		return fetch(messagesURL).then((response) => response.json());
 	},
 
-	getMessagesByChatId: (chatId) => {
+	getMessagesByChatId: (chatId: string) => {
 		return fetch(`${messagesURL}?chatId=${chatId}`).then((response) =>
 			response.json(),
 		);
 	},
 
-	getChatById: (chatId) => {
+	getChatById: (chatId: string) => {
 		return fetch(`${chatsURL}/${chatId}`).then((response) => response.json());
 	},
 
-	addMessage: (newMessage) => {
+	addMessage: (newMessage: Message) => {
 		return fetch(messagesURL, {
 			method: 'POST',
 			headers,
@@ -38,7 +41,7 @@ const chatsAPI = {
 		}).then((response) => response.json());
 	},
 
-	createNewChat: (newChat) => {
+	createNewChat: (newChat: Chat) => {
 		return fetch(chatsURL, {
 			method: 'POST',
 			headers,
@@ -46,13 +49,13 @@ const chatsAPI = {
 		}).then((response) => response.json());
 	},
 
-	deleteChat: (chatId) => {
+	deleteChat: (chatId: string) => {
 		return fetch(`${chatsURL}/${chatId}`, {
 			method: 'DELETE',
 		}).then((response) => response.json());
 	},
 
-	deleteMessageById: (id) => {
+	deleteMessageById: (id: string) => {
 		return fetch(`${messagesURL}/${id}`, {
 			method: 'DELETE',
 		}).then((response) => response.json());

@@ -3,32 +3,37 @@ import { useCallback, useState } from 'react';
 import chatsAPI from '../api/chatsAPI';
 
 const useCreateChat = (
-	loginUserId,
-	setIsNewChatGroup,
-	isContactListShow,
-	setIsContactListShow,
-	setCurrentChatId,
-	setIsCreateGroupChatShow,
-	setNewChatId,
-	setIsCurrentChatGroup,
+	loginUserId: string | null,
+	setIsNewChatGroup: React.Dispatch<React.SetStateAction<boolean>>,
+	isContactListShow: boolean,
+	setIsContactListShow: React.Dispatch<React.SetStateAction<boolean>>,
+	setCurrentChatId: React.Dispatch<React.SetStateAction<string | null>>,
+	setIsCreateGroupChatShow: React.Dispatch<React.SetStateAction<boolean>>,
+	setNewChatId: React.Dispatch<React.SetStateAction<string | null>>,
+	setIsCurrentChatGroup: React.Dispatch<React.SetStateAction<boolean>>,
 ) => {
 	const [isChecked, setIsChecked] = useState({});
-	const [groupChatName, setGroupChatName] = useState('');
+	const [groupChatName, setGroupChatName] = useState<string>('');
 
 	const createNewChat = useCallback(
-		(userId) => {
+		(userId: string) => {
 			setIsNewChatGroup(false);
 
 			const newChat = {
+				id: '',
 				membersId: [loginUserId, userId],
 				isGroup: false,
+				avatar: '',
 				name: '',
 				chatImg: '',
+				createdAt: '',
+				lastMessageTime: 0,
 			};
 
 			chatsAPI
 				.createNewChat(newChat)
 				.then((newChatResp) => {
+					setIsCurrentChatGroup(false);
 					setCurrentChatId(newChatResp.id);
 					setNewChatId(newChatResp.id);
 
@@ -45,6 +50,7 @@ const useCreateChat = (
 			setNewChatId,
 			setIsNewChatGroup,
 			setCurrentChatId,
+			setIsCurrentChatGroup,
 		],
 	);
 
@@ -57,14 +63,20 @@ const useCreateChat = (
 			return;
 		}
 
-		usersInGroupChat.push(loginUserId);
+		if (loginUserId) {
+			usersInGroupChat.push(loginUserId);
+		}
 
 		const newGroupChat = {
+			id: '',
 			membersId: usersInGroupChat,
 			isGroup: true,
 			name: groupChatName.trim(),
 			chatImg: '',
 			groupChatAdminId: loginUserId,
+			createdAt: '',
+			avatar: '',
+			lastMessageTime: 0,
 		};
 
 		chatsAPI

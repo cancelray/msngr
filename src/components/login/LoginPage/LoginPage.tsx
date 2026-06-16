@@ -1,9 +1,9 @@
-import { useContext, useState } from 'react';
-
-import { AuthContext } from '../../../context/AuthContext';
-import { UIContext } from '../../../context/UIContext';
+import React, { useState } from 'react';
 
 import Button from '../../UI/Button/Button';
+
+import useAuthContext from '../../../hooks/context/useAuthContext';
+import useUIContext from '../../../hooks/context/useUIContext';
 
 import styles from './LoginPage.module.css';
 
@@ -11,20 +11,20 @@ const LoginPage = () => {
 	const [loginInput, setLoginInput] = useState('');
 	const [passwordInput, setPasswordInput] = useState('');
 
-	const { loginSubmit, loginErrors } = useContext(AuthContext);
-	const { toRegisterPage } = useContext(UIContext);
+	const { loginSubmit, loginErrors } = useAuthContext();
+	const { toRegisterPage } = useUIContext();
 
 	const inputsClear = () => {
 		setLoginInput('');
 		setPasswordInput('');
 	};
 
-	const onSubmit = (event) => {
+	const onSubmit = (event: React.SubmitEvent) => {
 		event.preventDefault();
 		loginSubmit(loginInput, passwordInput, inputsClear);
 	};
 
-	const onClick = (event) => {
+	const onClick = (event: React.MouseEvent) => {
 		event.preventDefault();
 		toRegisterPage(inputsClear);
 	};

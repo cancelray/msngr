@@ -6,7 +6,9 @@ import useUser from '../hooks/useUser';
 
 import { AuthContext } from '../context/AuthContext';
 
-const AuthProvider = ({ children }) => {
+import type { ChildrenProps } from '../types/props/ChildrenProps.type';
+
+const AuthProvider = ({ children }: ChildrenProps) => {
 	const {
 		loginUserId,
 		setLoginUserId,

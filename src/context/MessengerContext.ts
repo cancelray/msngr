@@ -1,3 +1,7 @@
 import { createContext } from 'react';
 
-export const MessengerContext = createContext({});
+import type { MessengerContextType } from '../types/context/MessengerContextType.type';
+
+export const MessengerContext = createContext<MessengerContextType | null>(
+	null,
+);

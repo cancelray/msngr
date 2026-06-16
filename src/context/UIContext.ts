@@ -1,3 +1,5 @@
 import { createContext } from 'react';
 
-export const UIContext = createContext({});
+import type { UIContextType } from '../types/context/UIContextType.type';
+
+export const UIContext = createContext<UIContextType | null>(null);

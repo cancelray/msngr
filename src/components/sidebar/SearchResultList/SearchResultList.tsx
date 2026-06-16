@@ -1,9 +1,7 @@
-import { useContext } from 'react';
-
-import { ChatContext } from '../../../context/ChatContext';
-import { UIContext } from '../../../context/UIContext';
-
 import SearchResultListElement from '../../UI/SearchResultListElement/SearchResultListElement';
+
+import useChatContext from '../../../hooks/context/useChatContext';
+import useUIContext from '../../../hooks/context/useUIContext';
 
 import styles from './searchResultList.module.css';
 
@@ -14,16 +12,19 @@ const SearchResultList = () => {
 		setCurrentChatId,
 		setChatWithUser,
 		setGroupChat,
-	} = useContext(ChatContext);
+	} = useChatContext();
+
 	const {
 		searchResults,
 		setSearchInput,
 		setIsSearch,
 		setIsContactListShow,
 		createNewChat,
-	} = useContext(UIContext);
+	} = useUIContext();
 
-	const searchResultListClickHandler = (event) => {
+	const searchResultListClickHandler = (
+		event: React.MouseEvent<HTMLElement>,
+	) => {
 		setSearchInput('');
 
 		const chatId = event.currentTarget.dataset.chatId;
@@ -39,7 +40,10 @@ const SearchResultList = () => {
 			setCurrentChatId(null);
 
 			const userId = event.currentTarget.dataset.userId;
-			createNewChat(userId);
+
+			if (userId) {
+				createNewChat(userId);
+			}
 		}
 
 		setIsSearch(false);

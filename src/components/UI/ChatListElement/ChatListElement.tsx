@@ -1,18 +1,19 @@
-import { useContext } from 'react';
+import useAuthContext from '../../../hooks/context/useAuthContext';
+import useChatContext from '../../../hooks/context/useChatContext';
 
-import { AuthContext } from '../../../context/AuthContext';
-import { ChatContext } from '../../../context/ChatContext';
+import type { ChatListElementProps } from '../../../types/props/ChatListElementProps.type';
 
 import styles from './ChatListElement.module.css';
 
-const ChatListElement = (props) => {
+const ChatListElement = (props: ChatListElementProps) => {
 	const { chat, clickHandler } = props;
 
-	const { loginUserId } = useContext(AuthContext);
-	const { currentChatId } = useContext(ChatContext);
+	const { loginUserId } = useAuthContext();
+	const { currentChatId } = useChatContext();
 
 	const lastMessageTime = new Date(chat.lastMessageTime);
-	const dateIsNaN = isNaN(lastMessageTime);
+
+	const isDateNaN = isNaN(Number(lastMessageTime));
 
 	const day = String(lastMessageTime.getDate()).padStart(2, '0');
 	const month = String(lastMessageTime.getMonth() + 1).padStart(2, '0');
@@ -40,16 +41,18 @@ const ChatListElement = (props) => {
 					) : (
 						<p className={styles.name}>{chat.name} (group)</p>
 					)}
-					{dateIsNaN ? null : <p className={styles.date}>{date}</p>}
+					<p className={styles.date}>{isDateNaN ? '' : date}</p>
 				</div>
 				{chat.lastMessageAuthor ? (
 					<div className={styles.lastMessage}>
 						{chat.isGroup
 							? `${
 									chat.lastMessageAuthor === loginUserId
-										? 'You'
+										? 'You:'
 										: chat.lastMessageAuthorName
-								}: ${chat.lastMessage}`
+											? `${chat.lastMessageAuthorName}:`
+											: ''
+								} ${chat.lastMessage || ''}`
 							: `${chat.lastMessageAuthor === loginUserId ? 'You' : chat.name}: ${chat.lastMessage}`}
 					</div>
 				) : null}

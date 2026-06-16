@@ -1,8 +1,10 @@
-import { useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import usersAPI from '../api/usersAPI';
 
-const useRegister = (setIsLoginPageShow) => {
+const useRegister = (
+	setIsLoginPageShow: React.Dispatch<React.SetStateAction<boolean>>,
+) => {
 	const [registerErrors, setRegisterErrors] = useState({
 		isError: false,
 		errorTarget: '',
@@ -11,12 +13,12 @@ const useRegister = (setIsLoginPageShow) => {
 
 	const registerSubmit = useCallback(
 		async (
-			newLogin,
-			newPassword,
-			newPasswordRepeat,
-			newName,
-			newSecondName,
-			clearCallback,
+			newLogin: string,
+			newPassword: string,
+			newPasswordRepeat: string,
+			newName: string,
+			newSecondName: string,
+			clearCallback: () => void,
 		) => {
 			const user = await usersAPI
 				.getUserByLogin(newLogin)
@@ -59,6 +61,7 @@ const useRegister = (setIsLoginPageShow) => {
 			}
 
 			const newUser = {
+				id: '',
 				name: newName,
 				lastName: newSecondName,
 				login: newLogin,

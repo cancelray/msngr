@@ -1,18 +1,15 @@
-import { useContext } from 'react';
-
-import { AuthContext } from '../../../context/AuthContext';
-import { ChatContext } from '../../../context/ChatContext';
-import { MessengerContext } from '../../../context/MessengerContext';
-
 import Message from '../../UI/Message/Message';
 
+import useAuthContext from '../../../hooks/context/useAuthContext';
+import useChatContext from '../../../hooks/context/useChatContext';
+import useMessengerContext from '../../../hooks/context/useMessengerContext';
 import styles from './ChatWrapper.module.css';
 
 const ChatWrapper = () => {
-	const { loginUserId } = useContext(AuthContext);
-	const { users } = useContext(MessengerContext);
+	const { loginUserId } = useAuthContext();
+	const { users } = useMessengerContext();
 	const { currentChat, chatWrapperRef, endOfMessagesRef, isCurrentChatGroup } =
-		useContext(ChatContext);
+		useChatContext();
 
 	return (
 		<div

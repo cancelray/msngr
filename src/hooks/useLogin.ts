@@ -15,7 +15,7 @@ const useLogin = () => {
 		errorBody: '',
 	});
 
-	const toRegisterPage = useCallback((callbackClear) => {
+	const toRegisterPage = useCallback((callbackClear: () => void) => {
 		setLoginErrors({
 			isError: false,
 			errorTarget: '',
@@ -27,7 +27,7 @@ const useLogin = () => {
 	}, []);
 
 	const loginSubmit = useCallback(
-		(loginInput, passwordInput, callbackClear) => {
+		(loginInput: string, passwordInput: string, callbackClear: () => void) => {
 			usersAPI
 				.getUserByLogin(loginInput)
 				.then((user) => {

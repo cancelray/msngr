@@ -1,3 +1,5 @@
 import { createContext } from 'react';
 
-export const ChatContext = createContext({});
+import type { ChatContextType } from '../types/context/ChatContextType.type';
+
+export const ChatContext = createContext<ChatContextType | null>(null);

@@ -1,5 +1,7 @@
 const usersURL = 'http://localhost:3001/users';
 
+import type { User } from '../types/User.type';
+
 const headers = {
 	'Content-Type': 'application/json',
 };
@@ -9,17 +11,17 @@ const usersAPI = {
 		return fetch(usersURL).then((response) => response.json());
 	},
 
-	getUser: (userId) => {
+	getUser: (userId: string) => {
 		return fetch(`${usersURL}/${userId}`).then((response) => response.json());
 	},
 
-	getUserByLogin: (login) => {
+	getUserByLogin: (login: string) => {
 		return fetch(`${usersURL}?login=${login}`).then((response) =>
 			response.json(),
 		);
 	},
 
-	addNewUser: (newUser) => {
+	addNewUser: (newUser: User) => {
 		return fetch(usersURL, {
 			method: 'POST',
 			headers,

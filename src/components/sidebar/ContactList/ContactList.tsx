@@ -1,10 +1,10 @@
-import { useContext } from 'react';
-
-import { ChatContext } from '../../../context/ChatContext';
-import { UIContext } from '../../../context/UIContext';
+import React from 'react';
 
 import Button from '../../UI/Button/Button';
 import ContactListElement from '../../UI/ContactListElement/ContactListElement';
+
+import useChatContext from '../../../hooks/context/useChatContext';
+import useUIContext from '../../../hooks/context/useUIContext';
 
 import styles from './ContactList.module.css';
 
@@ -16,7 +16,7 @@ const ContactList = () => {
 		setChatWithUser,
 		setGroupChat,
 		setIsCurrentChatGroup,
-	} = useContext(ChatContext);
+	} = useChatContext();
 	const {
 		setIsContactListShow,
 		isChecked,
@@ -26,21 +26,23 @@ const ContactList = () => {
 		createNewChat,
 		groupChatName,
 		setGroupChatName,
-	} = useContext(UIContext);
+	} = useUIContext();
 
-	const contactListClickHandler = (event) => {
+	const contactListClickHandler = (event: React.MouseEvent<HTMLElement>) => {
 		if (isCreateGroupChatShow) {
 			const userId = event.currentTarget.dataset.userId;
 
-			if (userId in isChecked) {
-				const newIsChecked = structuredClone(isChecked);
+			if (userId) {
+				if (userId in isChecked) {
+					const newIsChecked = structuredClone(isChecked);
 
-				delete newIsChecked[userId];
-				setIsChecked(newIsChecked);
-			} else {
-				const newIsChecked = { ...isChecked };
-				newIsChecked[userId] = true;
-				setIsChecked(newIsChecked);
+					delete newIsChecked[userId];
+					setIsChecked(newIsChecked);
+				} else {
+					const newIsChecked = { ...isChecked };
+					newIsChecked[userId] = true;
+					setIsChecked(newIsChecked);
+				}
 			}
 		} else {
 			const chatId = event.currentTarget.dataset.chatId;
@@ -53,7 +55,9 @@ const ContactList = () => {
 				setIsCurrentChatGroup(false);
 			} else {
 				const userId = event.currentTarget.dataset.userId;
-				createNewChat(userId);
+				if (userId) {
+					createNewChat(userId);
+				}
 			}
 
 			setChatWithUser(null);
@@ -98,7 +102,7 @@ const ContactList = () => {
 						data-user-id={contact.id}
 						isCreateGroupChatShow={isCreateGroupChatShow}
 						contactListClickHandler={contactListClickHandler}
-						isChecked={isChecked[contact.id] ? true : false}
+						isChecked={isChecked[contact.id!] ? true : false}
 					/>
 				);
 			})}

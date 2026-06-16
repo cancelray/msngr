@@ -1,16 +1,17 @@
-import { useContext } from 'react';
+import type React from 'react';
 
-import { AuthContext } from '../../../context/AuthContext';
-import { ChatContext } from '../../../context/ChatContext';
-
-import { UIContext } from '../../../context/UIContext';
 import Button from '../../UI/Button/Button';
 import DropdownMenu from '../../UI/DropdownMenu/DropdownMenu';
+
+import useAuthContext from '../../../hooks/context/useAuthContext';
+import useChatContext from '../../../hooks/context/useChatContext';
+import useUIContext from '../../../hooks/context/useUIContext';
 
 import styles from './ChatHeader.module.css';
 
 const ChatHeader = () => {
-	const { loginUserId } = useContext(AuthContext);
+	const { loginUserId } = useAuthContext();
+
 	const {
 		chatWithUser,
 		groupChat,
@@ -25,15 +26,16 @@ const ChatHeader = () => {
 		setCurrentChatId,
 		setIsCurrentChatGroup,
 		userChats,
-	} = useContext(ChatContext);
+	} = useChatContext();
+
 	const {
 		isChatHeadDropdownShow,
 		setIsChatHeadDropdownShow,
 		chatHeadDropdownRef,
-				createNewChat,
-	} = useContext(UIContext);
+		createNewChat,
+	} = useUIContext();
 
-	const chatHeadNameClick = (event) => {
+	const chatHeadNameClick = (event: React.MouseEvent) => {
 		event.preventDefault();
 		setIsChatHeadDropdownShow(true);
 	};
@@ -66,7 +68,7 @@ const ChatHeader = () => {
 					>
 						<p>@{chatWithUser.login}</p>
 						<a
-							className={!isInContact ? styles.disable : null}
+							className={!isInContact ? styles.disable : undefined}
 							onClick={deleteContact}
 							data-is-disable={!isInContact ? 'disable' : null}
 						>
@@ -91,7 +93,7 @@ const ChatHeader = () => {
 			chatList.find((chat) => chat.id === currentChatId)?.groupChatAdminId ===
 			loginUserId;
 
-		const clickHandler = (userId) => {
+		const clickHandler = (userId: string) => {
 			const chatWithClickedUser = userChats.find(
 				(chat) =>
 					chat.membersId.length === 2 && chat.membersId.includes(userId),
@@ -112,10 +114,10 @@ const ChatHeader = () => {
 		return (
 			<div className={styles.chatHeader}>
 				<a onClick={chatHeadNameClick}>
-					{currentChatInfo?.avatar?.length > 0 ? (
+					{currentChatInfo?.avatar && currentChatInfo.avatar.length > 0 ? (
 						<img
 							className={styles.avatar}
-							src={currentChatInfo.avatar}
+							src={currentChatInfo?.avatar}
 							alt='avatar'
 						></img>
 					) : (

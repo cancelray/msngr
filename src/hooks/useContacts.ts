@@ -2,27 +2,32 @@ import { useCallback, useEffect, useState } from 'react';
 
 import contactsAPI from '../api/contactsAPI';
 
+import type { Contact } from '../types/Contact.type';
+import type { User } from '../types/User.type';
+
 const useContacts = (
-	loginUserId,
-	users,
-	userContactListId,
-	setUserContactListId,
-	chatWithUser,
+	loginUserId: string | null,
+	users: User[],
+	userContactListId: Contact[],
+	setUserContactListId: React.Dispatch<React.SetStateAction<Contact[]>>,
+	chatWithUser: User | null,
 ) => {
-	const [userContactList, setUserContactList] = useState([]);
+	const [userContactList, setUserContactList] = useState<User[] | []>([]);
 
 	const getContactList = useCallback(
-		(contactListId) => {
+		(contactListId: Contact[]) => {
 			if (users) {
-				const contactList = contactListId?.map((contact) =>
-					users.find((user) => {
+				const contactList: User[] = contactListId?.flatMap((contact) => {
+					const foundUser = users.find((user) => {
 						return isNaN(Number(user.id))
 							? user.id === contact.contactId
 							: Number(user.id) === contact.contactId;
-					}),
-				);
+					});
+					return foundUser ? [foundUser] : [];
+				});
 
 				contactList.sort((a, b) => a.name.localeCompare(b.name));
+
 				setUserContactList(contactList);
 			}
 		},
@@ -30,18 +35,16 @@ const useContacts = (
 	);
 
 	const addContact = useCallback(() => {
-		const newContact = {
+		const newContact: Contact = {
 			userId: !isNaN(Number(loginUserId)) ? Number(loginUserId) : loginUserId,
-			contactId: !isNaN(Number(chatWithUser.id))
-				? Number(chatWithUser.id)
-				: chatWithUser.id,
+			contactId: !isNaN(Number(chatWithUser?.id))
+				? Number(chatWithUser?.id)
+				: chatWithUser?.id,
 		};
 
 		contactsAPI
 			.addContact(newContact)
-			.then(
-				async () => await setUserContactListId((prev) => [...prev, newContact]),
-			)
+			.then(() => setUserContactListId((prev) => [...prev, newContact]))
 			.then(() => getContactList(userContactListId))
 			.catch((err) => alert(err));
 	}, [
@@ -53,7 +56,7 @@ const useContacts = (
 	]);
 
 	const deleteContact = useCallback(
-		async (event) => {
+		async (event: React.MouseEvent<HTMLAnchorElement>) => {
 			event.preventDefault();
 
 			if (event.currentTarget.dataset.isDisable) {
@@ -61,24 +64,33 @@ const useContacts = (
 			}
 
 			try {
-				const resp = await contactsAPI
-					.getContact(loginUserId, chatWithUser.id)
-					.catch((err) => alert(err));
+				if (chatWithUser && chatWithUser.id && loginUserId) {
+					const resp = await contactsAPI
+						.getContact(loginUserId, chatWithUser.id)
+						.catch((err) => alert(err));
 
-				await contactsAPI.deleteContact(resp[0].id).catch((err) => alert(err));
+					await contactsAPI
+						.deleteContact(resp[0].id)
+						.catch((err) => alert(err));
+				}
 			} finally {
-				const resp = await contactsAPI
-					.getContactListByUser(loginUserId)
-					.catch((err) => alert(err));
-					
-				setUserContactListId(resp);
+				if (loginUserId) {
+					const resp = await contactsAPI
+						.getContactListByUser(loginUserId)
+						.catch((err) => alert(err));
+
+					setUserContactListId(resp);
+				}
 			}
 		},
 		[loginUserId, chatWithUser, setUserContactListId],
 	);
 
 	useEffect(() => {
-		getContactList(userContactListId);
+		if (userContactListId) {
+			const getContacts = () => getContactList(userContactListId);
+			getContacts();
+		}
 	}, [userContactListId, getContactList]);
 
 	return {

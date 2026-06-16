@@ -1,15 +1,18 @@
-import { useContext, useMemo } from 'react';
+import { useMemo } from 'react';
 
 import useCreateChat from '../hooks/useCreateChat';
 import useDropdown from '../hooks/useDropdown';
 import useSearch from '../hooks/useSearch';
 
-import { AuthContext } from '../context/AuthContext';
-import { ChatContext } from '../context/ChatContext';
-import { MessengerContext } from '../context/MessengerContext';
+import useAuthContext from '../hooks/context/useAuthContext';
+import useChatContext from '../hooks/context/useChatContext';
+import useMessengerContext from '../hooks/context/useMessengerContext';
+
 import { UIContext } from '../context/UIContext';
 
-const UIProvider = ({ children }) => {
+import type { ChildrenProps } from '../types/props/ChildrenProps.type';
+
+const UIProvider = ({ children }: ChildrenProps) => {
 	const {
 		users,
 		isContactListShow,
@@ -20,10 +23,10 @@ const UIProvider = ({ children }) => {
 		setIsSidebarDropdownShow,
 		isChatHeadDropdownShow,
 		setIsChatHeadDropdownShow,
-	} = useContext(MessengerContext);
+	} = useMessengerContext();
 
 	const { loginUserId, toRegisterPage, isLoginPageShow, setIsLoginPageShow } =
-		useContext(AuthContext);
+		useAuthContext();
 
 	const {
 		chatList,
@@ -34,7 +37,7 @@ const UIProvider = ({ children }) => {
 		setIsCurrentChatGroup,
 		setIsNewChatGroup,
 		userContactList,
-	} = useContext(ChatContext);
+	} = useChatContext();
 
 	const {
 		createNewChat,

@@ -1,30 +1,44 @@
 import { useCallback, useEffect, useState } from 'react';
 
-const useChatList = (messages, users, loginUserId, userChats, getChatList) => {
-	const [chatList, setChatList] = useState([]);
-	const [newChatId, setNewChatId] = useState(null);
+import type { Chat, ChatListItem, GroupChat } from '../types/Chat.type';
+import type { Message } from '../types/Message.type';
+import type { User } from '../types/User.type';
 
+const useChatList = (
+	messages: Message[],
+	users: User[],
+	loginUserId: string | null,
+	userChats: Chat[],
+	getChatList: (loginUserId: string) => void,
+) => {
+	const [chatList, setChatList] = useState<ChatListItem[] | []>([]);
+	const [newChatId, setNewChatId] = useState<string | null>(null);
 
-	const getUsersFromChatList = useCallback(
-		async (users, userChats) => {
-			const allUserChats = [];
+	const getUsersFromChatList: (
+		users: User[],
+		userChats: Chat[],
+	) => Promise<ChatListItem[]> = useCallback(
+		async (users: User[], userChats: Chat[]) => {
+			const allUserChats: Chat[] = [];
 
 			userChats.forEach((chat, i) => {
 				if (chat.isGroup) {
-					const groupChat = {
+					const groupChat: GroupChat = {
 						id: chat.id,
-						chatId: chat.id,
+						membersId: [],
+						chatId: chat.id!,
 						isGroup: true,
 						name: chat.name,
-						avatar: chat.img,
+						avatar: chat.img!,
 						groupChatAdminId: chat.groupChatAdminId,
+						createdAt: '',
 					};
 
-					const members = [];
+					const members: User[] = [];
 
 					chat.membersId?.forEach((memberId) =>
 						members.push(
-							structuredClone(users.find((user) => user.id === memberId)),
+							structuredClone(users.find((user) => user.id === memberId)!),
 						),
 					);
 
@@ -38,15 +52,24 @@ const useChatList = (messages, users, loginUserId, userChats, getChatList) => {
 
 					if (user) {
 						delete user.password;
-						user.chatId = userChats[i].id;
-						user.isGroup = false;
 
-						if (user.chatId === newChatId) {
+						const chatListItem: ChatListItem = {
+							...user,
+							isGroup: false,
+							membersId: [],
+							createdAt: '',
+							lastMessageTime: 0,
+						};
+
+						chatListItem.chatId = userChats[i].id;
+						chatListItem.isGroup = false;
+
+						if (chatListItem.chatId === newChatId) {
 							return;
 						}
-					}
 
-					allUserChats.push(user);
+						allUserChats.push(chatListItem);
+					}
 				}
 			});
 
@@ -55,35 +78,44 @@ const useChatList = (messages, users, loginUserId, userChats, getChatList) => {
 					messages.filter((message) => userChat.chatId === message.chatId),
 				);
 
-				messagesData.sort((a, b) => a.createdAt - b.createdAt);
+				messagesData.sort((a, b) => a.createdAt! - b.createdAt!);
 
-				if (userChat) {
-					userChat.lastMessage = messagesData.at(-1)?.content;
-					userChat.lastMessageAuthor = messagesData.at(-1)?.senderId;
-					userChat.lastMessageTime = messagesData.at(-1)?.createdAt;
+				const userChatListItem: ChatListItem = structuredClone(userChat);
+
+				if (userChatListItem) {
+					userChatListItem.lastMessage = messagesData.at(-1)?.content;
+					userChatListItem.lastMessageAuthor = String(
+						messagesData.at(-1)?.senderId,
+					);
+					userChatListItem.lastMessageTime = messagesData.at(-1)?.createdAt;
 				}
 
-				if (userChat?.isGroup) {
+				if (userChatListItem?.isGroup) {
 					const lastMessageAuthor = users.find(
-						(user) => user.id === userChat.lastMessageAuthor,
+						(user) => user.id === userChatListItem.lastMessageAuthor,
 					);
 
-					userChat.lastMessageAuthorName = lastMessageAuthor?.name;
-					userChat.lastMessageAuthorLastName = lastMessageAuthor?.lastName;
+					userChatListItem.lastMessageAuthorName = lastMessageAuthor?.name;
+					userChatListItem.lastMessageAuthorLastName =
+						lastMessageAuthor?.lastName;
 				}
 
-				return { ...userChat, extra: messagesData };
+				return { ...userChatListItem, extra: messagesData };
 			});
 
-			chatsResult.sort((a, b) => b.lastMessageTime - a.lastMessageTime);
+			chatsResult.sort((a, b) => b.lastMessageTime! - a.lastMessageTime!);
 
-			return chatsResult;
+			const result: ChatListItem[] = [...chatsResult];
+
+			return result;
 		},
 		[messages, newChatId],
 	);
 
 	useEffect(() => {
-		getChatList(loginUserId);
+		if (loginUserId) {
+			getChatList(loginUserId);
+		}
 	}, [loginUserId, newChatId, getChatList, getUsersFromChatList, users]);
 
 	useEffect(() => {

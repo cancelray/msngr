@@ -1,6 +1,7 @@
+import type { ContactListElementProps } from '../../../types/props/ContactListElementProps.type';
 import styles from './ContactListElement.module.css';
 
-const ContactListElement = (props) => {
+const ContactListElement = (props: ContactListElementProps) => {
 	const {
 		contact,
 		contactListClickHandler,

@@ -1,19 +1,25 @@
-import { useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
+
+import type { ChatListItem } from '../types/Chat.type';
+import type { Contact } from '../types/Contact.type';
+import type { User } from '../types/User.type';
 
 const useSearch = (
-	chatList,
-	userContactList,
-	users,
-	newChatId,
-	currentChatId,
-	setCurrentChatId,
+	chatList: ChatListItem[],
+	userContactList: User[] | [],
+	users: User[],
+	newChatId: string | null,
+	currentChatId: string | null,
+	setCurrentChatId: React.Dispatch<React.SetStateAction<string | null>>,
 ) => {
 	const [searchInput, setSearchInput] = useState('');
 	const [isSearch, setIsSearch] = useState(false);
-	const [searchResults, setSearchResults] = useState([]);
+	const [searchResults, setSearchResults] = useState<
+		(ChatListItem | Contact | User)[] | []
+	>([]);
 
 	const search = useCallback(
-		(event) => {
+		(event: React.ChangeEvent<HTMLInputElement>) => {
 			const searchInput = event.target.value.trim();
 			setIsSearch(searchInput.length > 0);
 
@@ -30,9 +36,9 @@ const useSearch = (
 
 			const searchByContacts = userContactList.filter(
 				(contact) =>
-					contact.name.toLowerCase().includes(searchInput.toLowerCase()) ||
-					contact.lastName.toLowerCase().includes(searchInput.toLowerCase()) ||
-					contact.login.toLowerCase().includes(searchInput.toLowerCase()),
+					contact.name?.toLowerCase().includes(searchInput.toLowerCase()) ||
+					contact.lastName?.toLowerCase().includes(searchInput.toLowerCase()) ||
+					contact.login?.toLowerCase().includes(searchInput.toLowerCase()),
 			);
 
 			const searchResult = [...searchByChats, ...searchByContacts];

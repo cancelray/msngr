@@ -1,16 +1,17 @@
-import { useContext } from 'react';
-
-import { AuthContext } from '../../../context/AuthContext';
-import { ChatContext } from '../../../context/ChatContext';
-import { UIContext } from '../../../context/UIContext';
+import useAuthContext from '../../../hooks/context/useAuthContext';
+import useChatContext from '../../../hooks/context/useChatContext';
+import useUIContext from '../../../hooks/context/useUIContext';
 
 import DropdownMenu from '../../UI/DropdownMenu/DropdownMenu';
 import Search from '../Search/Search';
+
 import styles from './SidebarHeader.module.css';
 
 const SidebarHeader = () => {
-	const { user, setLoginUserId } = useContext(AuthContext);
-	const { setCurrentChatId } = useContext(ChatContext);
+	const { user, setLoginUserId } = useAuthContext();
+
+	const { setCurrentChatId } = useChatContext();
+
 	const {
 		setIsChatHeadDropdownShow,
 		isSidebarDropdownShow,
@@ -21,14 +22,14 @@ const SidebarHeader = () => {
 		setIsContactListShow,
 		setIsCreateGroupChatShow,
 		setGroupChatName,
-	} = useContext(UIContext);
+	} = useUIContext();
 
-	const userNameClick = (event) => {
+	const userNameClick = (event: React.MouseEvent) => {
 		event.preventDefault();
 		setIsSidebarDropdownShow(true);
 	};
 
-	const dropdownMenuClickHandler = (event) => {
+	const dropdownMenuClickHandler = (event: React.MouseEvent<HTMLElement>) => {
 		event.preventDefault();
 
 		const targetAction = event.currentTarget.dataset.action;
@@ -99,16 +100,16 @@ const SidebarHeader = () => {
 					className={styles.userInfo}
 					onClick={userNameClick}
 				>
-					<p>{user.name + ' ' + user.lastName}</p>
-					{user.avatar?.length > 0 ? (
+					<p>{user?.name + ' ' + user?.lastName}</p>
+					{user && user.avatar.length > 0 ? (
 						<img
 							className={styles.userAvatar}
-							src={user.avatar}
+							src={user?.avatar}
 							alt='avatar'
 						></img>
 					) : (
 						<div className={styles.avatarAlt}>
-							{user.name ? user.name[0] : ''}
+							{user?.name ? user.name[0] : ''}
 						</div>
 					)}
 				</a>

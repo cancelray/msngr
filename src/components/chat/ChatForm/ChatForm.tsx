@@ -1,19 +1,19 @@
-import { useContext, useState } from 'react';
-
-import { ChatContext } from '../../../context/ChatContext';
+import React, { useState } from 'react';
 
 import send from '../../../assets/send.svg';
+
+import useChatContext from '../../../hooks/context/useChatContext';
 
 import styles from './ChatForm.module.css';
 
 const ChatForm = () => {
-	const [inputChat, setInputChat] = useState('');
+	const [inputChat, setInputChat] = useState<string>('');
 
-	const { sendMessage } = useContext(ChatContext);
+	const { sendMessage } = useChatContext();
 
 	const trimmedInput = inputChat.trim();
 
-	const onSubmit = (event) => {
+	const onSubmit = (event: React.SubmitEvent) => {
 		event.preventDefault();
 
 		if (trimmedInput) {

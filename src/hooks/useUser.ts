@@ -4,22 +4,26 @@ import chatsAPI from '../api/chatsAPI';
 import contactsAPI from '../api/contactsAPI';
 import usersAPI from '../api/usersAPI';
 
-const useUser = (loginUserId) => {
-	const [user, setUser] = useState({});
-	const [userContactListId, setUserContactListId] = useState([]);
-	const [isUserLoading, setIsUserLoading] = useState(true);
-	const [userChats, setUserChats] = useState([]);
+import type { Chat } from '../types/Chat.type';
+import type { Contact } from '../types/Contact.type';
+import type { User } from '../types/User.type';
+
+const useUser = (loginUserId: string | null) => {
+	const [user, setUser] = useState<User | null>(null);
+	const [userContactListId, setUserContactListId] = useState<Contact[]>([]);
+	const [isUserLoading, setIsUserLoading] = useState<boolean>(true);
+	const [userChats, setUserChats] = useState<Chat[]>([]);
 
 	const getChatList = useCallback(
-		async (userId) => {
+		async (userId: string) => {
 			await chatsAPI
 				.getAllChats()
 				.then((chats) => {
 					const filteredChats = structuredClone(
-						chats.filter((chat) => chat.membersId.includes(userId)),
+						chats.filter((chat: Chat) => chat.membersId.includes(userId)),
 					);
 
-					filteredChats.forEach((chat) => {
+					filteredChats.forEach((chat: Chat) => {
 						const userIndex = chat.membersId.indexOf(userId);
 
 						if (userIndex !== 0) {

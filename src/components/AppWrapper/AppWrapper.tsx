@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 
 import chatsAPI from '../../api/chatsAPI';
 import usersAPI from '../../api/usersAPI';
@@ -6,12 +6,12 @@ import usersAPI from '../../api/usersAPI';
 import MainPageWrapper from '../MainPageWrapper/MainPageWrapper';
 import LoginPageWrapper from '../login/LoginPageWrapper/LoginPageWrapper';
 
-import { AuthContext } from '../../context/AuthContext';
-import { MessengerContext } from '../../context/MessengerContext';
+import useAuthContext from '../../hooks/context/useAuthContext';
+import useMessengerContext from '../../hooks/context/useMessengerContext';
 
 const AppWrapper = () => {
-	const { setUsers, setMessages } = useContext(MessengerContext);
-	const { loginUserId } = useContext(AuthContext);
+	const { setUsers, setMessages } = useMessengerContext();
+	const { loginUserId } = useAuthContext();
 
 	useEffect(() => {
 		usersAPI

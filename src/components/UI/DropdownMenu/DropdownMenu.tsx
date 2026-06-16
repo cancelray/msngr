@@ -1,6 +1,7 @@
+import type { DropdownMenuProps } from '../../../types/props/DropdownMenuProps.type';
 import styles from './DropdownMenu.module.css';
 
-const DropdownMenu = (props) => {
+const DropdownMenu = (props: DropdownMenuProps) => {
 	const { children, ref, className } = props;
 
 	return (

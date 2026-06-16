@@ -1,8 +1,6 @@
-import { useContext } from 'react';
-
-import { ChatContext } from '../../../context/ChatContext';
-
 import ChatListElement from '../../UI/ChatListElement/ChatListElement';
+
+import useChatContext from '../../../hooks/context/useChatContext';
 
 import styles from './ChatList.module.css';
 
@@ -14,9 +12,12 @@ const ChatList = () => {
 		setIsCurrentChatGroup,
 		setChatWithUser,
 		setGroupChat,
-	} = useContext(ChatContext);
+	} = useChatContext();
 
-	const clickHandler = (chatId, isGroup) => {
+	const clickHandler = (
+		chatId: string | null | undefined,
+		isGroup: boolean,
+	) => {
 		if (chatId === currentChatId) {
 			return;
 		}
@@ -24,9 +25,11 @@ const ChatList = () => {
 		setChatWithUser(null);
 		setGroupChat(null);
 
-		setCurrentChatId(chatId);
-
-		isGroup ? setIsCurrentChatGroup(true) : setIsCurrentChatGroup(false);
+		if (chatId) {
+			setCurrentChatId(chatId);
+		}
+		
+		setIsCurrentChatGroup(isGroup);
 	};
 
 	return (
