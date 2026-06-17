@@ -6,10 +6,14 @@ import DropdownMenu from '../../UI/DropdownMenu/DropdownMenu';
 import useAuthContext from '../../../hooks/context/useAuthContext';
 import useChatContext from '../../../hooks/context/useChatContext';
 import useUIContext from '../../../hooks/context/useUIContext';
+import useMessengerContext from '../../../hooks/context/useMessengerContext';
 
 import styles from './ChatHeader.module.css';
 
 const ChatHeader = () => {
+	const { isChatHeadDropdownShow, setIsChatHeadDropdownShow } =
+		useMessengerContext();
+
 	const { loginUserId } = useAuthContext();
 
 	const {
@@ -28,12 +32,7 @@ const ChatHeader = () => {
 		userChats,
 	} = useChatContext();
 
-	const {
-		isChatHeadDropdownShow,
-		setIsChatHeadDropdownShow,
-		chatHeadDropdownRef,
-		createNewChat,
-	} = useUIContext();
+	const { chatHeadDropdownRef, createNewChat } = useUIContext();
 
 	const chatHeadNameClick = (event: React.MouseEvent) => {
 		event.preventDefault();

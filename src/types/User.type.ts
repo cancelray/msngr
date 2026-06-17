@@ -5,6 +5,4 @@ export interface User {
 	login: string;
 	password?: string;
 	avatar: string;
-	chatId?: string;
-	isGroup?: boolean;
 }

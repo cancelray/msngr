@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import type { Chat, ChatListItem, GroupChat } from '../types/Chat.type';
+import type { Chat, ChatListItem } from '../types/Chat.type';
 import type { Message } from '../types/Message.type';
 import type { User } from '../types/User.type';
 
@@ -23,15 +23,14 @@ const useChatList = (
 
 			userChats.forEach((chat, i) => {
 				if (chat.isGroup) {
-					const groupChat: GroupChat = {
+					const groupChat: Chat = {
 						id: chat.id,
 						membersId: [],
-						chatId: chat.id!,
+						chatId: chat.id,
 						isGroup: true,
 						name: chat.name,
 						avatar: chat.img!,
 						groupChatAdminId: chat.groupChatAdminId,
-						createdAt: '',
 					};
 
 					const members: User[] = [];
@@ -87,6 +86,7 @@ const useChatList = (
 					userChatListItem.lastMessageAuthor = String(
 						messagesData.at(-1)?.senderId,
 					);
+
 					userChatListItem.lastMessageTime = messagesData.at(-1)?.createdAt;
 				}
 

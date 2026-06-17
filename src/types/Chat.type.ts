@@ -7,17 +7,13 @@ export interface Chat {
 	membersId: (string | null)[];
 	isGroup: boolean;
 	name: string;
-	chatImg?: string;
 	img?: string;
 	groupChatAdminId?: string | null;
 	senderId?: string;
-	createdAt: string;
+	createdAt?: string;
 	content?: string;
 	avatar: string;
 	lastMessageTime?: number;
-}
-
-export interface GroupChat extends Chat {
 	members?: User[];
 }
 
@@ -30,8 +26,6 @@ interface LastMessage {
 
 export interface ChatListItem extends Chat, LastMessage {
 	extra?: Message[];
-	members?: User[];
-	name: string;
 	lastName?: string;
 	login?: string;
 }

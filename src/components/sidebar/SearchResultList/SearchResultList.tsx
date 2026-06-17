@@ -1,11 +1,14 @@
 import SearchResultListElement from '../../UI/SearchResultListElement/SearchResultListElement';
 
 import useChatContext from '../../../hooks/context/useChatContext';
+import useMessengerContext from '../../../hooks/context/useMessengerContext';
 import useUIContext from '../../../hooks/context/useUIContext';
 
 import styles from './searchResultList.module.css';
 
 const SearchResultList = () => {
+	const { setIsContactListShow } = useMessengerContext();
+
 	const {
 		chatList,
 		currentChatId,
@@ -14,13 +17,8 @@ const SearchResultList = () => {
 		setGroupChat,
 	} = useChatContext();
 
-	const {
-		searchResults,
-		setSearchInput,
-		setIsSearch,
-		setIsContactListShow,
-		createNewChat,
-	} = useUIContext();
+	const { searchResults, setSearchInput, setIsSearch, createNewChat } =
+		useUIContext();
 
 	const searchResultListClickHandler = (
 		event: React.MouseEvent<HTMLElement>,

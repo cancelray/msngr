@@ -4,11 +4,14 @@ import Button from '../../UI/Button/Button';
 import ContactListElement from '../../UI/ContactListElement/ContactListElement';
 
 import useChatContext from '../../../hooks/context/useChatContext';
+import useMessengerContext from '../../../hooks/context/useMessengerContext';
 import useUIContext from '../../../hooks/context/useUIContext';
 
 import styles from './ContactList.module.css';
 
 const ContactList = () => {
+	const { setIsContactListShow, isCreateGroupChatShow } = useMessengerContext();
+
 	const {
 		chatList,
 		userContactList,
@@ -17,12 +20,11 @@ const ContactList = () => {
 		setGroupChat,
 		setIsCurrentChatGroup,
 	} = useChatContext();
+
 	const {
-		setIsContactListShow,
 		isChecked,
 		setIsChecked,
 		createGroupChat,
-		isCreateGroupChatShow,
 		createNewChat,
 		groupChatName,
 		setGroupChatName,

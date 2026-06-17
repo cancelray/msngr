@@ -3,8 +3,12 @@ import styles from './Message.module.css';
 
 const Message = (props: MessageProps) => {
 	const { message, messageAuthor, isShowAuthorName, loginUserId } = props;
-	
-	const messageCreatedDate = new Date(message.createdAt);
+
+	let messageCreatedDate = new Date();
+
+	if (message.createdAt) {
+		messageCreatedDate = new Date(message.createdAt);
+	}
 
 	const day = String(messageCreatedDate.getDate()).padStart(2, '0');
 	const month = String(messageCreatedDate.getMonth() + 1).padStart(2, '0');

@@ -11,7 +11,11 @@ const ChatListElement = (props: ChatListElementProps) => {
 	const { loginUserId } = useAuthContext();
 	const { currentChatId } = useChatContext();
 
-	const lastMessageTime = new Date(chat.lastMessageTime);
+	let lastMessageTime = new Date();
+
+	if (chat.lastMessageTime) {
+		lastMessageTime = new Date(chat.lastMessageTime);
+	}
 
 	const isDateNaN = isNaN(Number(lastMessageTime));
 
