@@ -3,7 +3,7 @@ import AppProviders from './AppProviders';
 import './styles';
 
 function App() {
-	return <AppProviders />;
+	return <AppProviders />; 
 }
 
 export default App;
