@@ -1,17 +1,23 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 import contactsAPI from '../api/contactsAPI';
 
 import type { Contact } from '../types/Contact.type';
 import type { User } from '../types/User.type';
 
+import type { State } from '../types/store/state.type';
+
 const useContacts = (
-	loginUserId: string | null,
 	users: User[],
 	userContactListId: Contact[],
 	setUserContactListId: React.Dispatch<React.SetStateAction<Contact[]>>,
 	chatWithUser: User | null,
 ) => {
+	const loginUserId = useSelector(
+		(state: State) => state.loginUserId?.loginUserId,
+	);
+
 	const [userContactList, setUserContactList] = useState<User[]>([]);
 
 	const getContactList = useCallback(
@@ -36,7 +42,7 @@ const useContacts = (
 
 	const addContact = useCallback(() => {
 		const newContact: Contact = {
-			userId: !isNaN(Number(loginUserId)) ? Number(loginUserId) : loginUserId,
+			userId: loginUserId as string,
 			contactId: !isNaN(Number(chatWithUser?.id))
 				? Number(chatWithUser?.id)
 				: chatWithUser?.id,

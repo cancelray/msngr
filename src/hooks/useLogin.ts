@@ -1,12 +1,11 @@
 import { useCallback, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import usersAPI from '../api/usersAPI';
+import { setLoginUserId } from '../store/auth/loginUserId/loginUserId.slice';
 
 const useLogin = () => {
-	const [loginUserId, setLoginUserId] = useState(() => {
-		const loginId = localStorage.getItem('LoginUserId');
-		return loginId ? loginId : null;
-	});
+	const dispatch = useDispatch();
 
 	const [isLoginPageShow, setIsLoginPageShow] = useState(true);
 	const [loginErrors, setLoginErrors] = useState({
@@ -41,8 +40,8 @@ const useLogin = () => {
 					}
 
 					if (user[0].password === passwordInput) {
-						setLoginUserId(user[0].id);
-						localStorage.setItem('LoginUserId', user[0].id);
+						dispatch(setLoginUserId(user[0].id));
+						localStorage.setItem('LoginUserId', user[0].id);						
 					} else {
 						setLoginErrors({
 							isError: true,
@@ -61,11 +60,10 @@ const useLogin = () => {
 				})
 				.catch((err) => alert(err));
 		},
-		[],
+		[dispatch],
 	);
 
 	return {
-		loginUserId,
 		setLoginUserId,
 		loginSubmit,
 		loginErrors,

@@ -1,16 +1,21 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 import type { Chat, ChatListItem } from '../types/Chat.type';
 import type { Message } from '../types/Message.type';
 import type { User } from '../types/User.type';
+import type { State } from '../types/store/state.type';
 
 const useChatList = (
 	messages: Message[],
 	users: User[],
-	loginUserId: string | null,
 	userChats: Chat[],
 	getChatList: (loginUserId: string) => void,
 ) => {
+	const loginUserId = useSelector(
+		(state: State) => state.loginUserId?.loginUserId,
+	);
+
 	const [chatList, setChatList] = useState<ChatListItem[]>([]);
 	const [newChatId, setNewChatId] = useState<string | null>(null);
 

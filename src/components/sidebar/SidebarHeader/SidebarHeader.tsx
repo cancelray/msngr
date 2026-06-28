@@ -1,3 +1,5 @@
+import { useDispatch } from 'react-redux';
+
 import useAuthContext from '../../../hooks/context/useAuthContext';
 import useChatContext from '../../../hooks/context/useChatContext';
 import useMessengerContext from '../../../hooks/context/useMessengerContext';
@@ -6,9 +8,13 @@ import useUIContext from '../../../hooks/context/useUIContext';
 import DropdownMenu from '../../UI/DropdownMenu/DropdownMenu';
 import Search from '../Search/Search';
 
+import { logoutUserId } from '../../../store/auth/loginUserId/loginUserId.slice';
+
 import styles from './SidebarHeader.module.css';
 
 const SidebarHeader = () => {
+	const dispatch = useDispatch();
+
 	const {
 		setIsChatHeadDropdownShow,
 		isSidebarDropdownShow,
@@ -18,7 +24,7 @@ const SidebarHeader = () => {
 		setIsCreateGroupChatShow,
 	} = useMessengerContext();
 
-	const { user, setLoginUserId } = useAuthContext();
+	const { user } = useAuthContext();
 
 	const { setCurrentChatId } = useChatContext();
 
@@ -73,7 +79,7 @@ const SidebarHeader = () => {
 				const isLogout = confirm('Are you sure you want to log out?');
 
 				if (isLogout) {
-					setLoginUserId(null);
+					dispatch(logoutUserId());
 					setCurrentChatId(null);
 
 					setIsSidebarDropdownShow(false);

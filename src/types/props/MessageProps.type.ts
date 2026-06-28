@@ -5,5 +5,4 @@ export interface MessageProps {
 	message: Chat;
 	messageAuthor?: User;
 	isShowAuthorName: boolean;
-	loginUserId: string | null;
 }

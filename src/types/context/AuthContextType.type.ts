@@ -6,8 +6,6 @@ import type { Contact } from '../Contact.type';
 import type { User } from '../User.type';
 
 export interface AuthContextType {
-	loginUserId: string | null;
-	setLoginUserId: React.Dispatch<React.SetStateAction<string | null>>;
 	loginSubmit: (
 		loginInput: string,
 		passwordInput: string,

@@ -1,12 +1,14 @@
 import type React from 'react';
+import { useSelector } from 'react-redux';
 
 import Button from '../../UI/Button/Button';
 import DropdownMenu from '../../UI/DropdownMenu/DropdownMenu';
 
-import useAuthContext from '../../../hooks/context/useAuthContext';
 import useChatContext from '../../../hooks/context/useChatContext';
-import useUIContext from '../../../hooks/context/useUIContext';
 import useMessengerContext from '../../../hooks/context/useMessengerContext';
+import useUIContext from '../../../hooks/context/useUIContext';
+
+import type { State } from '../../../types/store/state.type';
 
 import styles from './ChatHeader.module.css';
 
@@ -14,7 +16,9 @@ const ChatHeader = () => {
 	const { isChatHeadDropdownShow, setIsChatHeadDropdownShow } =
 		useMessengerContext();
 
-	const { loginUserId } = useAuthContext();
+	const loginUserId = useSelector(
+		(state: State) => state.loginUserId?.loginUserId,
+	);
 
 	const {
 		chatWithUser,

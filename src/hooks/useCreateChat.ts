@@ -1,10 +1,12 @@
 import { useCallback, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 import chatsAPI from '../api/chatsAPI';
+
 import type { Check } from '../types/Check.type';
+import type { State } from '../types/store/state.type';
 
 const useCreateChat = (
-	loginUserId: string | null,
 	setIsNewChatGroup: React.Dispatch<React.SetStateAction<boolean>>,
 	isContactListShow: boolean,
 	setIsContactListShow: React.Dispatch<React.SetStateAction<boolean>>,
@@ -13,6 +15,10 @@ const useCreateChat = (
 	setNewChatId: React.Dispatch<React.SetStateAction<string | null>>,
 	setIsCurrentChatGroup: React.Dispatch<React.SetStateAction<boolean>>,
 ) => {
+	const loginUserId = useSelector(
+		(state: State) => state.loginUserId?.loginUserId,
+	);
+
 	const [isChecked, setIsChecked] = useState<Check>({});
 	const [groupChatName, setGroupChatName] = useState<string>('');
 

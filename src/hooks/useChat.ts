@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 import chatsAPI from '../api/chatsAPI';
 import usersAPI from '../api/usersAPI';
@@ -6,12 +7,12 @@ import usersAPI from '../api/usersAPI';
 import type { Chat, ChatListItem } from '../types/Chat.type';
 import type { Message } from '../types/Message.type';
 import type { User } from '../types/User.type';
+import type { State } from '../types/store/state.type';
 
 const useChat = (
 	messages: Message[],
 	setMessages: React.Dispatch<React.SetStateAction<Message[]>>,
 	users: User[],
-	loginUserId: string | null,
 	chatList: ChatListItem[],
 	setChatList: React.Dispatch<React.SetStateAction<ChatListItem[]>>,
 	userChats: Chat[],
@@ -23,6 +24,10 @@ const useChat = (
 		userChats: Chat[],
 	) => Promise<ChatListItem[]>,
 ) => {
+	const loginUserId = useSelector(
+		(state: State) => state.loginUserId?.loginUserId,
+	);
+
 	const [currentChatId, setCurrentChatId] = useState<string | null>(null);
 	const [chatWithUser, setChatWithUser] = useState<User | null>(null);
 	const [groupChat, setGroupChat] = useState<User[] | null>(null);
@@ -43,7 +48,7 @@ const useChat = (
 
 			const newMessage: Message = {
 				chatId: currentChatId!,
-				senderId: loginUserId,
+				senderId: loginUserId as string,
 				content: clearInput,
 				createdAt: messageDate,
 			};

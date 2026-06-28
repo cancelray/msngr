@@ -15,7 +15,6 @@ const ChatProvider = ({ children }: ChildrenProps) => {
 	const { messages, setMessages, users } = useMessengerContext();
 
 	const {
-		loginUserId,
 		userContactListId,
 		setUserContactListId,
 		getChatList,
@@ -29,7 +28,7 @@ const ChatProvider = ({ children }: ChildrenProps) => {
 		newChatId,
 		setNewChatId,
 		getUsersFromChatList,
-	} = useChatList(messages, users, loginUserId, userChats, getChatList);
+	} = useChatList(messages, users, userChats, getChatList);
 
 	const {
 		setCurrentChatId,
@@ -50,7 +49,6 @@ const ChatProvider = ({ children }: ChildrenProps) => {
 		messages,
 		setMessages,
 		users,
-		loginUserId,
 		chatList,
 		setChatList,
 		userChats,
@@ -61,7 +59,6 @@ const ChatProvider = ({ children }: ChildrenProps) => {
 	);
 
 	const { userContactList, addContact, deleteContact } = useContacts(
-		loginUserId,
 		users,
 		userContactListId,
 		setUserContactListId,

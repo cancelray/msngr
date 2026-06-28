@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 import chatsAPI from '../api/chatsAPI';
 import contactsAPI from '../api/contactsAPI';
@@ -7,8 +8,13 @@ import usersAPI from '../api/usersAPI';
 import type { Chat } from '../types/Chat.type';
 import type { Contact } from '../types/Contact.type';
 import type { User } from '../types/User.type';
+import type { State } from '../types/store/state.type';
 
-const useUser = (loginUserId: string | null) => {
+const useUser = () => {
+	const loginUserId = useSelector(
+		(state: State) => state.loginUserId?.loginUserId,
+	);
+
 	const [user, setUser] = useState<User | null>(null);
 	const [userContactListId, setUserContactListId] = useState<Contact[]>([]);
 	const [isUserLoading, setIsUserLoading] = useState<boolean>(true);

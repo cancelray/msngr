@@ -22,7 +22,7 @@ const UIProvider = ({ children }: ChildrenProps) => {
 		setIsChatHeadDropdownShow,
 	} = useMessengerContext();
 
-	const { loginUserId, toRegisterPage, isLoginPageShow, setIsLoginPageShow } =
+	const { toRegisterPage, isLoginPageShow, setIsLoginPageShow } =
 		useAuthContext();
 
 	const {
@@ -44,7 +44,6 @@ const UIProvider = ({ children }: ChildrenProps) => {
 		isChecked,
 		setIsChecked,
 	} = useCreateChat(
-		loginUserId,
 		setIsNewChatGroup,
 		isContactListShow,
 		setIsContactListShow,
