@@ -4,14 +4,16 @@ import Message from '../../UI/Message/Message';
 
 import useChatContext from '../../../hooks/context/useChatContext';
 
-import type { State } from '../../../types/store/state.type';
+import { selectLoginUserId } from '../../../store/auth/loginUserId.slice';
+import { selectCurrentChat } from '../../../store/chat/currentChat.slice';
+import { selectUsers } from '../../../store/users/users.slice';
 
 import styles from './ChatWrapper.module.css';
 
 const ChatWrapper = () => {
-	const { loginUserId } = useSelector((state: State) => state.loginUserId);
-	const { users } = useSelector((state: State) => state.users);
-	const { currentChat } = useSelector((state: State) => state.currentChat);
+	const users = useSelector(selectUsers);
+	const loginUserId = useSelector(selectLoginUserId);
+	const currentChat = useSelector(selectCurrentChat);
 
 	const { chatWrapperRef, endOfMessagesRef, isCurrentChatGroup } =
 		useChatContext();

@@ -2,15 +2,16 @@ import { useSelector } from 'react-redux';
 
 import type { ChatListElementProps } from '../../../types/props/ChatListElementProps.type';
 
-import type { State } from '../../../types/store/state.type';
+import { selectLoginUserId } from '../../../store/auth/loginUserId.slice';
+import { selectCurrentChatId } from '../../../store/chat/currentChatId.slice';
 
 import styles from './ChatListElement.module.css';
 
 const ChatListElement = (props: ChatListElementProps) => {
 	const { chat, clickHandler } = props;
 
-	const { loginUserId } = useSelector((state: State) => state.loginUserId);
-	const { currentChatId } = useSelector((state: State) => state.currentChatId);
+	const loginUserId = useSelector(selectLoginUserId);
+	const currentChatId = useSelector(selectCurrentChatId);
 
 	let lastMessageTime = new Date();
 

@@ -2,14 +2,14 @@ import { useSelector } from 'react-redux';
 
 import type { MessageProps } from '../../../types/props/MessageProps.type';
 
-import type { State } from '../../../types/store/state.type';
+import { selectLoginUserId } from '../../../store/auth/loginUserId.slice';
 
 import styles from './Message.module.css';
 
 const Message = (props: MessageProps) => {
 	const { message, messageAuthor, isShowAuthorName } = props;
 
-	const { loginUserId } = useSelector((state: State) => state.loginUserId);
+	const loginUserId = useSelector(selectLoginUserId);
 
 	let messageCreatedDate = new Date();
 

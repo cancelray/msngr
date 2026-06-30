@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import type { Chat } from '../../types/Chat.type';
+import type { State } from '../../types/store/state.type';
 
 export type currentChat = {
 	currentChat: Chat[];
@@ -27,6 +28,8 @@ const currentChatSlice = createSlice({
 });
 
 export default currentChatSlice.reducer;
+
+export const selectCurrentChat = (state: State) => state.chat.currentChat.currentChat;
 
 export const { setCurrentChat, addNewMessageToChat, closeCurrentChat } =
 	currentChatSlice.actions;

@@ -8,16 +8,15 @@ import Search from '../Search/Search';
 
 import { logoutUserId } from '../../../store/auth/loginUserId.slice';
 
+import { selectUser } from '../../../store/auth/user.slice';
 import { closeChat } from '../../../store/chat/currentChatId.slice';
-
-import type { State } from '../../../types/store/state.type';
 
 import styles from './SidebarHeader.module.css';
 
 const SidebarHeader = () => {
 	const dispatch = useDispatch();
 
-	const { user } = useSelector((state: State) => state.user);
+	const user = useSelector(selectUser);
 
 	const {
 		setIsChatHeadDropdownShow,

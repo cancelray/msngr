@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
 import usersReducer from './store/users/users.slice';
 
@@ -17,13 +17,19 @@ import userContactListIdReducer from './store/userContactList/userContactListId.
 const store = configureStore({
 	reducer: {
 		users: usersReducer,
-		messages: messagesReducer,
-		loginUserId: loginUserIdReducer,
-		user: userReducer,
-		chatList: chatListReducer,
-		userChats: userChatsReducer,
-		currentChatId: currentChatIdReducer,
-		currentChat: currentChatReducer,
+		auth: combineReducers({
+			loginUserId: loginUserIdReducer,
+			user: userReducer,
+		}),
+		chatList: combineReducers({
+			chatList: chatListReducer,
+			userChats: userChatsReducer,
+		}),
+		chat: combineReducers({
+			currentChat: currentChatReducer,
+			currentChatId: currentChatIdReducer,
+			messages: messagesReducer,
+		}),
 		userContactListId: userContactListIdReducer,
 	},
 });

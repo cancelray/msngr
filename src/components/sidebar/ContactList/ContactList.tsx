@@ -10,15 +10,14 @@ import useUIContext from '../../../hooks/context/useUIContext';
 
 import { setCurrentChatId } from '../../../store/chat/currentChatId.slice';
 import { selectUserContactList } from '../../../store/userContactList/userContactListId.slice';
-
-import type { State } from '../../../types/store/state.type';
+import { selectChatList } from '../../../store/chatList/chatList.slice';
 
 import styles from './ContactList.module.css';
 
 const ContactList = () => {
 	const dispatch = useDispatch();
 
-	const { chatList } = useSelector((state: State) => state.chatList);
+	const chatList = useSelector(selectChatList);
 	const userContactList = useSelector(selectUserContactList);
 
 	const { setIsContactListShow, isCreateGroupChatShow } = useMessengerContext();

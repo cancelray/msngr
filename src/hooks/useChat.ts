@@ -4,19 +4,29 @@ import { useDispatch, useSelector } from 'react-redux';
 import chatsAPI from '../api/chatsAPI';
 import usersAPI from '../api/usersAPI';
 
+import { selectLoginUserId } from '../store/auth/loginUserId.slice';
 import {
 	addNewMessageToChat,
 	closeCurrentChat,
+	selectCurrentChat,
 	setCurrentChat,
 } from '../store/chat/currentChat.slice';
-import { closeChat } from '../store/chat/currentChatId.slice';
-import { addNewMessage, setMessages } from '../store/chat/messages.slice';
-import { setChatList } from '../store/chatList/chatList.slice';
+import {
+	closeChat,
+	selectCurrentChatId,
+} from '../store/chat/currentChatId.slice';
+import {
+	addNewMessage,
+	selectMessages,
+	setMessages,
+} from '../store/chat/messages.slice';
+import { selectChatList, setChatList } from '../store/chatList/chatList.slice';
+import { selectUserChats } from '../store/chatList/userChats.slice';
+import { selectUsers } from '../store/users/users.slice';
 
 import type { Chat, ChatListItem } from '../types/Chat.type';
 import type { Message } from '../types/Message.type';
 import type { User } from '../types/User.type';
-import type { State } from '../types/store/state.type';
 
 const useChat = (
 	newChatId: string | null,
@@ -29,13 +39,13 @@ const useChat = (
 ) => {
 	const dispatch = useDispatch();
 
-	const { loginUserId } = useSelector((state: State) => state.loginUserId);
-	const { messages } = useSelector((state: State) => state.messages);
-	const { users } = useSelector((state: State) => state.users);
-	const { chatList } = useSelector((state: State) => state.chatList);
-	const { userChats } = useSelector((state: State) => state.userChats);
-	const { currentChatId } = useSelector((state: State) => state.currentChatId);
-	const { currentChat } = useSelector((state: State) => state.currentChat);
+	const users = useSelector(selectUsers);
+	const loginUserId = useSelector(selectLoginUserId);
+	const chatList = useSelector(selectChatList);
+	const userChats = useSelector(selectUserChats);
+	const currentChatId = useSelector(selectCurrentChatId);
+	const currentChat = useSelector(selectCurrentChat);
+	const messages = useSelector(selectMessages);
 
 	const [chatWithUser, setChatWithUser] = useState<User | null>(null);
 	const [groupChat, setGroupChat] = useState<User[] | null>(null);
@@ -127,32 +137,30 @@ const useChat = (
 		}
 
 		if (currentChatId) {
-			chatsAPI
-				.getChatById(currentChatId)
-				.then((chat) => {
-					const chatWithUserId = chat.membersId?.filter(
-						(id: string) => id !== loginUserId,
+			chatsAPI.getChatById(currentChatId).then((chat) => {
+				const chatWithUserId = chat.membersId?.filter(
+					(id: string) => id !== loginUserId,
+				);
+
+				if (chatWithUserId?.length < 2) {
+					setIsCurrentChatGroup(false);
+					setGroupChat(null);
+
+					usersAPI.getUser(chatWithUserId[0]).then((user) => {
+						setChatWithUser(user);
+					});
+				} else {
+					setChatWithUser(null);
+
+					const groupChat = chatWithUserId?.map((userId: string) =>
+						usersAPI.getUser(userId),
 					);
 
-					if (chatWithUserId?.length < 2) {
-						setIsCurrentChatGroup(false);
-						setGroupChat(null);
-
-						usersAPI.getUser(chatWithUserId[0]).then((user) => {
-							setChatWithUser(user);
-						});
-					} else {
-						setChatWithUser(null);
-
-						const groupChat = chatWithUserId?.map((userId: string) =>
-							usersAPI.getUser(userId),
-						);
-
-						if (groupChat) {
-							Promise.all(groupChat).then(setGroupChat);
-						}
+					if (groupChat) {
+						Promise.all(groupChat).then(setGroupChat);
 					}
-				});
+				}
+			});
 
 			chatsAPI
 				.getMessagesByChatId(currentChatId)

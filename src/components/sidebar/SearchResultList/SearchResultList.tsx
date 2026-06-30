@@ -6,20 +6,20 @@ import useChatContext from '../../../hooks/context/useChatContext';
 import useMessengerContext from '../../../hooks/context/useMessengerContext';
 import useUIContext from '../../../hooks/context/useUIContext';
 
-import type { State } from '../../../types/store/state.type';
-
 import {
 	closeChat,
+	selectCurrentChatId,
 	setCurrentChatId,
 } from '../../../store/chat/currentChatId.slice';
+import { selectChatList } from '../../../store/chatList/chatList.slice';
 
 import styles from './searchResultList.module.css';
 
 const SearchResultList = () => {
 	const dispatch = useDispatch();
 
-	const { currentChatId } = useSelector((state: State) => state.currentChatId);
-	const { chatList } = useSelector((state: State) => state.chatList);
+	const currentChatId = useSelector(selectCurrentChatId);
+	const chatList = useSelector(selectChatList);
 
 	const { setIsContactListShow } = useMessengerContext();
 	const { setChatWithUser, setGroupChat } = useChatContext();

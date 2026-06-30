@@ -1,5 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+import type { State } from '../../types/store/state.type';
+
 export type loginUserId = { loginUserId: string };
 
 const getLoginUserId = () => {
@@ -13,7 +15,7 @@ const loginUserIdSlice = createSlice({
 		loginUserId: getLoginUserId(),
 	},
 	reducers: {
-		setLoginUserId: (state, action: {payload: string}) => {
+		setLoginUserId: (state, action: { payload: string }) => {
 			state.loginUserId = action.payload;
 		},
 
@@ -25,5 +27,7 @@ const loginUserIdSlice = createSlice({
 
 export default loginUserIdSlice.reducer;
 
-export const { setLoginUserId, logoutUserId } = loginUserIdSlice.actions;
+export const selectLoginUserId = (state: State) =>
+	state.auth.loginUserId.loginUserId;
 
+export const { setLoginUserId, logoutUserId } = loginUserIdSlice.actions;

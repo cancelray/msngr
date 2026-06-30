@@ -6,8 +6,8 @@ import contactsAPI from '../api/contactsAPI';
 import usersAPI from '../api/usersAPI';
 
 import type { Chat } from '../types/Chat.type';
-import type { State } from '../types/store/state.type';
 
+import { selectLoginUserId } from '../store/auth/loginUserId.slice';
 import { setUser } from '../store/auth/user.slice';
 import { setUserChats } from '../store/chatList/userChats.slice';
 import { setUserContactListId } from '../store/userContactList/userContactListId.slice';
@@ -15,7 +15,7 @@ import { setUserContactListId } from '../store/userContactList/userContactListId
 const useUser = () => {
 	const dispatch = useDispatch();
 
-	const { loginUserId } = useSelector((state: State) => state.loginUserId);
+	const loginUserId = useSelector(selectLoginUserId);
 
 	const [isUserLoading, setIsUserLoading] = useState<boolean>(true);
 

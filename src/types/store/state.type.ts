@@ -12,14 +12,26 @@ import type { messages } from '../../store/chat/messages.slice';
 
 import type { userContactListId } from '../../store/userContactList/userContactListId.slice';
 
-export interface State {
-	users: users;
+type auth = {
 	loginUserId: loginUserId;
 	user: loginUser;
+};
+
+type list = {
 	chatList: chatList;
 	userChats: userChats;
+};
+
+type chat = {
+	currentChat: currentChat;
 	currentChatId: currentChatId;
 	messages: messages;
-	currentChat: currentChat;
+};
+
+export interface State {
+	users: users;
+	auth: auth;
+	chatList: list;
+	chat: chat;
 	userContactListId: userContactListId;
 }

@@ -4,20 +4,23 @@ import ChatListElement from '../../UI/ChatListElement/ChatListElement';
 
 import useChatContext from '../../../hooks/context/useChatContext';
 
-import { setCurrentChatId } from '../../../store/chat/currentChatId.slice';
+import {
+	selectCurrentChatId,
+	setCurrentChatId,
+} from '../../../store/chat/currentChatId.slice';
 
 import type { State } from '../../../types/store/state.type';
 
 import styles from './ChatList.module.css';
 
 const ChatList = () => {
-	const { setIsCurrentChatGroup, setChatWithUser, setGroupChat } =
-		useChatContext();
-
 	const dispatch = useDispatch();
 
-	const { currentChatId } = useSelector((state: State) => state.currentChatId);
-	const { chatList } = useSelector((state: State) => state.chatList);
+	const currentChatId = useSelector(selectCurrentChatId);
+	const { chatList } = useSelector((state: State) => state.chatList.chatList);
+
+	const { setIsCurrentChatGroup, setChatWithUser, setGroupChat } =
+		useChatContext();
 
 	const clickHandler = (
 		chatId: string | null | undefined,

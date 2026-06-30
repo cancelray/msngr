@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import type { Message } from '../../types/Message.type';
+import type { State } from '../../types/store/state.type';
 
 export type messages = { messages: Message[] };
 
@@ -22,5 +23,7 @@ const messagesSlice = createSlice({
 });
 
 export default messagesSlice.reducer;
+
+export const selectMessages = (state: State) => state.chat.messages.messages;
 
 export const { setMessages, addNewMessage } = messagesSlice.actions;

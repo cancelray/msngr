@@ -8,21 +8,25 @@ import useChatContext from '../../../hooks/context/useChatContext';
 import useMessengerContext from '../../../hooks/context/useMessengerContext';
 import useUIContext from '../../../hooks/context/useUIContext';
 
-import { setCurrentChatId } from '../../../store/chat/currentChatId.slice';
-
-import type { State } from '../../../types/store/state.type';
+import { selectLoginUserId } from '../../../store/auth/loginUserId.slice';
+import {
+	selectCurrentChatId,
+	setCurrentChatId,
+} from '../../../store/chat/currentChatId.slice';
+import { selectChatList } from '../../../store/chatList/chatList.slice';
+import { selectUserChats } from '../../../store/chatList/userChats.slice';
+import { selectUserContactList } from '../../../store/userContactList/userContactListId.slice';
 
 import styles from './ChatHeader.module.css';
-import { selectUserContactList } from '../../../store/userContactList/userContactListId.slice';
 
 const ChatHeader = () => {
 	const dispatch = useDispatch();
 
-	const { loginUserId } = useSelector((state: State) => state.loginUserId);
-	const { currentChatId } = useSelector((state: State) => state.currentChatId);
-	const { chatList } = useSelector((state: State) => state.chatList);
-	const { userChats } = useSelector((state: State) => state.userChats);
+	const loginUserId = useSelector(selectLoginUserId);
+	const userChats = useSelector(selectUserChats);
 	const userContactList = useSelector(selectUserContactList);
+	const currentChatId = useSelector(selectCurrentChatId);
+	const chatList = useSelector(selectChatList);
 
 	const { isChatHeadDropdownShow, setIsChatHeadDropdownShow } =
 		useMessengerContext();

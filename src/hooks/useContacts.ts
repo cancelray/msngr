@@ -7,16 +7,17 @@ import {
 	addNewContact,
 	setUserContactListId,
 } from '../store/userContactList/userContactListId.slice';
+import { selectLoginUserId } from '../store/auth/loginUserId.slice';
 
 import type { Contact } from '../types/Contact.type';
 import type { User } from '../types/User.type';
 
-import type { State } from '../types/store/state.type';
+
 
 const useContacts = (chatWithUser: User | null) => {
 	const dispatch = useDispatch();
 
-	const { loginUserId } = useSelector((state: State) => state.loginUserId);
+	const loginUserId = useSelector(selectLoginUserId);
 
 	const addContact = useCallback(() => {
 		const newContact: Contact = {

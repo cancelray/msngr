@@ -7,14 +7,14 @@ import usersAPI from '../../api/usersAPI';
 import MainPageWrapper from '../MainPageWrapper/MainPageWrapper';
 import LoginPageWrapper from '../login/LoginPageWrapper/LoginPageWrapper';
 
+import { selectLoginUserId } from '../../store/auth/loginUserId.slice';
 import { setMessages } from '../../store/chat/messages.slice';
 import { setUsers } from '../../store/users/users.slice';
-import type { State } from '../../types/store/state.type';
 
 const AppWrapper = () => {
 	const dispatch = useDispatch();
 
-	const { loginUserId } = useSelector((state: State) => state.loginUserId);
+	const loginUserId = useSelector(selectLoginUserId);
 
 	useEffect(() => {
 		usersAPI.getAllUsers().then((resp) => dispatch(setUsers(resp)));

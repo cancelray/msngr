@@ -1,20 +1,24 @@
 import React, { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { closeChat } from '../store/chat/currentChatId.slice';
+import {
+	closeChat,
+	selectCurrentChatId,
+} from '../store/chat/currentChatId.slice';
+import { selectChatList } from '../store/chatList/chatList.slice';
 import { selectUserContactList } from '../store/userContactList/userContactListId.slice';
+import { selectUsers } from '../store/users/users.slice';
 
 import type { ChatListItem } from '../types/Chat.type';
 import type { Contact } from '../types/Contact.type';
-import type { State } from '../types/store/state.type';
 import type { User } from '../types/User.type';
 
 const useSearch = (newChatId: string | null) => {
 	const dispatch = useDispatch();
 
-	const { users } = useSelector((state: State) => state.users);
-	const { currentChatId } = useSelector((state: State) => state.currentChatId);
-	const { chatList } = useSelector((state: State) => state.chatList);
+	const users = useSelector(selectUsers);
+	const currentChatId = useSelector(selectCurrentChatId);
+	const chatList = useSelector(selectChatList);
 	const userContactList = useSelector(selectUserContactList);
 
 	const [searchInput, setSearchInput] = useState('');

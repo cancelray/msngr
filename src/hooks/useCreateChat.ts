@@ -3,10 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import chatsAPI from '../api/chatsAPI';
 
+import { selectLoginUserId } from '../store/auth/loginUserId.slice';
 import { setCurrentChatId } from '../store/chat/currentChatId.slice';
 
 import type { Check } from '../types/Check.type';
-import type { State } from '../types/store/state.type';
 
 const useCreateChat = (
 	setIsNewChatGroup: React.Dispatch<React.SetStateAction<boolean>>,
@@ -18,7 +18,7 @@ const useCreateChat = (
 ) => {
 	const dispatch = useDispatch();
 
-	const { loginUserId } = useSelector((state: State) => state.loginUserId);
+	const loginUserId = useSelector(selectLoginUserId);
 
 	const [isChecked, setIsChecked] = useState<Check>({});
 	const [groupChatName, setGroupChatName] = useState<string>('');
@@ -38,17 +38,15 @@ const useCreateChat = (
 				lastMessageTime: 0,
 			};
 
-			chatsAPI
-				.createNewChat(newChat)
-				.then((newChatResp) => {
-					setIsCurrentChatGroup(false);
-					dispatch(setCurrentChatId(newChatResp.id));
-					setNewChatId(newChatResp.id);
+			chatsAPI.createNewChat(newChat).then((newChatResp) => {
+				setIsCurrentChatGroup(false);
+				dispatch(setCurrentChatId(newChatResp.id));
+				setNewChatId(newChatResp.id);
 
-					if (isContactListShow) {
-						setIsContactListShow(false);
-					}
-				});
+				if (isContactListShow) {
+					setIsContactListShow(false);
+				}
+			});
 		},
 		[
 			dispatch,
@@ -86,19 +84,17 @@ const useCreateChat = (
 			lastMessageTime: 0,
 		};
 
-		chatsAPI
-			.createNewChat(newGroupChat)
-			.then((newChatResp) => {
-				setCurrentChatId(newChatResp.id);
-				setNewChatId(newChatResp.id);
+		chatsAPI.createNewChat(newGroupChat).then((newChatResp) => {
+			setCurrentChatId(newChatResp.id);
+			setNewChatId(newChatResp.id);
 
-				setIsCurrentChatGroup(true);
+			setIsCurrentChatGroup(true);
 
-				setIsCreateGroupChatShow(false);
-				setIsContactListShow(false);
-				setIsChecked({});
-				setGroupChatName('');
-			});
+			setIsCreateGroupChatShow(false);
+			setIsContactListShow(false);
+			setIsChecked({});
+			setGroupChatName('');
+		});
 	}, [
 		loginUserId,
 		groupChatName,
