@@ -1,5 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+export type loginUserId = { loginUserId: string };
+
 const getLoginUserId = () => {
 	const loginId = localStorage.getItem('LoginUserId');
 	return loginId ? loginId : null;
@@ -11,7 +13,7 @@ const loginUserIdSlice = createSlice({
 		loginUserId: getLoginUserId(),
 	},
 	reducers: {
-		setLoginUserId: (state, action) => {
+		setLoginUserId: (state, action: {payload: string}) => {
 			state.loginUserId = action.payload;
 		},
 

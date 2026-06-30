@@ -1,4 +1,5 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Button from '../../UI/Button/Button';
 import ContactListElement from '../../UI/ContactListElement/ContactListElement';
@@ -7,19 +8,23 @@ import useChatContext from '../../../hooks/context/useChatContext';
 import useMessengerContext from '../../../hooks/context/useMessengerContext';
 import useUIContext from '../../../hooks/context/useUIContext';
 
+import { setCurrentChatId } from '../../../store/chat/currentChatId.slice';
+import { selectUserContactList } from '../../../store/userContactList/userContactListId.slice';
+
+import type { State } from '../../../types/store/state.type';
+
 import styles from './ContactList.module.css';
 
 const ContactList = () => {
+	const dispatch = useDispatch();
+
+	const { chatList } = useSelector((state: State) => state.chatList);
+	const userContactList = useSelector(selectUserContactList);
+
 	const { setIsContactListShow, isCreateGroupChatShow } = useMessengerContext();
 
-	const {
-		chatList,
-		userContactList,
-		setCurrentChatId,
-		setChatWithUser,
-		setGroupChat,
-		setIsCurrentChatGroup,
-	} = useChatContext();
+	const { setChatWithUser, setGroupChat, setIsCurrentChatGroup } =
+		useChatContext();
 
 	const {
 		isChecked,
@@ -52,7 +57,7 @@ const ContactList = () => {
 			if (chatId) {
 				setIsContactListShow(false);
 
-				setCurrentChatId(chatId);
+				dispatch(setCurrentChatId(chatId));
 
 				setIsCurrentChatGroup(false);
 			} else {

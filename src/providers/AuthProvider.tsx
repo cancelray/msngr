@@ -20,13 +20,8 @@ const AuthProvider = ({ children }: ChildrenProps) => {
 	const { registerSubmit, registerErrors } = useRegister(setIsLoginPageShow);
 
 	const {
-		user,
 		isUserLoading,
-		userContactListId,
-		setUserContactListId,
 		getChatList,
-		userChats,
-		setUserChats,
 	} = useUser();
 
 	const value = useMemo(
@@ -43,13 +38,8 @@ const AuthProvider = ({ children }: ChildrenProps) => {
 			registerErrors,
 
 			//useUser
-			user,
 			isUserLoading,
-			userContactListId,
-			setUserContactListId,
 			getChatList,
-			userChats,
-			setUserChats,
 		}),
 		[
 			//useLogin
@@ -64,13 +54,8 @@ const AuthProvider = ({ children }: ChildrenProps) => {
 			registerErrors,
 
 			//useUser
-			user,
 			isUserLoading,
-			userContactListId,
-			setUserContactListId,
 			getChatList,
-			userChats,
-			setUserChats,
 		],
 	);
 

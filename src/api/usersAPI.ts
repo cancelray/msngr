@@ -8,16 +8,20 @@ const headers = {
 
 const usersAPI = {
 	getAllUsers: () => {
-		return fetch(usersURL).then((response) => response.json());
+		return fetch(usersURL)
+			.then((response) => response.json())
+			.catch((err) => alert(err));
 	},
 
 	getUser: (userId: string) => {
-		return fetch(`${usersURL}/${userId}`).then((response) => response.json());
+		return fetch(`${usersURL}/${userId}`)
+			.then((response) => response.json())
+			.catch((err) => alert(err));
 	},
 
 	getUserByLogin: (login: string) => {
 		return fetch(`${usersURL}?login=${login}`).then((response) =>
-			response.json(),
+			response.json().catch((err) => alert(err)),
 		);
 	},
 
@@ -26,7 +30,9 @@ const usersAPI = {
 			method: 'POST',
 			headers,
 			body: JSON.stringify(newUser),
-		}).then((response) => response.json());
+		})
+			.then((response) => response.json())
+			.catch((err) => alert(err));
 	},
 };
 

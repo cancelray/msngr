@@ -1,9 +1,6 @@
 import type React from 'react';
 
 import type { AuthError } from '../AuthError.type';
-import type { Chat } from '../Chat.type';
-import type { Contact } from '../Contact.type';
-import type { User } from '../User.type';
 
 export interface AuthContextType {
 	loginSubmit: (
@@ -24,11 +21,6 @@ export interface AuthContextType {
 		clearCallback: () => void,
 	) => void;
 	registerErrors: AuthError;
-	user: User | null;
 	isUserLoading: boolean;
-	userContactListId: Contact[];
-	setUserContactListId: React.Dispatch<React.SetStateAction<Contact[]>>;
 	getChatList: (loginUserId: string) => void;
-	userChats: Chat[];
-	setUserChats: React.Dispatch<React.SetStateAction<Chat[]>>;
 }

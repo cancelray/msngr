@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import usersAPI from '../api/usersAPI';
-import { setLoginUserId } from '../store/auth/loginUserId/loginUserId.slice';
+import { setLoginUserId } from '../store/auth/loginUserId.slice';
 
 const useLogin = () => {
 	const dispatch = useDispatch();
@@ -41,7 +41,7 @@ const useLogin = () => {
 
 					if (user[0].password === passwordInput) {
 						dispatch(setLoginUserId(user[0].id));
-						localStorage.setItem('LoginUserId', user[0].id);						
+						localStorage.setItem('LoginUserId', user[0].id);
 					} else {
 						setLoginErrors({
 							isError: true,
@@ -57,8 +57,7 @@ const useLogin = () => {
 						errorBody: '',
 					});
 					callbackClear();
-				})
-				.catch((err) => alert(err));
+				});
 		},
 		[dispatch],
 	);

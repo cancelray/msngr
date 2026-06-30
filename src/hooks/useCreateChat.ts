@@ -1,7 +1,9 @@
 import { useCallback, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import chatsAPI from '../api/chatsAPI';
+
+import { setCurrentChatId } from '../store/chat/currentChatId.slice';
 
 import type { Check } from '../types/Check.type';
 import type { State } from '../types/store/state.type';
@@ -10,14 +12,13 @@ const useCreateChat = (
 	setIsNewChatGroup: React.Dispatch<React.SetStateAction<boolean>>,
 	isContactListShow: boolean,
 	setIsContactListShow: React.Dispatch<React.SetStateAction<boolean>>,
-	setCurrentChatId: React.Dispatch<React.SetStateAction<string | null>>,
 	setIsCreateGroupChatShow: React.Dispatch<React.SetStateAction<boolean>>,
 	setNewChatId: React.Dispatch<React.SetStateAction<string | null>>,
 	setIsCurrentChatGroup: React.Dispatch<React.SetStateAction<boolean>>,
 ) => {
-	const loginUserId = useSelector(
-		(state: State) => state.loginUserId?.loginUserId,
-	);
+	const dispatch = useDispatch();
+
+	const { loginUserId } = useSelector((state: State) => state.loginUserId);
 
 	const [isChecked, setIsChecked] = useState<Check>({});
 	const [groupChatName, setGroupChatName] = useState<string>('');
@@ -41,22 +42,21 @@ const useCreateChat = (
 				.createNewChat(newChat)
 				.then((newChatResp) => {
 					setIsCurrentChatGroup(false);
-					setCurrentChatId(newChatResp.id);
+					dispatch(setCurrentChatId(newChatResp.id));
 					setNewChatId(newChatResp.id);
 
 					if (isContactListShow) {
 						setIsContactListShow(false);
 					}
-				})
-				.catch((err) => alert(err));
+				});
 		},
 		[
+			dispatch,
 			loginUserId,
 			isContactListShow,
 			setIsContactListShow,
 			setNewChatId,
 			setIsNewChatGroup,
-			setCurrentChatId,
 			setIsCurrentChatGroup,
 		],
 	);
@@ -98,8 +98,7 @@ const useCreateChat = (
 				setIsContactListShow(false);
 				setIsChecked({});
 				setGroupChatName('');
-			})
-			.catch((err) => alert(err));
+			});
 	}, [
 		loginUserId,
 		groupChatName,
@@ -107,7 +106,6 @@ const useCreateChat = (
 		setIsContactListShow,
 		setIsCreateGroupChatShow,
 		setNewChatId,
-		setCurrentChatId,
 		setIsNewChatGroup,
 		setIsCurrentChatGroup,
 	]);

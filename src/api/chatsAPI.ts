@@ -10,27 +10,33 @@ const headers = {
 
 const chatsAPI = {
 	getAllChats: () => {
-		return fetch(`${chatsURL}`).then((response) => response.json());
+		return fetch(`${chatsURL}`)
+			.then((response) => response.json())
+			.catch((err) => alert(err));
 	},
 
 	getAllNotGroupChats: () => {
-		return fetch(`${chatsURL}?isGroup=false`).then((response) =>
-			response.json(),
-		);
+		return fetch(`${chatsURL}?isGroup=false`)
+			.then((response) => response.json())
+			.catch((err) => alert(err));
 	},
 
 	getAllMessages: () => {
-		return fetch(messagesURL).then((response) => response.json());
+		return fetch(messagesURL)
+			.then((response) => response.json())
+			.catch((err) => alert(err));
 	},
 
 	getMessagesByChatId: (chatId: string) => {
-		return fetch(`${messagesURL}?chatId=${chatId}`).then((response) =>
-			response.json(),
-		);
+		return fetch(`${messagesURL}?chatId=${chatId}`)
+			.then((response) => response.json())
+			.catch((err) => alert(err));
 	},
 
 	getChatById: (chatId: string) => {
-		return fetch(`${chatsURL}/${chatId}`).then((response) => response.json());
+		return fetch(`${chatsURL}/${chatId}`)
+			.then((response) => response.json())
+			.catch((err) => alert(err));
 	},
 
 	addMessage: (newMessage: Message) => {
@@ -38,7 +44,9 @@ const chatsAPI = {
 			method: 'POST',
 			headers,
 			body: JSON.stringify(newMessage),
-		}).then((response) => response.json());
+		})
+			.then((response) => response.json())
+			.catch((err) => alert(err));
 	},
 
 	createNewChat: (newChat: Chat) => {
@@ -46,19 +54,25 @@ const chatsAPI = {
 			method: 'POST',
 			headers,
 			body: JSON.stringify(newChat),
-		}).then((response) => response.json());
+		})
+			.then((response) => response.json())
+			.catch((err) => alert(err));
 	},
 
 	deleteChat: (chatId: string) => {
 		return fetch(`${chatsURL}/${chatId}`, {
 			method: 'DELETE',
-		}).then((response) => response.json());
+		})
+			.then((response) => response.json())
+			.catch((err) => alert(err));
 	},
 
 	deleteMessageById: (id: string) => {
 		return fetch(`${messagesURL}/${id}`, {
 			method: 'DELETE',
-		}).then((response) => response.json());
+		})
+			.then((response) => response.json())
+			.catch((err) => alert(err));
 	},
 };
 

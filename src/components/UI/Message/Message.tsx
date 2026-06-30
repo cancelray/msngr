@@ -9,9 +9,7 @@ import styles from './Message.module.css';
 const Message = (props: MessageProps) => {
 	const { message, messageAuthor, isShowAuthorName } = props;
 
-	const loginUserId = useSelector(
-		(state: State) => state.loginUserId?.loginUserId,
-	);
+	const { loginUserId } = useSelector((state: State) => state.loginUserId);
 
 	let messageCreatedDate = new Date();
 

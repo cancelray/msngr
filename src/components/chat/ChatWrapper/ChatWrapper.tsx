@@ -3,19 +3,17 @@ import { useSelector } from 'react-redux';
 import Message from '../../UI/Message/Message';
 
 import useChatContext from '../../../hooks/context/useChatContext';
-import useMessengerContext from '../../../hooks/context/useMessengerContext';
 
 import type { State } from '../../../types/store/state.type';
 
 import styles from './ChatWrapper.module.css';
 
 const ChatWrapper = () => {
-	const loginUserId = useSelector(
-		(state: State) => state.loginUserId?.loginUserId,
-	);
+	const { loginUserId } = useSelector((state: State) => state.loginUserId);
+	const { users } = useSelector((state: State) => state.users);
+	const { currentChat } = useSelector((state: State) => state.currentChat);
 
-	const { users } = useMessengerContext();
-	const { currentChat, chatWrapperRef, endOfMessagesRef, isCurrentChatGroup } =
+	const { chatWrapperRef, endOfMessagesRef, isCurrentChatGroup } =
 		useChatContext();
 
 	return (

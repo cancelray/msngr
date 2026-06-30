@@ -1,22 +1,20 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { setChatList } from '../store/chatList/chatList.slice';
 
 import type { Chat, ChatListItem } from '../types/Chat.type';
-import type { Message } from '../types/Message.type';
 import type { User } from '../types/User.type';
 import type { State } from '../types/store/state.type';
 
-const useChatList = (
-	messages: Message[],
-	users: User[],
-	userChats: Chat[],
-	getChatList: (loginUserId: string) => void,
-) => {
-	const loginUserId = useSelector(
-		(state: State) => state.loginUserId?.loginUserId,
-	);
+const useChatList = (getChatList: (loginUserId: string) => void) => {
+	const dispatch = useDispatch();
 
-	const [chatList, setChatList] = useState<ChatListItem[]>([]);
+	const { loginUserId } = useSelector((state: State) => state.loginUserId);
+	const { messages } = useSelector((state: State) => state.messages);
+	const { users } = useSelector((state: State) => state.users);
+	const { userChats } = useSelector((state: State) => state.userChats);
+
 	const [newChatId, setNewChatId] = useState<string | null>(null);
 
 	const getUsersFromChatList: (
@@ -124,12 +122,12 @@ const useChatList = (
 	}, [loginUserId, newChatId, getChatList, getUsersFromChatList, users]);
 
 	useEffect(() => {
-		getUsersFromChatList(users, userChats).then(setChatList);
-	}, [userChats, getUsersFromChatList, setChatList, users]);
+		getUsersFromChatList(users, userChats).then((resp) =>
+			dispatch(setChatList(resp)),
+		);
+	}, [dispatch, userChats, getUsersFromChatList, users]);
 
 	return {
-		chatList,
-		setChatList,
 		userChats,
 		newChatId,
 		setNewChatId,

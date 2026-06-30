@@ -1,5 +1,5 @@
 import type React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Button from '../../UI/Button/Button';
 import DropdownMenu from '../../UI/DropdownMenu/DropdownMenu';
@@ -8,32 +8,34 @@ import useChatContext from '../../../hooks/context/useChatContext';
 import useMessengerContext from '../../../hooks/context/useMessengerContext';
 import useUIContext from '../../../hooks/context/useUIContext';
 
+import { setCurrentChatId } from '../../../store/chat/currentChatId.slice';
+
 import type { State } from '../../../types/store/state.type';
 
 import styles from './ChatHeader.module.css';
+import { selectUserContactList } from '../../../store/userContactList/userContactListId.slice';
 
 const ChatHeader = () => {
+	const dispatch = useDispatch();
+
+	const { loginUserId } = useSelector((state: State) => state.loginUserId);
+	const { currentChatId } = useSelector((state: State) => state.currentChatId);
+	const { chatList } = useSelector((state: State) => state.chatList);
+	const { userChats } = useSelector((state: State) => state.userChats);
+	const userContactList = useSelector(selectUserContactList);
+
 	const { isChatHeadDropdownShow, setIsChatHeadDropdownShow } =
 		useMessengerContext();
-
-	const loginUserId = useSelector(
-		(state: State) => state.loginUserId?.loginUserId,
-	);
 
 	const {
 		chatWithUser,
 		groupChat,
-		chatList,
-		currentChatId,
-		userContactList,
 		addContact,
 		deleteChat,
 		deleteContact,
 		setChatWithUser,
 		setGroupChat,
-		setCurrentChatId,
 		setIsCurrentChatGroup,
-		userChats,
 	} = useChatContext();
 
 	const { chatHeadDropdownRef, createNewChat } = useUIContext();
@@ -103,7 +105,7 @@ const ChatHeader = () => {
 			);
 
 			if (chatWithClickedUser) {
-				setCurrentChatId(chatWithClickedUser.id);
+				dispatch(setCurrentChatId(chatWithClickedUser.id));
 			} else {
 				createNewChat(userId);
 			}

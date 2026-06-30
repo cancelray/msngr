@@ -20,9 +20,7 @@ const useRegister = (
 			newSecondName: string,
 			clearCallback: () => void,
 		) => {
-			const user = await usersAPI
-				.getUserByLogin(newLogin)
-				.catch((err) => alert(err));
+			const user = await usersAPI.getUserByLogin(newLogin);
 
 			if (user.length > 0) {
 				setRegisterErrors({
@@ -69,7 +67,7 @@ const useRegister = (
 				avatar: '',
 			};
 
-			usersAPI.addNewUser(newUser).catch((err) => alert(err));
+			usersAPI.addNewUser(newUser);
 
 			clearCallback();
 
