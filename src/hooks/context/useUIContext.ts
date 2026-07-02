@@ -6,7 +6,7 @@ const useUIContext = () => {
 	const context = useContext(UIContext);
 
 	if (!context) {
-		throw new Error('Chat Context Error');
+		throw new Error('UI Context Error');
 	}
 
 	return context;

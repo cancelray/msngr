@@ -9,15 +9,14 @@ import {
 	setCurrentChatId,
 } from '../../../store/chat/currentChatId.slice';
 
-import type { State } from '../../../types/store/state.type';
-
+import { selectChatList } from '../../../store/chatList/chatList.slice';
 import styles from './ChatList.module.css';
 
 const ChatList = () => {
 	const dispatch = useDispatch();
 
 	const currentChatId = useSelector(selectCurrentChatId);
-	const { chatList } = useSelector((state: State) => state.chatList.chatList);
+	const chatList = useSelector(selectChatList);
 
 	const { setIsCurrentChatGroup, setChatWithUser, setGroupChat } =
 		useChatContext();

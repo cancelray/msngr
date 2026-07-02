@@ -85,7 +85,7 @@ const useCreateChat = (
 		};
 
 		chatsAPI.createNewChat(newGroupChat).then((newChatResp) => {
-			setCurrentChatId(newChatResp.id);
+			dispatch(setCurrentChatId(newChatResp.id));
 			setNewChatId(newChatResp.id);
 
 			setIsCurrentChatGroup(true);
@@ -96,6 +96,7 @@ const useCreateChat = (
 			setGroupChatName('');
 		});
 	}, [
+		dispatch,
 		loginUserId,
 		groupChatName,
 		isChecked,

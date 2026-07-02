@@ -13,7 +13,7 @@ import {
 } from '../../../store/chat/currentChatId.slice';
 import { selectChatList } from '../../../store/chatList/chatList.slice';
 
-import styles from './searchResultList.module.css';
+import styles from './SearchResultList.module.css';
 
 const SearchResultList = () => {
 	const dispatch = useDispatch();
