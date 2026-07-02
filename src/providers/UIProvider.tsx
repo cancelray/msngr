@@ -14,7 +14,6 @@ import type { ChildrenProps } from '../types/props/ChildrenProps.type';
 
 const UIProvider = ({ children }: ChildrenProps) => {
 	const {
-		users,
 		isContactListShow,
 		setIsContactListShow,
 		setIsCreateGroupChatShow,
@@ -22,18 +21,14 @@ const UIProvider = ({ children }: ChildrenProps) => {
 		setIsChatHeadDropdownShow,
 	} = useMessengerContext();
 
-	const { loginUserId, toRegisterPage, isLoginPageShow, setIsLoginPageShow } =
+	const { toRegisterPage, isLoginPageShow, setIsLoginPageShow } =
 		useAuthContext();
 
 	const {
-		chatList,
 		newChatId,
 		setNewChatId,
-		setCurrentChatId,
-		currentChatId,
 		setIsCurrentChatGroup,
 		setIsNewChatGroup,
-		userContactList,
 	} = useChatContext();
 
 	const {
@@ -44,11 +39,9 @@ const UIProvider = ({ children }: ChildrenProps) => {
 		isChecked,
 		setIsChecked,
 	} = useCreateChat(
-		loginUserId,
 		setIsNewChatGroup,
 		isContactListShow,
 		setIsContactListShow,
-		setCurrentChatId,
 		setIsCreateGroupChatShow,
 		setNewChatId,
 		setIsCurrentChatGroup,
@@ -62,12 +55,7 @@ const UIProvider = ({ children }: ChildrenProps) => {
 		setIsSearch,
 		searchResults,
 	} = useSearch(
-		chatList,
-		userContactList,
-		users,
 		newChatId,
-		currentChatId,
-		setCurrentChatId,
 	);
 
 	const { sidebarDropdownRef, chatHeadDropdownRef } = useDropdown(

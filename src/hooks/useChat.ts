@@ -1,20 +1,34 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import chatsAPI from '../api/chatsAPI';
 import usersAPI from '../api/usersAPI';
+
+import { selectLoginUserId } from '../store/auth/loginUserId.slice';
+import {
+	addNewMessageToChat,
+	closeCurrentChat,
+	selectCurrentChat,
+	setCurrentChat,
+} from '../store/chat/currentChat.slice';
+import {
+	closeChat,
+	selectCurrentChatId,
+} from '../store/chat/currentChatId.slice';
+import {
+	addNewMessage,
+	selectMessages,
+	setMessages,
+} from '../store/chat/messages.slice';
+import { selectChatList, setChatList } from '../store/chatList/chatList.slice';
+import { selectUserChats } from '../store/chatList/userChats.slice';
+import { selectUsers } from '../store/users/users.slice';
 
 import type { Chat, ChatListItem } from '../types/Chat.type';
 import type { Message } from '../types/Message.type';
 import type { User } from '../types/User.type';
 
 const useChat = (
-	messages: Message[],
-	setMessages: React.Dispatch<React.SetStateAction<Message[]>>,
-	users: User[],
-	loginUserId: string | null,
-	chatList: ChatListItem[],
-	setChatList: React.Dispatch<React.SetStateAction<ChatListItem[]>>,
-	userChats: Chat[],
 	newChatId: string | null,
 	setNewChatId: React.Dispatch<React.SetStateAction<string | null>>,
 	getChatList: (loginUserId: string) => void,
@@ -23,10 +37,18 @@ const useChat = (
 		userChats: Chat[],
 	) => Promise<ChatListItem[]>,
 ) => {
-	const [currentChatId, setCurrentChatId] = useState<string | null>(null);
+	const dispatch = useDispatch();
+
+	const users = useSelector(selectUsers);
+	const loginUserId = useSelector(selectLoginUserId);
+	const chatList = useSelector(selectChatList);
+	const userChats = useSelector(selectUserChats);
+	const currentChatId = useSelector(selectCurrentChatId);
+	const currentChat = useSelector(selectCurrentChat);
+	const messages = useSelector(selectMessages);
+
 	const [chatWithUser, setChatWithUser] = useState<User | null>(null);
 	const [groupChat, setGroupChat] = useState<User[] | null>(null);
-	const [currentChat, setCurrentChat] = useState<Chat[]>([]);
 	const [isNewChatGroup, setIsNewChatGroup] = useState<boolean>(false);
 	const [isCurrentChatGroup, setIsCurrentChatGroup] = useState<boolean>(false);
 
@@ -43,24 +65,21 @@ const useChat = (
 
 			const newMessage: Message = {
 				chatId: currentChatId!,
-				senderId: loginUserId,
+				senderId: loginUserId as string,
 				content: clearInput,
 				createdAt: messageDate,
 			};
 
-			await chatsAPI
-				.addMessage(newMessage)
-				.then((respNewMessage) => {
-					setMessages((prev) => [...prev, respNewMessage]);
-					setCurrentChat((prev) => [...prev, respNewMessage]);
-				})
-				.catch((err) => alert(err));
+			await chatsAPI.addMessage(newMessage).then((respNewMessage) => {
+				dispatch(addNewMessage(respNewMessage));
+				dispatch(addNewMessageToChat(respNewMessage));
+			});
 
 			endOfMessagesRef.current?.scrollIntoView({ behavior: 'smooth' });
 
 			callbackInputClear();
 		},
-		[loginUserId, currentChatId, newChatId, setMessages, setNewChatId],
+		[dispatch, loginUserId, currentChatId, newChatId, setNewChatId],
 	);
 
 	const deleteChat = useCallback(() => {
@@ -82,28 +101,24 @@ const useChat = (
 				.deleteChat(currentChatId!)
 				.then(async () => {
 					const deleteMessages = currentChat.map((message) =>
-						chatsAPI.deleteMessageById(message.id!).catch((err) => alert(err)),
+						chatsAPI.deleteMessageById(message.id!),
 					);
 					await Promise.all(deleteMessages);
 				})
 				.then(() =>
-					chatsAPI
-						.getAllMessages()
-						.then(setMessages)
-						.catch((err) => alert(err)),
-				)
-				.catch((err) => alert(err));
+					chatsAPI.getAllMessages().then((resp) => dispatch(setMessages(resp))),
+				);
 
-			setCurrentChatId(null);
+			dispatch(closeChat());
 			setNewChatId(null);
 		}
 	}, [
+		dispatch,
 		loginUserId,
 		chatList,
 		currentChat,
 		currentChatId,
 		isCurrentChatGroup,
-		setMessages,
 		setNewChatId,
 	]);
 
@@ -118,48 +133,41 @@ const useChat = (
 				.deleteChat(newChatId)
 				.then(() => setNewChatId(null))
 				.then(() => getUsersFromChatList(users, userChats))
-				.then(setChatList)
-				.catch((err) => alert(err));
+				.then((resp) => dispatch(setChatList(resp)));
 		}
 
 		if (currentChatId) {
-			chatsAPI
-				.getChatById(currentChatId)
-				.then((chat) => {
-					const chatWithUserId = chat.membersId?.filter(
-						(id: string) => id !== loginUserId,
+			chatsAPI.getChatById(currentChatId).then((chat) => {
+				const chatWithUserId = chat.membersId?.filter(
+					(id: string) => id !== loginUserId,
+				);
+
+				if (chatWithUserId?.length < 2) {
+					setIsCurrentChatGroup(false);
+					setGroupChat(null);
+
+					usersAPI.getUser(chatWithUserId[0]).then((user) => {
+						setChatWithUser(user);
+					});
+				} else {
+					setChatWithUser(null);
+
+					const groupChat = chatWithUserId?.map((userId: string) =>
+						usersAPI.getUser(userId),
 					);
 
-					if (chatWithUserId?.length < 2) {
-						setIsCurrentChatGroup(false);
-						setGroupChat(null);
-
-						usersAPI
-							.getUser(chatWithUserId[0])
-							.then((user) => {
-								setChatWithUser(user);
-							})
-							.catch((err) => alert(err));
-					} else {
-						setChatWithUser(null);
-
-						const groupChat = chatWithUserId?.map((userId: string) =>
-							usersAPI.getUser(userId).catch((err) => alert(err)),
-						);
-
-						if (groupChat) {
-							Promise.all(groupChat).then(setGroupChat);
-						}
+					if (groupChat) {
+						Promise.all(groupChat).then(setGroupChat);
 					}
-				})
-				.catch((err) => alert(err));
+				}
+			});
 
 			chatsAPI
 				.getMessagesByChatId(currentChatId)
-				.then(setCurrentChat)
-				.catch((err) => alert(err));
+				.then((resp) => dispatch(setCurrentChat(resp)));
 		}
 	}, [
+		dispatch,
 		currentChatId,
 		isNewChatGroup,
 		messages,
@@ -168,7 +176,6 @@ const useChat = (
 		getUsersFromChatList,
 		userChats,
 		users,
-		setChatList,
 		setNewChatId,
 	]);
 
@@ -185,15 +192,17 @@ const useChat = (
 			setNewChatId(null);
 			getChatList(loginUserId);
 
-			getUsersFromChatList(users, userChats).then(setChatList);
+			getUsersFromChatList(users, userChats).then((resp) =>
+				dispatch(setChatList(resp)),
+			);
 		}
 	}, [
+		dispatch,
 		newChatId,
 		isCurrentChatGroup,
 		getChatList,
 		getUsersFromChatList,
 		loginUserId,
-		setChatList,
 		setNewChatId,
 		userChats,
 		users,
@@ -201,14 +210,14 @@ const useChat = (
 
 	useEffect(() => {
 		const handleBeforeUnload = () => {
-			setCurrentChatId(null);
+			dispatch(closeChat());
 		};
 
 		const handleClickEsc = (event: KeyboardEvent) => {
 			if (event.key === 'Escape') {
-				setCurrentChatId(null);
+				dispatch(closeChat());
 				setChatWithUser(null);
-				setCurrentChat([]);
+				dispatch(closeCurrentChat());
 			}
 		};
 
@@ -219,16 +228,13 @@ const useChat = (
 			document.removeEventListener('keydown', handleClickEsc);
 			window.removeEventListener('beforeunload', handleBeforeUnload);
 		};
-	}, []);
+	}, [dispatch]);
 
 	return {
-		setCurrentChatId,
 		chatWithUser,
 		setChatWithUser,
 		groupChat,
 		setGroupChat,
-		currentChatId,
-		currentChat,
 		sendMessage,
 		chatWrapperRef,
 		endOfMessagesRef,

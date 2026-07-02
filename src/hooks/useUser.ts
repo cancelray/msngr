@@ -1,69 +1,62 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import chatsAPI from '../api/chatsAPI';
 import contactsAPI from '../api/contactsAPI';
 import usersAPI from '../api/usersAPI';
 
 import type { Chat } from '../types/Chat.type';
-import type { Contact } from '../types/Contact.type';
-import type { User } from '../types/User.type';
 
-const useUser = (loginUserId: string | null) => {
-	const [user, setUser] = useState<User | null>(null);
-	const [userContactListId, setUserContactListId] = useState<Contact[]>([]);
+import { selectLoginUserId } from '../store/auth/loginUserId.slice';
+import { setUser } from '../store/auth/user.slice';
+import { setUserChats } from '../store/chatList/userChats.slice';
+import { setUserContactListId } from '../store/userContactList/userContactListId.slice';
+
+const useUser = () => {
+	const dispatch = useDispatch();
+
+	const loginUserId = useSelector(selectLoginUserId);
+
 	const [isUserLoading, setIsUserLoading] = useState<boolean>(true);
-	const [userChats, setUserChats] = useState<Chat[]>([]);
 
 	const getChatList = useCallback(
 		async (userId: string) => {
-			await chatsAPI
-				.getAllChats()
-				.then((chats) => {
-					const filteredChats = structuredClone(
-						chats.filter((chat: Chat) => chat.membersId.includes(userId)),
-					);
+			await chatsAPI.getAllChats().then((chats) => {
+				const filteredChats = structuredClone(
+					chats.filter((chat: Chat) => chat.membersId.includes(userId)),
+				);
 
-					filteredChats.forEach((chat: Chat) => {
-						const userIndex = chat.membersId.indexOf(userId);
+				filteredChats.forEach((chat: Chat) => {
+					const userIndex = chat.membersId.indexOf(userId);
 
-						if (userIndex !== 0) {
-							const [item] = chat.membersId.splice(userIndex, 1);
-							chat.membersId.unshift(item);
-						}
-					});
+					if (userIndex !== 0) {
+						const [item] = chat.membersId.splice(userIndex, 1);
+						chat.membersId.unshift(item);
+					}
+				});
 
-					setUserChats(filteredChats);
-				})
-				.catch((err) => alert(err));
+				dispatch(setUserChats(filteredChats));
+			});
 		},
-		[setUserChats],
+		[dispatch],
 	);
 
 	useEffect(() => {
 		if (loginUserId) {
-			usersAPI
-				.getUser(loginUserId)
-				.then(setUser)
-				.catch((err) => alert(err));
+			usersAPI.getUser(loginUserId).then((resp) => dispatch(setUser(resp)));
 
 			contactsAPI
 				.getContactListByUser(loginUserId)
-				.then(setUserContactListId)
-				.then(() => setIsUserLoading(false))
-				.catch((err) => alert(err));
+				.then((resp) => dispatch(setUserContactListId(resp)))
+				.then(() => setIsUserLoading(false));
 
 			getChatList(loginUserId);
 		}
-	}, [loginUserId, setUserContactListId, getChatList]);
+	}, [dispatch, loginUserId, getChatList]);
 
 	return {
-		user,
 		isUserLoading,
-		userContactListId,
-		setUserContactListId,
 		getChatList,
-		userChats,
-		setUserChats,
 	};
 };
 

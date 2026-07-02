@@ -1,22 +1,28 @@
+import { useDispatch, useSelector } from 'react-redux';
+
 import SearchResultListElement from '../../UI/SearchResultListElement/SearchResultListElement';
 
 import useChatContext from '../../../hooks/context/useChatContext';
 import useMessengerContext from '../../../hooks/context/useMessengerContext';
 import useUIContext from '../../../hooks/context/useUIContext';
 
-import styles from './searchResultList.module.css';
+import {
+	closeChat,
+	selectCurrentChatId,
+	setCurrentChatId,
+} from '../../../store/chat/currentChatId.slice';
+import { selectChatList } from '../../../store/chatList/chatList.slice';
+
+import styles from './SearchResultList.module.css';
 
 const SearchResultList = () => {
+	const dispatch = useDispatch();
+
+	const currentChatId = useSelector(selectCurrentChatId);
+	const chatList = useSelector(selectChatList);
+
 	const { setIsContactListShow } = useMessengerContext();
-
-	const {
-		chatList,
-		currentChatId,
-		setCurrentChatId,
-		setChatWithUser,
-		setGroupChat,
-	} = useChatContext();
-
+	const { setChatWithUser, setGroupChat } = useChatContext();
 	const { searchResults, setSearchInput, setIsSearch, createNewChat } =
 		useUIContext();
 
@@ -33,9 +39,9 @@ const SearchResultList = () => {
 		}
 
 		if (chatId) {
-			setCurrentChatId(chatId);
+			dispatch(setCurrentChatId(chatId));
 		} else {
-			setCurrentChatId(null);
+			dispatch(closeChat());
 
 			const userId = event.currentTarget.dataset.userId;
 

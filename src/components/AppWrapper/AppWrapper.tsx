@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import chatsAPI from '../../api/chatsAPI';
 import usersAPI from '../../api/usersAPI';
@@ -6,23 +7,20 @@ import usersAPI from '../../api/usersAPI';
 import MainPageWrapper from '../MainPageWrapper/MainPageWrapper';
 import LoginPageWrapper from '../login/LoginPageWrapper/LoginPageWrapper';
 
-import useAuthContext from '../../hooks/context/useAuthContext';
-import useMessengerContext from '../../hooks/context/useMessengerContext';
+import { selectLoginUserId } from '../../store/auth/loginUserId.slice';
+import { setMessages } from '../../store/chat/messages.slice';
+import { setUsers } from '../../store/users/users.slice';
 
 const AppWrapper = () => {
-	const { setUsers, setMessages } = useMessengerContext();
-	const { loginUserId } = useAuthContext();
+	const dispatch = useDispatch();
+
+	const loginUserId = useSelector(selectLoginUserId);
 
 	useEffect(() => {
-		usersAPI
-			.getAllUsers()
-			.then(setUsers)
-			.catch((err) => alert(err));
-		chatsAPI
-			.getAllMessages()
-			.then(setMessages)
-			.catch((err) => alert(err));
-	}, [setUsers, setMessages]);
+		usersAPI.getAllUsers().then((resp) => dispatch(setUsers(resp)));
+
+		chatsAPI.getAllMessages().then((resp) => dispatch(setMessages(resp)));
+	}, [dispatch]);
 
 	return loginUserId ? <MainPageWrapper /> : <LoginPageWrapper />;
 };

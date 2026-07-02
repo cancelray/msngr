@@ -1,17 +1,26 @@
 import React, { useCallback, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import {
+	closeChat,
+	selectCurrentChatId,
+} from '../store/chat/currentChatId.slice';
+import { selectChatList } from '../store/chatList/chatList.slice';
+import { selectUserContactList } from '../store/userContactList/userContactListId.slice';
+import { selectUsers } from '../store/users/users.slice';
 
 import type { ChatListItem } from '../types/Chat.type';
 import type { Contact } from '../types/Contact.type';
 import type { User } from '../types/User.type';
 
-const useSearch = (
-	chatList: ChatListItem[],
-	userContactList: User[],
-	users: User[],
-	newChatId: string | null,
-	currentChatId: string | null,
-	setCurrentChatId: React.Dispatch<React.SetStateAction<string | null>>,
-) => {
+const useSearch = (newChatId: string | null) => {
+	const dispatch = useDispatch();
+
+	const users = useSelector(selectUsers);
+	const currentChatId = useSelector(selectCurrentChatId);
+	const chatList = useSelector(selectChatList);
+	const userContactList = useSelector(selectUserContactList);
+
 	const [searchInput, setSearchInput] = useState('');
 	const [isSearch, setIsSearch] = useState(false);
 	const [searchResults, setSearchResults] = useState<
@@ -24,7 +33,7 @@ const useSearch = (
 			setIsSearch(searchInput.length > 0);
 
 			if (searchInput.length > 0 && currentChatId === newChatId) {
-				setCurrentChatId(null);
+				dispatch(closeChat());
 			}
 
 			const searchByChats = chatList.filter(
@@ -59,14 +68,7 @@ const useSearch = (
 				setSearchResults(uniqueSearchResults);
 			}
 		},
-		[
-			users,
-			chatList,
-			userContactList,
-			newChatId,
-			currentChatId,
-			setCurrentChatId,
-		],
+		[dispatch, users, chatList, userContactList, newChatId, currentChatId],
 	);
 
 	return {

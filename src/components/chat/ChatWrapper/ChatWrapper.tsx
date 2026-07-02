@@ -1,15 +1,21 @@
+import { useSelector } from 'react-redux';
+
 import Message from '../../UI/Message/Message';
 
-import useAuthContext from '../../../hooks/context/useAuthContext';
 import useChatContext from '../../../hooks/context/useChatContext';
-import useMessengerContext from '../../../hooks/context/useMessengerContext';
+
+import { selectLoginUserId } from '../../../store/auth/loginUserId.slice';
+import { selectCurrentChat } from '../../../store/chat/currentChat.slice';
+import { selectUsers } from '../../../store/users/users.slice';
 
 import styles from './ChatWrapper.module.css';
 
 const ChatWrapper = () => {
-	const { loginUserId } = useAuthContext();
-	const { users } = useMessengerContext();
-	const { currentChat, chatWrapperRef, endOfMessagesRef, isCurrentChatGroup } =
+	const users = useSelector(selectUsers);
+	const loginUserId = useSelector(selectLoginUserId);
+	const currentChat = useSelector(selectCurrentChat);
+
+	const { chatWrapperRef, endOfMessagesRef, isCurrentChatGroup } =
 		useChatContext();
 
 	return (
@@ -26,7 +32,6 @@ const ChatWrapper = () => {
 					isShowAuthorName={
 						isCurrentChatGroup && String(message.senderId) !== loginUserId
 					}
-					loginUserId={loginUserId}
 					key={message.id}
 				/>
 			))}

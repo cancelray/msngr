@@ -1,15 +1,17 @@
-import useAuthContext from '../../../hooks/context/useAuthContext';
-import useChatContext from '../../../hooks/context/useChatContext';
+import { useSelector } from 'react-redux';
 
 import type { ChatListElementProps } from '../../../types/props/ChatListElementProps.type';
+
+import { selectLoginUserId } from '../../../store/auth/loginUserId.slice';
+import { selectCurrentChatId } from '../../../store/chat/currentChatId.slice';
 
 import styles from './ChatListElement.module.css';
 
 const ChatListElement = (props: ChatListElementProps) => {
 	const { chat, clickHandler } = props;
 
-	const { loginUserId } = useAuthContext();
-	const { currentChatId } = useChatContext();
+	const loginUserId = useSelector(selectLoginUserId);
+	const currentChatId = useSelector(selectCurrentChatId);
 
 	let lastMessageTime = new Date();
 

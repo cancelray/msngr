@@ -1,35 +1,45 @@
 import type React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Button from '../../UI/Button/Button';
 import DropdownMenu from '../../UI/DropdownMenu/DropdownMenu';
 
-import useAuthContext from '../../../hooks/context/useAuthContext';
 import useChatContext from '../../../hooks/context/useChatContext';
-import useUIContext from '../../../hooks/context/useUIContext';
 import useMessengerContext from '../../../hooks/context/useMessengerContext';
+import useUIContext from '../../../hooks/context/useUIContext';
+
+import { selectLoginUserId } from '../../../store/auth/loginUserId.slice';
+import {
+	selectCurrentChatId,
+	setCurrentChatId,
+} from '../../../store/chat/currentChatId.slice';
+import { selectChatList } from '../../../store/chatList/chatList.slice';
+import { selectUserChats } from '../../../store/chatList/userChats.slice';
+import { selectUserContactList } from '../../../store/userContactList/userContactListId.slice';
 
 import styles from './ChatHeader.module.css';
 
 const ChatHeader = () => {
+	const dispatch = useDispatch();
+
+	const loginUserId = useSelector(selectLoginUserId);
+	const userChats = useSelector(selectUserChats);
+	const userContactList = useSelector(selectUserContactList);
+	const currentChatId = useSelector(selectCurrentChatId);
+	const chatList = useSelector(selectChatList);
+
 	const { isChatHeadDropdownShow, setIsChatHeadDropdownShow } =
 		useMessengerContext();
-
-	const { loginUserId } = useAuthContext();
 
 	const {
 		chatWithUser,
 		groupChat,
-		chatList,
-		currentChatId,
-		userContactList,
 		addContact,
 		deleteChat,
 		deleteContact,
 		setChatWithUser,
 		setGroupChat,
-		setCurrentChatId,
 		setIsCurrentChatGroup,
-		userChats,
 	} = useChatContext();
 
 	const { chatHeadDropdownRef, createNewChat } = useUIContext();
@@ -99,7 +109,7 @@ const ChatHeader = () => {
 			);
 
 			if (chatWithClickedUser) {
-				setCurrentChatId(chatWithClickedUser.id);
+				dispatch(setCurrentChatId(chatWithClickedUser.id));
 			} else {
 				createNewChat(userId);
 			}

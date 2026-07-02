@@ -1,18 +1,25 @@
 import { useCallback, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import chatsAPI from '../api/chatsAPI';
+
+import { selectLoginUserId } from '../store/auth/loginUserId.slice';
+import { setCurrentChatId } from '../store/chat/currentChatId.slice';
+
 import type { Check } from '../types/Check.type';
 
 const useCreateChat = (
-	loginUserId: string | null,
 	setIsNewChatGroup: React.Dispatch<React.SetStateAction<boolean>>,
 	isContactListShow: boolean,
 	setIsContactListShow: React.Dispatch<React.SetStateAction<boolean>>,
-	setCurrentChatId: React.Dispatch<React.SetStateAction<string | null>>,
 	setIsCreateGroupChatShow: React.Dispatch<React.SetStateAction<boolean>>,
 	setNewChatId: React.Dispatch<React.SetStateAction<string | null>>,
 	setIsCurrentChatGroup: React.Dispatch<React.SetStateAction<boolean>>,
 ) => {
+	const dispatch = useDispatch();
+
+	const loginUserId = useSelector(selectLoginUserId);
+
 	const [isChecked, setIsChecked] = useState<Check>({});
 	const [groupChatName, setGroupChatName] = useState<string>('');
 
@@ -31,26 +38,23 @@ const useCreateChat = (
 				lastMessageTime: 0,
 			};
 
-			chatsAPI
-				.createNewChat(newChat)
-				.then((newChatResp) => {
-					setIsCurrentChatGroup(false);
-					setCurrentChatId(newChatResp.id);
-					setNewChatId(newChatResp.id);
+			chatsAPI.createNewChat(newChat).then((newChatResp) => {
+				setIsCurrentChatGroup(false);
+				dispatch(setCurrentChatId(newChatResp.id));
+				setNewChatId(newChatResp.id);
 
-					if (isContactListShow) {
-						setIsContactListShow(false);
-					}
-				})
-				.catch((err) => alert(err));
+				if (isContactListShow) {
+					setIsContactListShow(false);
+				}
+			});
 		},
 		[
+			dispatch,
 			loginUserId,
 			isContactListShow,
 			setIsContactListShow,
 			setNewChatId,
 			setIsNewChatGroup,
-			setCurrentChatId,
 			setIsCurrentChatGroup,
 		],
 	);
@@ -80,28 +84,25 @@ const useCreateChat = (
 			lastMessageTime: 0,
 		};
 
-		chatsAPI
-			.createNewChat(newGroupChat)
-			.then((newChatResp) => {
-				setCurrentChatId(newChatResp.id);
-				setNewChatId(newChatResp.id);
+		chatsAPI.createNewChat(newGroupChat).then((newChatResp) => {
+			dispatch(setCurrentChatId(newChatResp.id));
+			setNewChatId(newChatResp.id);
 
-				setIsCurrentChatGroup(true);
+			setIsCurrentChatGroup(true);
 
-				setIsCreateGroupChatShow(false);
-				setIsContactListShow(false);
-				setIsChecked({});
-				setGroupChatName('');
-			})
-			.catch((err) => alert(err));
+			setIsCreateGroupChatShow(false);
+			setIsContactListShow(false);
+			setIsChecked({});
+			setGroupChatName('');
+		});
 	}, [
+		dispatch,
 		loginUserId,
 		groupChatName,
 		isChecked,
 		setIsContactListShow,
 		setIsCreateGroupChatShow,
 		setNewChatId,
-		setCurrentChatId,
 		setIsNewChatGroup,
 		setIsCurrentChatGroup,
 	]);

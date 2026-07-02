@@ -10,8 +10,6 @@ import type { ChildrenProps } from '../types/props/ChildrenProps.type';
 
 const AuthProvider = ({ children }: ChildrenProps) => {
 	const {
-		loginUserId,
-		setLoginUserId,
 		loginSubmit,
 		loginErrors,
 		toRegisterPage,
@@ -22,20 +20,13 @@ const AuthProvider = ({ children }: ChildrenProps) => {
 	const { registerSubmit, registerErrors } = useRegister(setIsLoginPageShow);
 
 	const {
-		user,
 		isUserLoading,
-		userContactListId,
-		setUserContactListId,
 		getChatList,
-		userChats,
-		setUserChats,
-	} = useUser(loginUserId);
+	} = useUser();
 
 	const value = useMemo(
 		() => ({
 			//useLogin
-			loginUserId,
-			setLoginUserId,
 			loginSubmit,
 			loginErrors,
 			toRegisterPage,
@@ -47,18 +38,11 @@ const AuthProvider = ({ children }: ChildrenProps) => {
 			registerErrors,
 
 			//useUser
-			user,
 			isUserLoading,
-			userContactListId,
-			setUserContactListId,
 			getChatList,
-			userChats,
-			setUserChats,
 		}),
 		[
 			//useLogin
-			loginUserId,
-			setLoginUserId,
 			loginSubmit,
 			loginErrors,
 			toRegisterPage,
@@ -70,13 +54,8 @@ const AuthProvider = ({ children }: ChildrenProps) => {
 			registerErrors,
 
 			//useUser
-			user,
 			isUserLoading,
-			userContactListId,
-			setUserContactListId,
 			getChatList,
-			userChats,
-			setUserChats,
 		],
 	);
 

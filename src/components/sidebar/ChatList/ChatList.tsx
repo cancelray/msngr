@@ -1,18 +1,25 @@
+import { useDispatch, useSelector } from 'react-redux';
+
 import ChatListElement from '../../UI/ChatListElement/ChatListElement';
 
 import useChatContext from '../../../hooks/context/useChatContext';
 
+import {
+	selectCurrentChatId,
+	setCurrentChatId,
+} from '../../../store/chat/currentChatId.slice';
+
+import { selectChatList } from '../../../store/chatList/chatList.slice';
 import styles from './ChatList.module.css';
 
 const ChatList = () => {
-	const {
-		currentChatId,
-		setCurrentChatId,
-		chatList,
-		setIsCurrentChatGroup,
-		setChatWithUser,
-		setGroupChat,
-	} = useChatContext();
+	const dispatch = useDispatch();
+
+	const currentChatId = useSelector(selectCurrentChatId);
+	const chatList = useSelector(selectChatList);
+
+	const { setIsCurrentChatGroup, setChatWithUser, setGroupChat } =
+		useChatContext();
 
 	const clickHandler = (
 		chatId: string | null | undefined,
@@ -26,9 +33,9 @@ const ChatList = () => {
 		setGroupChat(null);
 
 		if (chatId) {
-			setCurrentChatId(chatId);
+			dispatch(setCurrentChatId(chatId));
 		}
-		
+
 		setIsCurrentChatGroup(isGroup);
 	};
 

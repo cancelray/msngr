@@ -1,38 +1,23 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import contactsAPI from '../api/contactsAPI';
+
+import {
+	addNewContact,
+	setUserContactListId,
+} from '../store/userContactList/userContactListId.slice';
+import { selectLoginUserId } from '../store/auth/loginUserId.slice';
 
 import type { Contact } from '../types/Contact.type';
 import type { User } from '../types/User.type';
 
-const useContacts = (
-	loginUserId: string | null,
-	users: User[],
-	userContactListId: Contact[],
-	setUserContactListId: React.Dispatch<React.SetStateAction<Contact[]>>,
-	chatWithUser: User | null,
-) => {
-	const [userContactList, setUserContactList] = useState<User[]>([]);
 
-	const getContactList = useCallback(
-		(contactListId: Contact[]) => {
-			if (users) {
-				const contactList: User[] = contactListId?.flatMap((contact) => {
-					const foundUser = users.find((user) => {
-						return isNaN(Number(user.id))
-							? user.id === contact.contactId
-							: Number(user.id) === contact.contactId;
-					});
-					return foundUser ? [foundUser] : [];
-				});
 
-				contactList.sort((a, b) => a.name.localeCompare(b.name));
+const useContacts = (chatWithUser: User | null) => {
+	const dispatch = useDispatch();
 
-				setUserContactList(contactList);
-			}
-		},
-		[users],
-	);
+	const loginUserId = useSelector(selectLoginUserId);
 
 	const addContact = useCallback(() => {
 		const newContact: Contact = {
@@ -44,16 +29,8 @@ const useContacts = (
 
 		contactsAPI
 			.addContact(newContact)
-			.then(() => setUserContactListId((prev) => [...prev, newContact]))
-			.then(() => getContactList(userContactListId))
-			.catch((err) => alert(err));
-	}, [
-		loginUserId,
-		userContactListId,
-		chatWithUser,
-		getContactList,
-		setUserContactListId,
-	]);
+			.then(() => dispatch(addNewContact(newContact)));
+	}, [dispatch, loginUserId, chatWithUser]);
 
 	const deleteContact = useCallback(
 		async (event: React.MouseEvent<HTMLAnchorElement>) => {
@@ -65,38 +42,25 @@ const useContacts = (
 
 			try {
 				if (chatWithUser && chatWithUser.id && loginUserId) {
-					const resp = await contactsAPI
-						.getContact(loginUserId, chatWithUser.id)
-						.catch((err) => alert(err));
+					const resp = await contactsAPI.getContact(
+						loginUserId,
+						chatWithUser.id,
+					);
 
-					await contactsAPI
-						.deleteContact(resp[0].id)
-						.catch((err) => alert(err));
+					await contactsAPI.deleteContact(resp[0].id);
 				}
 			} finally {
 				if (loginUserId) {
-					const resp = await contactsAPI
-						.getContactListByUser(loginUserId)
-						.catch((err) => alert(err));
+					const resp = await contactsAPI.getContactListByUser(loginUserId);
 
-					setUserContactListId(resp);
+					dispatch(setUserContactListId(resp));
 				}
 			}
 		},
-		[loginUserId, chatWithUser, setUserContactListId],
+		[dispatch, loginUserId, chatWithUser],
 	);
 
-	useEffect(() => {
-		if (userContactListId) {
-			const getContacts = () => getContactList(userContactListId);
-			getContacts();
-		}
-	}, [userContactListId, getContactList]);
-
 	return {
-		userContactListId,
-		setUserContactListId,
-		userContactList,
 		addContact,
 		deleteContact,
 	};

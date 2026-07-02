@@ -1,14 +1,23 @@
-import useAuthContext from '../../../hooks/context/useAuthContext';
-import useChatContext from '../../../hooks/context/useChatContext';
+import { useDispatch, useSelector } from 'react-redux';
+
 import useMessengerContext from '../../../hooks/context/useMessengerContext';
 import useUIContext from '../../../hooks/context/useUIContext';
 
 import DropdownMenu from '../../UI/DropdownMenu/DropdownMenu';
 import Search from '../Search/Search';
 
+import { logoutUserId } from '../../../store/auth/loginUserId.slice';
+
+import { selectUser } from '../../../store/auth/user.slice';
+import { closeChat } from '../../../store/chat/currentChatId.slice';
+
 import styles from './SidebarHeader.module.css';
 
 const SidebarHeader = () => {
+	const dispatch = useDispatch();
+
+	const user = useSelector(selectUser);
+
 	const {
 		setIsChatHeadDropdownShow,
 		isSidebarDropdownShow,
@@ -17,10 +26,6 @@ const SidebarHeader = () => {
 		setIsContactListShow,
 		setIsCreateGroupChatShow,
 	} = useMessengerContext();
-
-	const { user, setLoginUserId } = useAuthContext();
-
-	const { setCurrentChatId } = useChatContext();
 
 	const { sidebarDropdownRef, setIsChecked, setGroupChatName } = useUIContext();
 
@@ -52,7 +57,7 @@ const SidebarHeader = () => {
 				setGroupChatName('');
 
 				setIsSidebarDropdownShow(false);
-				setCurrentChatId(null);
+				dispatch(closeChat());
 
 				if (!isContactListShow) {
 					setIsContactListShow(true);
@@ -61,7 +66,7 @@ const SidebarHeader = () => {
 				break;
 			}
 			case 'toCreateGroupChat': {
-				setCurrentChatId(null);
+				dispatch(closeChat());
 				setIsCreateGroupChatShow(true);
 				setIsContactListShow(true);
 
@@ -73,8 +78,8 @@ const SidebarHeader = () => {
 				const isLogout = confirm('Are you sure you want to log out?');
 
 				if (isLogout) {
-					setLoginUserId(null);
-					setCurrentChatId(null);
+					dispatch(logoutUserId());
+					dispatch(closeChat());
 
 					setIsSidebarDropdownShow(false);
 					setIsChatHeadDropdownShow(false);
